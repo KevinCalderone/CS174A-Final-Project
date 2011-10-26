@@ -1,0 +1,41 @@
+#version 140
+
+in vec3 normal;
+in vec3 position;
+in vec4 color;
+
+uniform vec3 eyePosition;
+uniform vec3 lightPosition;
+
+uniform mat4 viewportMatrix;
+uniform mat4 modelviewMatrix;
+
+uniform bool vertexLighting;
+
+uniform vec3 ambientColor;
+uniform float ambientCoefficient;
+
+uniform vec3 diffuseColor;
+uniform float diffuseCoefficient;
+
+uniform vec3 specularColor;
+uniform float specularCoefficient;
+uniform float specularExponent;
+
+out vec4 fColor; 
+
+void main() { 
+	if (vertexLighting) {
+		fColor = color;
+	}
+	else {
+		vec3 light = normalize(lightPosition - position);
+		vec3 eye = normalize(eyePosition  - position);
+		vec3 half = normalize(light + eye);
+
+		fColor = vec4(ambientCoefficient * ambientColor + 
+			          (diffuseCoefficient * max(dot(normal, light), 0.0f)) * diffuseColor +
+				      (specularCoefficient * pow(max(dot(normal, half), 0.0f), specularExponent)) * specularColor  
+					  , 1.0f); 
+    }          
+}

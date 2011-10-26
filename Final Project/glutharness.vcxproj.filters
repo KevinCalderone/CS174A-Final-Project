@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Code\main.cpp" />
+    <ClCompile Include="Code\Object.cpp" />
+    <ClCompile Include="Code\OpenGLController.cpp" />
+    <ClCompile Include="Code\ShaderState.cpp" />
+    <ClCompile Include="Code\SphereObject.cpp" />
+    <ClCompile Include="Code\InitShader.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\Timer.cpp">
+      <Filter>Support</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Code\Object.h" />
+    <ClInclude Include="Code\OpenGLController.h" />
+    <ClInclude Include="Code\ShaderState.h" />
+    <ClInclude Include="Code\SphereObject.h" />
+    <ClInclude Include="Code\Vertex.h" />
+    <ClInclude Include="Code\Angel.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\mat.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\vec.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Timer.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\frag.txt">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\vert.txt">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Support">
+      <UniqueIdentifier>{835ff7d0-5388-472d-bcf2-b1befbfd2926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{4a409850-85d5-47d8-b434-5d5a8044de84}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
