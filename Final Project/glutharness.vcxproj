@@ -93,20 +93,14 @@
     <ClInclude Include="Code\mat.h" />
     <ClInclude Include="Code\Timer.h" />
     <ClInclude Include="Code\vec.h" />
-    <ClInclude Include="Code\Object.h" />
-    <ClInclude Include="Code\OpenGLController.h" />
     <ClInclude Include="Code\ShaderState.h" />
-    <ClInclude Include="Code\SphereObject.h" />
     <ClInclude Include="Code\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\InitShader.cpp" />
     <ClCompile Include="Code\Timer.cpp" />
     <ClCompile Include="Code\main.cpp" />
-    <ClCompile Include="Code\Object.cpp" />
-    <ClCompile Include="Code\OpenGLController.cpp" />
     <ClCompile Include="Code\ShaderState.cpp" />
-    <ClCompile Include="Code\SphereObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\frag.txt" />

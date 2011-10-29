@@ -2,10 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Code\main.cpp" />
-    <ClCompile Include="Code\Object.cpp" />
-    <ClCompile Include="Code\OpenGLController.cpp" />
     <ClCompile Include="Code\ShaderState.cpp" />
-    <ClCompile Include="Code\SphereObject.cpp" />
     <ClCompile Include="Code\InitShader.cpp">
       <Filter>Support</Filter>
     </ClCompile>
@@ -14,11 +11,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\Object.h" />
-    <ClInclude Include="Code\OpenGLController.h" />
     <ClInclude Include="Code\ShaderState.h" />
-    <ClInclude Include="Code\SphereObject.h" />
-    <ClInclude Include="Code\Vertex.h" />
     <ClInclude Include="Code\Angel.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -29,6 +22,9 @@
       <Filter>Support</Filter>
     </ClInclude>
     <ClInclude Include="Code\Timer.h">
+      <Filter>Support</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Vertex.h">
       <Filter>Support</Filter>
     </ClInclude>
   </ItemGroup>

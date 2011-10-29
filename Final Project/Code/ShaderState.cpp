@@ -31,7 +31,7 @@ GLuint ShaderState::u_specularExponent = -1;
 
 void ShaderState::InitShaders () {
  	// Load shaders and use the resulting shader program
-	s_program = InitShader( "../Shaders/vert.txt", "../Shaders/frag.txt" );
+	s_program = InitShader( "Shaders/vert.txt", "Shaders/frag.txt" );
     glUseProgram(s_program );
 
 	// Initialize location of shader variables

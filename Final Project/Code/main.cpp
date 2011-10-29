@@ -3,10 +3,8 @@
 // ------------------------
 
 #include <stdlib.h>
-
-#include "OpenGLController.h"
-
-static OpenGLController controller;
+#include "Timer.h"
+#include "Angel.h"
 
 const int FPS = 30;
 
@@ -22,9 +20,6 @@ void initGlut (int& argc, char** argv) {
 void callbackDisplay () {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
-	controller.Update();
-	controller.Render();
-
 	glutSwapBuffers();
 }
 
@@ -36,64 +31,6 @@ void callbackReshape (int width, int height) {
 // Called when a key is pressed. x, y is the current mouse position.
 void callbackKeyboard (unsigned char key, int x, int y) {
 	switch (key) {
-		// Translate Camera
-		case 'a':
-		case 'A':
-			controller.MoveSideways(-1.0f);
-		break;
-
-		case 'd':
-		case 'D':
-			controller.MoveSideways(1.0f);
-		break;
-
-		case 'w':
-		case 'W':
-			controller.MoveForward(1.0f);
-		break;
-
-		case 's':
-		case 'S':
-			controller.MoveForward(-1.0f);
-		break;
-
-		case 'j':
-		case 'J':
-			controller.Turn(-0.1f);
-		break;
-
-		case 'k':
-		case 'K':
-			controller.Turn(0.1f);
-		break;
-
-		case 'i':
-		case 'I':
-			controller.TurnUp(0.1f);
-		break;
-
-		case 'm':
-		case 'M':
-			controller.TurnUp(-0.1f);
-		break;
-
-		// Camera Aspect Ratio (aka fovx)
-		case 'o':
-		case 'O':
-			controller.ChangeAspectRatio(0.1f);
-		break;
-
-		case 'p':
-		case 'P':
-			controller.ChangeAspectRatio(-0.1f);
-		break;
-
-		case ' ':
-			controller.ResetCamera();
-		break;
-
-		case 'q':
-		case 'Q':
 		case 27:	// esc
 			exit(0);
 		break;
@@ -141,8 +78,6 @@ int main (int argc, char** argv) {
 	initGlut(argc, argv);
 	initCallbacks();
 	glewInit();
-
-	controller.Init();
 	glutMainLoop();
 	return 0;
 }
