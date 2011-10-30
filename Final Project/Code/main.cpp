@@ -6,7 +6,7 @@
 #include "Timer.h"
 #include "Angel.h"
 
-const int FPS = 30;
+const int FPS = 60;
 
 void initGlut (int& argc, char** argv) { 
 	glutInit(&argc, argv);
