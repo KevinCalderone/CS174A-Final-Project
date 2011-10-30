@@ -90,7 +90,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Code\Angel.h" />
+    <ClInclude Include="Code\Bullet.h" />
+    <ClInclude Include="Code\EnviroObj.h" />
+    <ClInclude Include="Code\GameManager.h" />
+    <ClInclude Include="Code\Ground.h" />
     <ClInclude Include="Code\mat.h" />
+    <ClInclude Include="Code\Monster.h" />
+    <ClInclude Include="Code\Object.h" />
+    <ClInclude Include="Code\Player.h" />
     <ClInclude Include="Code\Timer.h" />
     <ClInclude Include="Code\vec.h" />
     <ClInclude Include="Code\ShaderState.h" />
