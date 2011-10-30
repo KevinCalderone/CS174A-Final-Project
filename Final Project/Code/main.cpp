@@ -4,7 +4,7 @@
 
 #include <stdlib.h>
 #include "Timer.h"
-#include "Angel.h"
+#include "GameManager.h"
 
 const int FPS = 60;
 

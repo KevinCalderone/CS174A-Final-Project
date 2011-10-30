@@ -64,6 +64,13 @@
     <ClInclude Include="Code\BMPTexture.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Code\GameManager.h" />
+    <ClInclude Include="Code\Bullet.h" />
+    <ClInclude Include="Code\EnviroObj.h" />
+    <ClInclude Include="Code\Monster.h" />
+    <ClInclude Include="Code\Object.h" />
+    <ClInclude Include="Code\Player.h" />
+    <ClInclude Include="Code\Ground.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\frag.txt">
