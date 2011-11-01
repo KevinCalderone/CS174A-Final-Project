@@ -9,6 +9,21 @@ class Player : public Object
 public:
 	Player ();
 	~Player ();
+
+	bool shoot();
+	void kill();
+
+	void setWeaponDelay(int delay);
+	void setCooldown(int cooldown);
+	void addLife(int add);
+	void removeLife();
+
+
+private:
+
+	int m_lives;
+	int m_weaponDelay;
+	int m_cooldown;
 };
 
 

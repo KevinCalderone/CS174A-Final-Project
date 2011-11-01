@@ -14,7 +14,7 @@ public:
 	void setPosition (const vec3& position);
 	void setVelocity (const vec3& velocity);
 	void setDirection (const vec3& direction);
-	void setScale (float scale);
+	void setSize (float size);
 
 	vec3* getPosition ();
 	vec3* getDirection ();
@@ -22,24 +22,20 @@ public:
 	RenderBatch* getRenderBatch ();
 
 	void Update(float delta);
-	//void Render();
+	void Render();
 
 protected:
 
-	void AllocateVertexData (unsigned int count);
-
-	unsigned int m_vertexCount;
-
-	Vertex* m_data;
-	ShaderState m_state;
-	RenderBatch m_render;
+	ShaderState* m_state;
+	RenderBatch* m_render;
 
 private:
 	vec3 m_position;
 	vec3 m_direction;
+	vec3 m_velocity;
 	float m_scale;
 
-	vec3 m_velocity;
+	
 };
 
 
