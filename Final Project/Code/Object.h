@@ -8,6 +8,8 @@ class Object
 {
 
 public:
+	Object ();
+	~Object ();
 
 	void setPosition (const vec3& position);
 	void setVelocity (const vec3& velocity);
@@ -20,7 +22,7 @@ public:
 	RenderBatch* getRenderBatch ();
 
 	void Update(float delta);
-	void Render();
+	//void Render();
 
 protected:
 

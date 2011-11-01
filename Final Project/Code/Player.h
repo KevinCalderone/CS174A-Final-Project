@@ -5,6 +5,10 @@
 
 class Player : public Object
 {
+
+public:
+	Player ();
+	~Player ();
 };
 
 
