@@ -24,10 +24,13 @@ void main() {
 	vec3 halfVec = (lightDirection + eyeVec) / 2.0f;
 
 	fColor +=	vec4(
-				lightCombinedAmbient +												// Ambient Light
-				max(dot(normalVec, lightVec), 0.0f) * lightCombinedDiffuse +		// Diffuse Light
-				pow(max(dot(halfVec, normalVec), 0.0f), materialSpecularExponent)	// Specular Light
+				lightCombinedAmbient +
+				max(dot(normalVec, lightVec), 0.0f) * lightCombinedDiffuse +
+				pow(max(dot(halfVec, normalVec), 0.0f), materialSpecularExponent) * lightCombinedSpecular
 				, 0.0f);	
+
+
+	fColor = vec4(clamp(fColor.x, 0.0f, 2.0f), clamp(fColor.y, 0.0f, 2.0f), clamp(fColor.z, 0.0f, 2.0f), 1.0f);
 
 	if (b_useTexture0) {
 		fColor *= texture2D(texture0, texCoord);

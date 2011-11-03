@@ -42,7 +42,7 @@ void callbackDisplay () {
 		batch.m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
 		batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f);
 		batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f);
-		batch.m_effectParameters.m_materialSpecularExponent = 1.0f;
+		batch.m_effectParameters.m_materialSpecularExponent = 7.0f;
 
 		// Use a name that is specified in the TextureLibrary.txt file, or else it will will just draw black
 		batch.m_effectParameters.m_texture0 = "panda";	
@@ -115,10 +115,11 @@ int main (int argc, char** argv) {
 	
 	RenderParameters renderParameters;
 	renderParameters.m_projectionMatrix = mat4();
+	renderParameters.m_eyePosition = vec3(0.0f, 0.0f, 1.0f);
 	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, 0.0f);
-	renderParameters.m_lightAmbient = vec3(0.3f, 0.3f, 0.3f);
-	renderParameters.m_lightDiffuse = vec3(1.0f, 0.0f, 0.0f);
-	renderParameters.m_lightSpecular = vec3(0.0f, 0.0f, 1.0f);
+	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f);
+	renderParameters.m_lightDiffuse = vec3(1.0f, 1.0f, 0.6f) * 0.4f;
+	renderParameters.m_lightSpecular = vec3(1.0f, 1.0f, 0.8f) * 0.1f;
 
 	graphicsManager->SetRenderParameters(renderParameters);
 
