@@ -11,7 +11,7 @@
 #include "Ground.h"
 #include <vector>
 
-const enum objectType {player, monster, bullet, bush};
+const enum objectType {PLAYER, MONSTER, BULLET, BUSH};
 
 class GameManager
 {
