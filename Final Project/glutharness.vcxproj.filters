@@ -46,9 +46,6 @@
     <ClInclude Include="Code\UberShader.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Code\EffectState.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Code\ShaderState.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -72,6 +69,12 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Code\Geometry.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\EffectParameters.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\RenderParameters.h">
       <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>

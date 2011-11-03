@@ -35,14 +35,17 @@ void callbackDisplay () {
 		// This will take in names specified in the GeometryLibrary.txt file
 		batch.m_geometryID = "test";	
 
-		// This probably should be passed in once instead of per object, will probably move this to a seperate call like SetCamera()
-		batch.m_effectState.m_projectionMatrix = mat4();	
-
 		// Modelview matrix that you will calculate from the objects position, rotation, scale
-		batch.m_effectState.m_modelviewMatrix = Angel::Scale(0.5f, 0.5f, 0.5f) * Angel::RotateX(theta) * Angel::RotateY(theta)* Angel::RotateZ(theta);
+		batch.m_effectParameters.m_modelviewMatrix = Angel::Scale(0.5f, 0.5f, 0.5f) * Angel::RotateX(theta) * Angel::RotateY(theta)* Angel::RotateZ(theta);
 		
+		// Material lighting properties
+		batch.m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
+		batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f);
+		batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f);
+		batch.m_effectParameters.m_materialSpecularExponent = 1.0f;
+
 		// Use a name that is specified in the TextureLibrary.txt file, or else it will will just draw black
-		batch.m_effectState.m_texture0 = "panda";	
+		batch.m_effectParameters.m_texture0 = "panda";	
 
 		graphicsManager->Render(batch);
 	}
@@ -110,6 +113,15 @@ int main (int argc, char** argv) {
 	// This is just for testing until you get this incorportated into GameManager
 	graphicsManager = new GraphicsManager("../Data/AssetLibrary.txt");
 	
+	RenderParameters renderParameters;
+	renderParameters.m_projectionMatrix = mat4();
+	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, 0.0f);
+	renderParameters.m_lightAmbient = vec3(0.3f, 0.3f, 0.3f);
+	renderParameters.m_lightDiffuse = vec3(1.0f, 0.0f, 0.0f);
+	renderParameters.m_lightSpecular = vec3(0.0f, 0.0f, 1.0f);
+
+	graphicsManager->SetRenderParameters(renderParameters);
+
 	glutMainLoop();
 	return 0;
 }
