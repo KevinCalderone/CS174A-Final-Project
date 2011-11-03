@@ -37,9 +37,6 @@
     <ClInclude Include="Code\Timer.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Vertex.h">
-      <Filter>Support</Filter>
-    </ClInclude>
     <ClInclude Include="Code\GraphicsManager.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -71,14 +68,12 @@
     <ClInclude Include="Code\Object.h" />
     <ClInclude Include="Code\Player.h" />
     <ClInclude Include="Code\Ground.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\frag.txt">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\vert.txt">
-      <Filter>Shaders</Filter>
-    </None>
+    <ClInclude Include="Code\Vertex.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Geometry.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">
@@ -90,5 +85,13 @@
     <Filter Include="Graphics">
       <UniqueIdentifier>{4606b1fd-a183-46cb-9316-fca1ec1e4f16}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Shaders\frag.txt">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Data\Shaders\vert.txt">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

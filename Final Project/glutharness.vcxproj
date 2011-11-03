@@ -92,6 +92,7 @@
     <ClInclude Include="Code\Angel.h" />
     <ClInclude Include="Code\BMPTexture.h" />
     <ClInclude Include="Code\EffectState.h" />
+    <ClInclude Include="Code\Geometry.h" />
     <ClInclude Include="Code\GeometryManager.h" />
     <ClInclude Include="Code\GraphicsManager.h" />
     <ClInclude Include="Code\RenderBatch.h" />
@@ -121,8 +122,8 @@
     <ClCompile Include="Code\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\frag.txt" />
-    <None Include="Shaders\vert.txt" />
+    <None Include="Data\Shaders\frag.txt" />
+    <None Include="Data\Shaders\vert.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

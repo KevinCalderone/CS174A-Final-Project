@@ -1,0 +1,4 @@
+../Data/Shaders/vert.txt
+../Data/Shaders/frag.txt
+../Data/Geometry/GeometryLibrary.txt
+../Data/Textures/TextureLibrary.txt

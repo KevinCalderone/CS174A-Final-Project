@@ -7,8 +7,8 @@
 
 struct EffectState
 {
-	mat4 m_modelView;
-	mat4 m_projection;
+	mat4 m_projectionMatrix;
+	mat4 m_modelviewMatrix;
 
 	std::string m_texture0;
 };

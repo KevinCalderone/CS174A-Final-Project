@@ -11,7 +11,7 @@ enum TextureMode { e_TextureModeNearest, e_TextureModeLinear };
 class BMPTexture
 {
 public:
-	BMPTexture (std::string fileName, TextureMode mode);
+	BMPTexture (const std::string& fileName, TextureMode mode);
 	~BMPTexture (); 
 
 	void Apply ();
@@ -25,10 +25,9 @@ private:
         
 	std::string file;
      
-	GLuint texture;
+	GLuint textureID;
 	unsigned int width;
 	unsigned int height;
-  
 };
 
 #endif

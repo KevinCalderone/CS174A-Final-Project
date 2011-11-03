@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include "Timer.h"
 #include "GameManager.h"
+#include "GraphicsManager.h"
+
+// This is just for testing until you get this incorportated into GameManager
+GraphicsManager* graphicsManager;
 
 const int FPS = 60;
 
@@ -18,9 +22,33 @@ void initGlut (int& argc, char** argv) {
 
 // Called when the window needs to be redrawn.
 void callbackDisplay () {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// This is just for testing until you get this incorportated into GameManager
+	graphicsManager->ClearScreen();
 	
-	glutSwapBuffers();
+	{
+		static float theta = 0.0f;
+		theta += 1.0f;
+
+		RenderBatch batch;
+		
+		// it currently ignores this any just uses a cube
+		// This will take in names specified in the GeometryLibrary.txt file
+		batch.m_geometryID = "test";	
+
+		// This probably should be passed in once instead of per object, will probably move this to a seperate call like SetCamera()
+		batch.m_effectState.m_projectionMatrix = mat4();	
+
+		// Modelview matrix that you will calculate from the objects position, rotation, scale
+		batch.m_effectState.m_modelviewMatrix = Angel::Scale(0.5f, 0.5f, 0.5f) * Angel::RotateX(theta) * Angel::RotateY(theta)* Angel::RotateZ(theta);
+		
+		// Use a name that is specified in the TextureLibrary.txt file, or else it will will just draw black
+		batch.m_effectState.m_texture0 = "panda";	
+
+		graphicsManager->Render(batch);
+	}
+
+	// This is just for testing until you get this incorportated into GameManager
+	graphicsManager->SwapBuffers();
 }
 
 // Called when the window is resized.
@@ -78,6 +106,10 @@ int main (int argc, char** argv) {
 	initGlut(argc, argv);
 	initCallbacks();
 	glewInit();
+
+	// This is just for testing until you get this incorportated into GameManager
+	graphicsManager = new GraphicsManager("../Data/AssetLibrary.txt");
+	
 	glutMainLoop();
 	return 0;
 }

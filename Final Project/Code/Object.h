@@ -1,7 +1,6 @@
 #ifndef __OBJECT_H__
 #define __OBJECT_H__
 
-#include "Vertex.h"
 #include "RenderBatch.h"
 
 class Object
@@ -24,12 +23,6 @@ public:
 
 protected:
 
-	void AllocateVertexData (unsigned int count);
-
-	unsigned int m_vertexCount;
-
-	Vertex* m_data;
-	ShaderState m_state;
 	RenderBatch m_render;
 
 private:
