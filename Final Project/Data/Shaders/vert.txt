@@ -1,0 +1,17 @@
+#version 140
+
+in vec3 vPosition;
+in vec3 vNormal;
+in vec2 vTexCoord;
+
+out vec3 normal;
+out vec2 texCoord;
+
+uniform mat4 projectionMatrix;
+uniform mat4 modelviewMatrix;
+
+void main() { 
+	texCoord = vTexCoord;	
+	normal = (modelviewMatrix * vec4(vNormal, 0.0f)).xyz;
+    gl_Position = projectionMatrix * modelviewMatrix * vec4(vPosition, 1.0f); 
+}

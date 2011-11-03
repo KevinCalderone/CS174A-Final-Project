@@ -63,7 +63,8 @@ InitShader(const char* vShaderFile, const char* fShaderFile)
 	    glGetShaderInfoLog( shader, logSize, NULL, logMsg );
 	    std::cerr << logMsg << std::endl;
 	    delete [] logMsg;
-
+		
+		system("pause");
 	    exit( EXIT_FAILURE );
 	}
 
@@ -78,15 +79,16 @@ InitShader(const char* vShaderFile, const char* fShaderFile)
     GLint  linked;
     glGetProgramiv( program, GL_LINK_STATUS, &linked );
     if ( !linked ) {
-	std::cerr << "Shader program failed to link" << std::endl;
-	GLint  logSize;
-	glGetProgramiv( program, GL_INFO_LOG_LENGTH, &logSize);
-	char* logMsg = new char[logSize];
-	glGetProgramInfoLog( program, logSize, NULL, logMsg );
-	std::cerr << logMsg << std::endl;
-	delete [] logMsg;
-
-	exit( EXIT_FAILURE );
+		std::cerr << "Shader program failed to link" << std::endl;
+		GLint  logSize;
+		glGetProgramiv( program, GL_INFO_LOG_LENGTH, &logSize);
+		char* logMsg = new char[logSize];
+		glGetProgramInfoLog( program, logSize, NULL, logMsg );
+		std::cerr << logMsg << std::endl;
+		delete [] logMsg;
+	
+		system("pause");
+		exit( EXIT_FAILURE );
     }
 
     /* use program object */

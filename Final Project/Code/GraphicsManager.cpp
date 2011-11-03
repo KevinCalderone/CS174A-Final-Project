@@ -1,0 +1,99 @@
+#include "GraphicsManager.h"
+
+#include <fstream>
+
+#include "UberShader.h"
+#include "GeometryManager.h"
+#include "TextureManager.h"
+
+#include "RenderBatch.h"
+#include "ShaderState.h"
+#include "Geometry.h"
+
+GraphicsManager::GraphicsManager (const std::string& assetLibrary) 
+	: m_uberShader(NULL), m_geometryManager(NULL), m_textureManager(NULL), m_assetLibrary(assetLibrary)
+{
+	ReloadAssets();
+
+	glEnable(GL_DEPTH_TEST);
+}
+
+GraphicsManager::~GraphicsManager () {
+	ClearAssets();
+}
+
+void GraphicsManager::ClearAssets () {
+	if (m_uberShader != NULL) {
+		delete m_uberShader;
+		m_uberShader = NULL;
+	}
+
+	if (m_geometryManager != NULL) {
+		delete m_geometryManager;
+		m_geometryManager = NULL;
+	}
+	
+	if (m_textureManager != NULL) {
+		delete m_textureManager;
+		m_textureManager = NULL;
+	}
+}
+
+void GraphicsManager::ReloadAssets () {
+	ClearAssets();
+	
+	std::ifstream is;
+	is.open (m_assetLibrary.c_str(), std::ios::binary);
+
+	if(!is.is_open()) {
+		printf("GraphicsManager::ReloadAssets: Error opening asset library file.");
+	}
+	else {
+		std::string vertexShaderFile;
+		std::string fragmentShaderFile;
+		std::string geometryLibrary;
+		std::string textureLibrary;
+   
+		is >> vertexShaderFile;
+		is >> fragmentShaderFile;
+		is >> geometryLibrary;
+		is >> textureLibrary;
+
+		m_geometryManager = new GeometryManager(geometryLibrary);
+		m_uberShader = new UberShader(vertexShaderFile, fragmentShaderFile);
+		m_textureManager = new TextureManager(textureLibrary);
+
+		is.close();
+   }           
+}
+
+void GraphicsManager::ClearScreen () {
+	glClearColor( 1.0, 1.0, 1.0, 1.0 ); // white background
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void GraphicsManager::Render (const RenderBatch& batch) {
+	if (m_uberShader == NULL)
+		return;
+
+	ShaderState state = CalculateShaderState(batch.m_effectState);
+	m_uberShader->SetShaderState(state);
+	m_textureManager->SetTexture(batch.m_effectState.m_texture0);
+
+	m_geometryManager->RenderGeometry(batch.m_geometryID);
+}
+
+void GraphicsManager::SwapBuffers () {
+	glutSwapBuffers();
+}
+
+ShaderState GraphicsManager::CalculateShaderState (const EffectState& effectState) {
+	ShaderState state;
+
+	state.m_projectionMatrix = effectState.m_projectionMatrix;
+	state.m_modelviewMatrix = effectState.m_modelviewMatrix;
+
+	state.b_useTexture0 = m_textureManager->HasTexture(effectState.m_texture0);
+
+	return state;
+}

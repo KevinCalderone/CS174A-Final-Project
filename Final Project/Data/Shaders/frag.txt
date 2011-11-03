@@ -1,0 +1,18 @@
+#version 140
+
+in vec2 texCoord;
+in vec3 normal;
+out vec4 fColor; 
+
+uniform sampler2D texture0;
+
+uniform bool b_useTexture0;
+
+void main() { 
+
+	fColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+	if (b_useTexture0) {
+		fColor += texture2D(texture0, texCoord) + vec4(normal, 0.0f) * 0.0f;
+	}
+}

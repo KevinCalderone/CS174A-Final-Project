@@ -2,16 +2,29 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Code\main.cpp" />
-    <ClCompile Include="Code\ShaderState.cpp" />
     <ClCompile Include="Code\InitShader.cpp">
       <Filter>Support</Filter>
     </ClCompile>
     <ClCompile Include="Code\Timer.cpp">
       <Filter>Support</Filter>
     </ClCompile>
+    <ClCompile Include="Code\GraphicsManager.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\UberShader.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\GeometryManager.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\TextureManager.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\BMPTexture.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Code\ShaderState.h" />
     <ClInclude Include="Code\Angel.h">
       <Filter>Support</Filter>
     </ClInclude>
@@ -24,8 +37,29 @@
     <ClInclude Include="Code\Timer.h">
       <Filter>Support</Filter>
     </ClInclude>
-    <ClInclude Include="Code\Vertex.h">
-      <Filter>Support</Filter>
+    <ClInclude Include="Code\GraphicsManager.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\RenderBatch.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\UberShader.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\EffectState.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ShaderState.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GeometryManager.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\TextureManager.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\BMPTexture.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Code\GameManager.h" />
     <ClInclude Include="Code\Bullet.h" />
@@ -34,14 +68,12 @@
     <ClInclude Include="Code\Object.h" />
     <ClInclude Include="Code\Player.h" />
     <ClInclude Include="Code\Ground.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\frag.txt">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\vert.txt">
-      <Filter>Shaders</Filter>
-    </None>
+    <ClInclude Include="Code\Vertex.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Geometry.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">
@@ -50,5 +82,16 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{4a409850-85d5-47d8-b434-5d5a8044de84}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{4606b1fd-a183-46cb-9316-fca1ec1e4f16}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\Shaders\frag.txt">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Data\Shaders\vert.txt">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
