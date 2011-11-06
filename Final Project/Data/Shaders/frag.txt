@@ -21,7 +21,7 @@ void main() {
 	vec3 lightVec = normalize(lightDirection);
 	vec3 eyeVec = normalize(position.xyz - eyePosition);
 	vec3 normalVec = normalize(normal);
-	vec3 halfVec = (lightDirection + eyeVec) / 2.0f;
+	vec3 halfVec = normalize(lightDirection + eyeVec);
 
 	fColor +=	vec4(
 				lightCombinedAmbient +

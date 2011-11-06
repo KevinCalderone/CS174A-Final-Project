@@ -1,3 +1,4 @@
 10000
 cube ../Data/Geometry/cube.obj
+sphere ../Data/Geometry/sphere.obj
 monster ../Data/Geometry/monster.obj
