@@ -3,12 +3,12 @@
 
 #include <string>
 
-#include "EffectState.h"
+#include "EffectParameters.h"
 
 struct RenderBatch
 {
 	std::string m_geometryID;
-	EffectState m_effectState;
+	EffectParameters m_effectParameters;
 };
 
 #endif

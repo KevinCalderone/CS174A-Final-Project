@@ -3,14 +3,22 @@
 
 #include <string>
 
+#include "RenderParameters.h"
+
 struct RenderBatch;
-struct EffectState;
+struct EffectParameters;
 
 class UberShader;
 class GeometryManager;
 class TextureManager;
 
 struct ShaderState;
+
+/*
+ TODO
+ - Model Loading
+ - Only submit diff of state change to GPU
+*/
 
 class GraphicsManager
 {
@@ -19,6 +27,7 @@ public:
 	~GraphicsManager ();
 
 	void ClearScreen ();
+	void SetRenderParameters (const RenderParameters& renderParameters);
 	void Render (const RenderBatch& batch);
 	void SwapBuffers ();
 
@@ -26,9 +35,11 @@ public:
 
 private:
 	void ClearAssets ();
-	ShaderState CalculateShaderState (const EffectState& effectState);
+	ShaderState CalculateShaderState (const EffectParameters& effectParameters);
 
 	const std::string m_assetLibrary;
+
+	RenderParameters m_renderParameters;
 
 	UberShader* m_uberShader;
 	GeometryManager* m_geometryManager;

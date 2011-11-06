@@ -6,6 +6,9 @@
 #include "GeometryManager.h"
 #include "TextureManager.h"
 
+#include "EffectParameters.h"
+#include "RenderParameters.h"
+
 #include "RenderBatch.h"
 #include "ShaderState.h"
 #include "Geometry.h"
@@ -72,13 +75,17 @@ void GraphicsManager::ClearScreen () {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void GraphicsManager::SetRenderParameters(const RenderParameters& renderParameters) {
+	m_renderParameters = renderParameters;
+}
+
 void GraphicsManager::Render (const RenderBatch& batch) {
 	if (m_uberShader == NULL)
 		return;
 
-	ShaderState state = CalculateShaderState(batch.m_effectState);
+	ShaderState state = CalculateShaderState(batch.m_effectParameters);
 	m_uberShader->SetShaderState(state);
-	m_textureManager->SetTexture(batch.m_effectState.m_texture0);
+	m_textureManager->SetTexture(batch.m_effectParameters.m_diffuseTexture);
 
 	m_geometryManager->RenderGeometry(batch.m_geometryID);
 }
@@ -87,13 +94,21 @@ void GraphicsManager::SwapBuffers () {
 	glutSwapBuffers();
 }
 
-ShaderState GraphicsManager::CalculateShaderState (const EffectState& effectState) {
+ShaderState GraphicsManager::CalculateShaderState (const EffectParameters& effectParameters) {
 	ShaderState state;
 
-	state.m_projectionMatrix = effectState.m_projectionMatrix;
-	state.m_modelviewMatrix = effectState.m_modelviewMatrix;
+	state.m_projectionMatrix = m_renderParameters.m_projectionMatrix;
+	state.m_modelviewMatrix = effectParameters.m_modelviewMatrix;
 
-	state.b_useTexture0 = m_textureManager->HasTexture(effectState.m_texture0);
+	state.b_useDiffuseTexture = m_textureManager->HasTexture(effectParameters.m_diffuseTexture);
+
+	state.m_eyePosition = m_renderParameters.m_eyePosition;
+
+	state.m_lightDirection = m_renderParameters.m_lightDirection;
+	state.m_lightCombinedAmbient = m_renderParameters.m_lightAmbient * effectParameters.m_materialDiffuse;
+	state.m_lightCombinedDiffuse = m_renderParameters.m_lightDiffuse * effectParameters.m_materialDiffuse;
+	state.m_lightCombinedSpecular = m_renderParameters.m_lightSpecular * effectParameters.m_materialSpecular;
+	state.m_materialSpecularExponent = effectParameters.m_materialSpecularExponent;
 
 	return state;
 }

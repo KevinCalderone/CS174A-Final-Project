@@ -16,8 +16,15 @@ UberShader::UberShader (const std::string& vertShader, const std::string& fragSh
 	m_projectionMatrix = glGetUniformLocation(m_program, "projectionMatrix");
 	m_modelviewMatrix = glGetUniformLocation(m_program, "modelviewMatrix");
 
-	b_useTexture0 = glGetUniformLocation(m_program, "b_useTexture0");
-	m_texture0 = glGetUniformLocation(m_program, "texture0");
+	b_useDiffuseTexture = glGetUniformLocation(m_program, "b_useDiffuseTexture");
+
+	m_eyePosition = glGetUniformLocation(m_program, "eyePosition");
+
+	m_lightDirection = glGetUniformLocation(m_program, "lightDirection");
+	m_lightCombinedAmbient = glGetUniformLocation(m_program, "lightCombinedAmbient");
+	m_lightCombinedDiffuse = glGetUniformLocation(m_program, "lightCombinedDiffuse");
+	m_lightCombinedSpecular = glGetUniformLocation(m_program, "lightCombinedSpecular");
+	m_materialSpecularExponent = glGetUniformLocation(m_program, "materialSpecularExponent");
 
     glEnableVertexAttribArray(m_vPosition);
     glVertexAttribPointer(m_vPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(c_positionDataOffset));
@@ -27,8 +34,9 @@ UberShader::UberShader (const std::string& vertShader, const std::string& fragSh
 
 	glEnableVertexAttribArray(m_vTexCoord);
     glVertexAttribPointer(m_vTexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(c_texCoord0DataOffset));
-		
-	glUniform1i(m_texture0, 0);
+	
+	// bind sampler to texture unit 0
+	glUniform1i(glGetUniformLocation(m_program, "texture0"), 0);
 	
 	ShaderState state;
 	SetShaderState(state);
@@ -42,7 +50,15 @@ void UberShader::SetShaderState (const ShaderState& shaderState) {
 	glUniformMatrix4fv(m_projectionMatrix, 1, GL_TRUE, (GLfloat*)&shaderState.m_projectionMatrix);
 	glUniformMatrix4fv(m_modelviewMatrix, 1, GL_TRUE, (GLfloat*)&shaderState.m_modelviewMatrix);
 
-	glUniform1i(b_useTexture0, shaderState.b_useTexture0);
+	glUniform1i(b_useDiffuseTexture, shaderState.b_useDiffuseTexture);
+
+	glUniform3fv(m_eyePosition, 1, shaderState.m_eyePosition);
+
+	glUniform3fv(m_lightDirection, 1, shaderState.m_lightDirection);
+	glUniform3fv(m_lightCombinedAmbient, 1, shaderState.m_lightCombinedAmbient);
+	glUniform3fv(m_lightCombinedDiffuse, 1, shaderState.m_lightCombinedDiffuse);
+	glUniform3fv(m_lightCombinedSpecular, 1, shaderState.m_lightCombinedSpecular);
+	glUniform1f(m_materialSpecularExponent, shaderState.m_materialSpecularExponent);
 
 	m_currentState = shaderState;
 }

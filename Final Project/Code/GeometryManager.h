@@ -18,11 +18,12 @@ public:
 
 private:
 	void InitBuffer (unsigned int size);
-	void LoadGeometryFile (const std::string& geometryID, const std::string& geometryFile);
+
+	void LoadOBJFile (const std::string& geometryID, const std::string& geometryFile);
+
 	std::map<std::string, Geometry*> m_geometry;
 
 	GLuint m_buffer;
-	Vertex* m_vertexData;
 	unsigned int m_vertexDataUsed;
 };
 
