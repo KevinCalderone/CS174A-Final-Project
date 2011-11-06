@@ -9,6 +9,7 @@
 
 // This is just for testing until you get this incorportated into GameManager
 GraphicsManager* graphicsManager;
+static GameManager* gameManager;
 
 const int FPS = 60;
 
@@ -17,7 +18,7 @@ void initGlut (int& argc, char** argv) {
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 50);
 	glutInitWindowSize(640, 480);
-	glutCreateWindow("CS17A Final Project");
+	glutCreateWindow("CS174A Final Project");
 }
 
 // Called when the window needs to be redrawn.
@@ -58,11 +59,7 @@ void callbackReshape (int width, int height) {
 
 // Called when a key is pressed. x, y is the current mouse position.
 void callbackKeyboard (unsigned char key, int x, int y) {
-	switch (key) {
-		case 27:	// esc
-			exit(0);
-		break;
-	}
+	gameManager->callbackKeyboard(key, x, y);
 }
 
 // Called when a mouse button is pressed or released
@@ -106,9 +103,10 @@ int main (int argc, char** argv) {
 	initGlut(argc, argv);
 	initCallbacks();
 	glewInit();
-
-	// This is just for testing until you get this incorportated into GameManager
-	graphicsManager = new GraphicsManager("../Data/AssetLibrary.txt");
+	// starting to replace calls through GameManager
+	gameManager = new GameManager();
+	gameManager->initGame();
+	graphicsManager = gameManager->getGraphicsManager();
 	
 	glutMainLoop();
 	return 0;

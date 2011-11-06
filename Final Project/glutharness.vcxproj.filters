@@ -23,6 +23,7 @@
     <ClCompile Include="Code\BMPTexture.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="GameManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Angel.h">
