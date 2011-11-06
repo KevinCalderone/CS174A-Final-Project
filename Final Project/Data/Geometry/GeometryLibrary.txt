@@ -1,2 +1,3 @@
-14
-test test.3ds
+10000
+cube ../Data/Geometry/cube.obj
+monster ../Data/Geometry/monster.obj

@@ -11,7 +11,8 @@ struct EffectParameters
 	mat4 m_modelviewMatrix;
 
 	// Texture Channels
-	std::string m_texture0;
+	std::string m_diffuseTexture;
+	std::string m_normalMap;
 
 	// Material Parameters
 	vec3 m_materialAmbient;

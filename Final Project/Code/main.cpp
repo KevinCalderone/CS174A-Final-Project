@@ -31,9 +31,8 @@ void callbackDisplay () {
 
 		RenderBatch batch;
 		
-		// it currently ignores this any just uses a cube
 		// This will take in names specified in the GeometryLibrary.txt file
-		batch.m_geometryID = "test";	
+		batch.m_geometryID = "monster";	
 
 		// Modelview matrix that you will calculate from the objects position, rotation, scale
 		batch.m_effectParameters.m_modelviewMatrix = Angel::Scale(0.5f, 0.5f, 0.5f) * Angel::RotateX(theta) * Angel::RotateY(theta)* Angel::RotateZ(theta);
@@ -42,10 +41,10 @@ void callbackDisplay () {
 		batch.m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
 		batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f);
 		batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f);
-		batch.m_effectParameters.m_materialSpecularExponent = 7.0f;
+		batch.m_effectParameters.m_materialSpecularExponent = 5.0f;
 
 		// Use a name that is specified in the TextureLibrary.txt file, or else it will will just draw black
-		batch.m_effectParameters.m_texture0 = "panda";	
+		batch.m_effectParameters.m_diffuseTexture = "monster";	
 
 		graphicsManager->Render(batch);
 	}

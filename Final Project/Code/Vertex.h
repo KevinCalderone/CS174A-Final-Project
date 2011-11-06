@@ -4,6 +4,9 @@
 // 32-byte aligned interleaved data
 struct Vertex
 {
+	Vertex (const vec3& p, const vec3& n, const vec2& t0)
+		: position(p), normal(n), texCoord0(t0) {}
+
 	vec3 position;
 	vec3 normal;
 	vec2 texCoord0;

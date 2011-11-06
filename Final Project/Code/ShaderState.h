@@ -10,7 +10,7 @@ struct ShaderState
 	mat4 m_projectionMatrix;
 	mat4 m_modelviewMatrix;
 
-	static_branch b_useTexture0;
+	static_branch b_useDiffuseTexture;
 
 	vec3 m_eyePosition;
 

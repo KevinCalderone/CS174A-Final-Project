@@ -22,7 +22,7 @@ private:
 	GLuint m_projectionMatrix;
 	GLuint m_modelviewMatrix;
 
-	GLuint b_useTexture0;
+	GLuint b_useDiffuseTexture;
 
 	GLuint m_eyePosition;
 

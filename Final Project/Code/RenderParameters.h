@@ -14,6 +14,7 @@ struct RenderParameters
 	vec3 m_lightAmbient;
 	vec3 m_lightDiffuse;
 	vec3 m_lightSpecular;
+	std::string m_environmentMap;
 };
 
 #endif
