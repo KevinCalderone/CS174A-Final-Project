@@ -29,7 +29,7 @@ private:
 	vec3 m_position;
 	vec3 m_direction;
 	vec3 m_velocity;
-	float m_scale;
+	float m_size;
 
 	
 };
