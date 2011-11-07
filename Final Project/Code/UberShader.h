@@ -23,6 +23,7 @@ private:
 	GLuint m_modelviewMatrix;
 
 	GLuint b_useDiffuseTexture;
+	GLuint b_useEnvironmentMap;
 
 	GLuint m_eyePosition;
 

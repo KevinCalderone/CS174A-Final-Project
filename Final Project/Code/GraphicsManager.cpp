@@ -83,9 +83,11 @@ void GraphicsManager::Render (const RenderBatch& batch) {
 	if (m_uberShader == NULL)
 		return;
 
+
 	ShaderState state = CalculateShaderState(batch.m_effectParameters);
 	m_uberShader->SetShaderState(state);
-	m_textureManager->SetTexture(batch.m_effectParameters.m_diffuseTexture);
+	m_textureManager->SetTexture(e_TextureChannelDiffuse, batch.m_effectParameters.m_diffuseTexture);
+	m_textureManager->SetTexture(e_TextureChannelEnvMap, m_renderParameters.m_environmentMap);
 
 	m_geometryManager->RenderGeometry(batch.m_geometryID);
 }
@@ -101,6 +103,7 @@ ShaderState GraphicsManager::CalculateShaderState (const EffectParameters& effec
 	state.m_modelviewMatrix = effectParameters.m_modelviewMatrix;
 
 	state.b_useDiffuseTexture = m_textureManager->HasTexture(effectParameters.m_diffuseTexture);
+	state.b_useEnvironmentMap = m_textureManager->HasTexture(m_renderParameters.m_environmentMap);
 
 	state.m_eyePosition = m_renderParameters.m_eyePosition;
 

@@ -9,7 +9,6 @@
 
 // This is just for testing until you get this incorportated into GameManager
 GraphicsManager* graphicsManager;
-static GameManager* gameManager;
 
 const int FPS = 60;
 
@@ -18,7 +17,7 @@ void initGlut (int& argc, char** argv) {
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 50);
 	glutInitWindowSize(640, 480);
-	glutCreateWindow("CS174A Final Project");
+	glutCreateWindow("CS17A Final Project");
 }
 
 // Called when the window needs to be redrawn.
@@ -42,10 +41,10 @@ void callbackDisplay () {
 		batch.m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
 		batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f);
 		batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f);
-		batch.m_effectParameters.m_materialSpecularExponent = 50.0f;
+		batch.m_effectParameters.m_materialSpecularExponent = 100.0f;
 
 		// Use a name that is specified in the TextureLibrary.txt file, or else it will will just draw black
-		batch.m_effectParameters.m_diffuseTexture = "monster";	
+		batch.m_effectParameters.m_diffuseTexture = "none";	
 
 		graphicsManager->Render(batch);
 	}
@@ -61,7 +60,11 @@ void callbackReshape (int width, int height) {
 
 // Called when a key is pressed. x, y is the current mouse position.
 void callbackKeyboard (unsigned char key, int x, int y) {
-	gameManager->callbackKeyboard(key, x, y);
+	switch (key) {
+		case 27:	// esc
+			exit(0);
+		break;
+	}
 }
 
 // Called when a mouse button is pressed or released
@@ -105,18 +108,18 @@ int main (int argc, char** argv) {
 	initGlut(argc, argv);
 	initCallbacks();
 	glewInit();
-	// starting to replace calls through GameManager
-	gameManager = new GameManager();
-	gameManager->initGame();
-	graphicsManager = gameManager->getGraphicsManager();
+
+	// This is just for testing until you get this incorportated into GameManager
+	graphicsManager = new GraphicsManager("../Data/AssetLibrary.txt");
 	
 	RenderParameters renderParameters;
 	renderParameters.m_projectionMatrix = mat4();
 	renderParameters.m_eyePosition = vec3(0.0f, 0.0f, 1.0f);
 	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, -2.0f);
-	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f);
+	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.1f;
 	renderParameters.m_lightDiffuse = vec3(1.0f, 1.0f, 0.6f) * 0.4f;
 	renderParameters.m_lightSpecular = vec3(1.0f, 1.0f, 0.5f) * 0.8f;
+	renderParameters.m_environmentMap = "envMap";
 
 	graphicsManager->SetRenderParameters(renderParameters);
 

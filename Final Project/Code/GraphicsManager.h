@@ -14,17 +14,14 @@ class TextureManager;
 
 struct ShaderState;
 
-/*
- TODO
- - Model Loading
- - Only submit diff of state change to GPU
-*/
-
 class GraphicsManager
 {
 public:
 	GraphicsManager (const std::string& assetLibrary);
 	~GraphicsManager ();
+
+	void SetCameraProjection (vec3 playerPosition);
+	void SetCameraOrthogonal ();
 
 	void ClearScreen ();
 	void SetRenderParameters (const RenderParameters& renderParameters);

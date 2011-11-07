@@ -11,6 +11,7 @@ struct ShaderState
 	mat4 m_modelviewMatrix;
 
 	static_branch b_useDiffuseTexture;
+	static_branch b_useEnvironmentMap;
 
 	vec3 m_eyePosition;
 

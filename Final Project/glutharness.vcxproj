@@ -114,7 +114,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\BMPTexture.cpp" />
-    <ClCompile Include="Code\GameManager.cpp" />
     <ClCompile Include="Code\GeometryManager.cpp" />
     <ClCompile Include="Code\GraphicsManager.cpp" />
     <ClCompile Include="Code\InitShader.cpp" />

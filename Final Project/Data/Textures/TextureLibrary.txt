@@ -1,2 +1,9 @@
-panda ../Data/Textures/panda.bmp
-monster ../Data/Textures/monster.bmp
+2d panda ../Data/Textures/panda.bmp
+2d monster ../Data/Textures/monster.bmp
+cube envMap
+	../Data/Textures/envMap_+x.bmp
+	../Data/Textures/envMap_+y.bmp
+	../Data/Textures/envMap_+z.bmp
+	../Data/Textures/envMap_-x.bmp
+	../Data/Textures/envMap_-y.bmp
+	../Data/Textures/envMap_-z.bmp

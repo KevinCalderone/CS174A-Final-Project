@@ -11,19 +11,18 @@
     <ClCompile Include="Code\GraphicsManager.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Code\UberShader.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\GeometryManager.cpp">
-      <Filter>Graphics</Filter>
+    <ClCompile Include="Code\BMPTexture.cpp">
+      <Filter>Graphics\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Code\TextureManager.cpp">
-      <Filter>Graphics</Filter>
+      <Filter>Graphics\Texture</Filter>
     </ClCompile>
-    <ClCompile Include="Code\BMPTexture.cpp">
-      <Filter>Graphics</Filter>
+    <ClCompile Include="Code\GeometryManager.cpp">
+      <Filter>Graphics\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Code\GameManager.cpp" />
+    <ClCompile Include="Code\UberShader.cpp">
+      <Filter>Graphics\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Angel.h">
@@ -44,21 +43,6 @@
     <ClInclude Include="Code\RenderBatch.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Code\UberShader.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\ShaderState.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\GeometryManager.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\TextureManager.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\BMPTexture.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Code\GameManager.h" />
     <ClInclude Include="Code\Bullet.h" />
     <ClInclude Include="Code\EnviroObj.h" />
@@ -66,17 +50,32 @@
     <ClInclude Include="Code\Object.h" />
     <ClInclude Include="Code\Player.h" />
     <ClInclude Include="Code\Ground.h" />
-    <ClInclude Include="Code\Vertex.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Code\Geometry.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Code\EffectParameters.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Code\RenderParameters.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\BMPTexture.h">
+      <Filter>Graphics\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\TextureManager.h">
+      <Filter>Graphics\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\GeometryManager.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Geometry.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\Vertex.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\UberShader.h">
+      <Filter>Graphics\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ShaderState.h">
+      <Filter>Graphics\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -88,6 +87,15 @@
     </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{4606b1fd-a183-46cb-9316-fca1ec1e4f16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Texture">
+      <UniqueIdentifier>{554927aa-d4a2-4db3-a5b3-db1dc5e85387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Geometry">
+      <UniqueIdentifier>{5b016e54-5706-4405-9c5f-d353dc579eed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Shader">
+      <UniqueIdentifier>{f4474ff5-268f-45fb-b8b9-2845cd2ac771}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
