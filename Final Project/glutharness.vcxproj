@@ -114,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\BMPTexture.cpp" />
+    <ClCompile Include="Code\GameManager.cpp" />
     <ClCompile Include="Code\GeometryManager.cpp" />
     <ClCompile Include="Code\GraphicsManager.cpp" />
     <ClCompile Include="Code\InitShader.cpp" />
@@ -121,7 +122,6 @@
     <ClCompile Include="Code\UberShader.cpp" />
     <ClCompile Include="Code\Timer.cpp" />
     <ClCompile Include="Code\main.cpp" />
-    <ClCompile Include="GameManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Data\Shaders\frag.txt" />

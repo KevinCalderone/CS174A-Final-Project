@@ -1,4 +1,4 @@
-#include "Code\GameManager.h"
+#include "GameManager.h"
 
 GameManager::GameManager()
 {
@@ -14,6 +14,8 @@ void GameManager::callbackKeyboard(unsigned char key, int x, int y)
 		case 27:	// esc
 			exit(0);
 		break;
+		case '`':
+			m_graphicsManager->ReloadAssets();
 	}
 }
 
@@ -48,11 +50,11 @@ void GameManager::initMonsters() // gotta wait for implementation of Monster
 {
 	// this is just a random spawning algorithm at the moment
 	float x, y;
-	do
-	{
-		x = 12 - 24 * rand(); // horizontal screen range of 20 units? Left = -10, Right = +10
-		y = 12; // vertical screen range of 20 units? Top = +10, Bottom = -10
-	} while(Spawn(MONSTER,Angel::vec3(x,y,0.0f),20.f*rand(),m_monsters.size() <= MONSTERCAP));
+	//do
+	//{
+	//	x = 12 - 24 * rand(); // horizontal screen range of 20 units? Left = -10, Right = +10
+	//	y = 12; // vertical screen range of 20 units? Top = +10, Bottom = -10
+	//} while(Spawn(MONSTER,Angel::vec3(x,y,0.0f),20.f*rand(),m_monsters.size() <= MONSTERCAP));
 	//Spawn(MONSTER,Angel::vec3(0.0f,0.0f,0.0f)); //Needs to be changed, of course.							\
 													Again, do we want a file to specify, or do it manually?	\
 													I think manually would be better here, since we could	\

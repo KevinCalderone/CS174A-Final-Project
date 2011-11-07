@@ -1,14 +1,14 @@
 #ifndef __GAMEMANAGER_H__
 #define __GAMEMANAGER_H__
 
-#include "../Code/Angel.h"
-#include "../Code/GraphicsManager.h"
-#include "../Code/Object.h"
-#include "../Code/Player.h"
-#include "../Code/Monster.h"
-#include "../Code/Bullet.h"
-#include "../Code/EnviroObj.h"
-#include "../Code/Ground.h"
+#include "Angel.h"
+#include "GraphicsManager.h"
+#include "Object.h"
+#include "Player.h"
+#include "Monster.h"
+#include "Bullet.h"
+#include "EnviroObj.h"
+#include "Ground.h"
 #include <vector>
 
 const enum objectType {PLAYER, MONSTER, BULLET, BUSH};
@@ -29,7 +29,7 @@ private:
 	Ground* m_ground;
 	GraphicsManager* m_graphicsManager;
 	int m_score;
-	const int MONSTERCAP;
+	static const int MONSTERCAP = 50;
 	bool Spawn(objectType type, vec3 position, double size=10.0, bool permit=true);
 	void Delete(Object* object);
 	void Update();
