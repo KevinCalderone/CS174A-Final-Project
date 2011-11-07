@@ -14,7 +14,6 @@ public:
 	void kill();
 
 	void setWeaponDelay(int delay);
-	void setCooldown(int cooldown);
 	void addLife(int add);
 	void removeLife();
 

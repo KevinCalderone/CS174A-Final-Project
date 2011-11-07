@@ -17,11 +17,9 @@ public:
 
 	vec3* getPosition ();
 	vec3* getDirection ();
-	ShaderState* getShaderState ();
 	RenderBatch* getRenderBatch ();
 
 	void Update(float delta);
-	void Render();
 
 protected:
 
