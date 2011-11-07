@@ -13,9 +13,10 @@ void GameManager::callbackKeyboard(unsigned char key, int x, int y)
 	switch (key) {
 		case 27:	// esc
 			exit(0);
-		break;
+			break;
 		case '`':
 			m_graphicsManager->ReloadAssets();
+			break;
 	}
 }
 
