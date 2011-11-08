@@ -2,6 +2,8 @@
 	../Data/Textures/panda.bmp
 2d monster 
 	../Data/Textures/monster.bmp
+2d monsterNormal
+	../Data/Textures/monsterNormal.bmp
 2d stone 
 	../Data/Textures/stone.bmp
 2d stoneNormal 

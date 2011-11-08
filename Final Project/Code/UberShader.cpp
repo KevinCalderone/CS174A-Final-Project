@@ -18,6 +18,7 @@ UberShader::UberShader (const std::string& vertShader, const std::string& fragSh
 
 	b_useDiffuseTexture = glGetUniformLocation(m_program, "b_useDiffuseTexture");
 	b_useEnvironmentMap = glGetUniformLocation(m_program, "b_useEnvironmentMap");
+	b_useNormalMap = glGetUniformLocation(m_program, "b_useNormalMap");
 
 	m_eyePosition = glGetUniformLocation(m_program, "eyePosition");
 
@@ -40,6 +41,7 @@ UberShader::UberShader (const std::string& vertShader, const std::string& fragSh
 	// bind samplers to texture units
 	glUniform1i(glGetUniformLocation(m_program, "diffuseTexture"), 0);
 	glUniform1i(glGetUniformLocation(m_program, "environmentMap"), 1);
+	glUniform1i(glGetUniformLocation(m_program, "normalMap"), 2);
 
 	ShaderState state;
 	SetShaderState(state);
@@ -55,6 +57,7 @@ void UberShader::SetShaderState (const ShaderState& shaderState) {
 
 	glUniform1i(b_useDiffuseTexture, shaderState.b_useDiffuseTexture);
 	glUniform1i(b_useEnvironmentMap, shaderState.b_useEnvironmentMap);
+	glUniform1i(b_useNormalMap, shaderState.b_useNormalMap);
 
 	glUniform3fv(m_eyePosition, 1, shaderState.m_eyePosition);
 

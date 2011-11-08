@@ -24,6 +24,7 @@ private:
 
 	GLuint b_useDiffuseTexture;
 	GLuint b_useEnvironmentMap;
+	GLuint b_useNormalMap;
 
 	GLuint m_eyePosition;
 

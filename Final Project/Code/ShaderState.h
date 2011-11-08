@@ -12,6 +12,7 @@ struct ShaderState
 
 	static_branch b_useDiffuseTexture;
 	static_branch b_useEnvironmentMap;
+	static_branch b_useNormalMap;
 
 	vec3 m_eyePosition;
 
