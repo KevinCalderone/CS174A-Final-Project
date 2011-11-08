@@ -23,6 +23,8 @@
     <ClCompile Include="Code\UberShader.cpp">
       <Filter>Graphics\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Object.cpp" />
+    <ClCompile Include="Code\Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Angel.h">
