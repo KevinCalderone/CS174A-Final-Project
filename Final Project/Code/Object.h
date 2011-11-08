@@ -14,6 +14,7 @@ public:
 	void setVelocity (const vec3& velocity);
 	void setDirection (const vec3& direction);
 	void setSize (float size);
+	void setRenderBatch(RenderBatch* rb);
 
 	vec3* getPosition ();
 	vec3* getDirection ();

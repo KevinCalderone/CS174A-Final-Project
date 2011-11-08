@@ -11,7 +11,7 @@ public:
 	~Player ();
 
 	bool shoot();
-	void kill();
+	bool kill();
 
 	void setWeaponDelay(int delay);
 	void addLife(int add);

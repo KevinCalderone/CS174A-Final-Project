@@ -29,6 +29,10 @@ void Object::setSize (float size) {
 	m_size = size;
 }
 
+void Object::setRenderBatch(RenderBatch* rb) {
+	m_render = rb;
+}
+
 vec3* Object::getPosition () {
 	return &m_position;
 }
