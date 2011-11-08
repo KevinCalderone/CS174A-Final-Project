@@ -3,7 +3,9 @@
 
 #include "mat.h"
 
-typedef bool static_branch;
+#include "GraphicsSettings.h"
+
+typedef int static_branch;
 
 struct ShaderState
 {
@@ -22,6 +24,14 @@ struct ShaderState
 	vec3 m_lightCombinedSpecular;
 	float m_materialSpecularExponent;
 	float m_materialGloss;
+
+	static_branch b_usePointLight[c_num_point_lights];
+	vec3 m_pointLightPosition[c_num_point_lights];
+	vec3 m_pointLightCombinedAmbient[c_num_point_lights];
+	vec3 m_pointLightCombinedDiffuse[c_num_point_lights];
+	vec3 m_pointLightCombinedSpecular[c_num_point_lights];
+	float m_pointLightRange[c_num_point_lights];
+	float m_pointLightAttenuationMultiplier[c_num_point_lights];
 };
 
 #endif

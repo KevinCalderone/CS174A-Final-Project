@@ -13,6 +13,8 @@
 #include "ShaderState.h"
 #include "Geometry.h"
 
+static const float c_num_falloff_range = 0.0001f;	// must be greater than 0
+
 GraphicsManager::GraphicsManager (const std::string& assetLibrary) 
 	: m_uberShader(NULL), m_geometryManager(NULL), m_textureManager(NULL), m_assetLibrary(assetLibrary)
 {
@@ -119,11 +121,33 @@ ShaderState GraphicsManager::CalculateShaderState (const EffectParameters& effec
 	state.m_eyePosition = m_renderParameters.m_eyePosition;
 
 	state.m_lightDirection = m_renderParameters.m_lightDirection;
-	state.m_lightCombinedAmbient = m_renderParameters.m_lightAmbient * effectParameters.m_materialDiffuse;
+	state.m_lightCombinedAmbient = m_renderParameters.m_lightAmbient * effectParameters.m_materialAmbient;
 	state.m_lightCombinedDiffuse = m_renderParameters.m_lightDiffuse * effectParameters.m_materialDiffuse;
 	state.m_lightCombinedSpecular = m_renderParameters.m_lightSpecular * effectParameters.m_materialSpecular;
 	state.m_materialSpecularExponent = effectParameters.m_materialSpecularExponent;
 	state.m_materialGloss = effectParameters.m_materialGloss;
+
+	for (int i = 0; i < c_num_point_lights; ++i) {
+		state.m_pointLightCombinedAmbient[i] = m_renderParameters.m_pointLightAmbient[i] * effectParameters.m_materialAmbient;
+		state.m_pointLightCombinedDiffuse[i] = m_renderParameters.m_pointLightDiffuse[i] * effectParameters.m_materialDiffuse;
+		state.m_pointLightCombinedSpecular[i] = m_renderParameters.m_pointLightSpecular[i] * effectParameters.m_materialSpecular;
+
+		state.b_usePointLight[i] = state.m_pointLightCombinedAmbient[i] != vec3() ||
+								   state.m_pointLightCombinedDiffuse[i] != vec3() ||
+								   state.m_pointLightCombinedSpecular[i] != vec3();
+
+		if (state.b_usePointLight[i] == false)
+			continue;
+
+		state.m_pointLightPosition[i] = m_renderParameters.m_pointLightPosition[i];
+		state.m_pointLightRange[i] = m_renderParameters.m_pointLightRange[i];
+
+		float falloffRange = m_renderParameters.m_pointLightRange[i] - m_renderParameters.m_pointLightFalloff[i];
+		if (falloffRange < c_num_falloff_range)
+			falloffRange = c_num_falloff_range;
+
+		state.m_pointLightAttenuationMultiplier[i] = 1.0f / falloffRange;
+	}
 
 	return state;
 }

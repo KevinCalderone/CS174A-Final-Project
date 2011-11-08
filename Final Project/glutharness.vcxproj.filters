@@ -79,6 +79,9 @@
     <ClInclude Include="Code\ShaderState.h">
       <Filter>Graphics\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Code\GraphicsSettings.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">

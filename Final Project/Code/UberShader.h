@@ -35,6 +35,14 @@ private:
 	GLuint m_materialSpecularExponent;
 	GLuint m_materialGloss;
 
+	GLuint b_usePointLight;
+	GLuint m_pointLightPosition;
+	GLuint m_pointLightCombinedAmbient;
+	GLuint m_pointLightCombinedDiffuse;
+	GLuint m_pointLightCombinedSpecular;
+	GLuint m_pointLightRange;
+	GLuint m_pointLightAttenuationMultiplier;
+
 	ShaderState m_currentState;
 };
 

@@ -16,7 +16,7 @@ void initGlut (int& argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 50);
-	glutInitWindowSize(640, 480);
+	glutInitWindowSize(800, 600);
 	glutCreateWindow("CS17A Final Project");
 }
 
@@ -45,8 +45,13 @@ void callbackDisplay () {
 		static float theta = 0.0f;
 		theta += 1.0f;
 
-		SetupCamera(vec4(sin(theta * DegreesToRadians), 0.0f, cos(theta* DegreesToRadians), 0.0f));
-		
+		SetupCamera(vec4(sin(theta * DegreesToRadians), 0.0f, cos(theta * DegreesToRadians), 0.0f));
+
+		RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
+		renderParameters.m_pointLightPosition[0] = vec3(5.0f * sin((theta + 0) * DegreesToRadians), 1.0f, 5.0f * cos((theta + 0) * DegreesToRadians));
+		renderParameters.m_pointLightPosition[1] = vec3(5.0f * sin((theta + 120) * DegreesToRadians), 1.0f, 5.0f * cos((theta + 120) * DegreesToRadians));
+		renderParameters.m_pointLightPosition[2] = vec3(5.0f * sin((theta + 240) * DegreesToRadians), 1.0f, 5.0f * cos((theta + 240) * DegreesToRadians));
+
 		{
 			RenderBatch batch;
 		
@@ -58,7 +63,7 @@ void callbackDisplay () {
 			batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.5f;
 			batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f) * 0.3f;
 			batch.m_effectParameters.m_materialSpecularExponent = 6.0f;
-			batch.m_effectParameters.m_materialGloss = 0.15f;
+			batch.m_effectParameters.m_materialGloss = 0.0f;
 		
 			batch.m_effectParameters.m_diffuseTexture = "stone";	
 			batch.m_effectParameters.m_normalMap = "stoneNormal";	
@@ -73,11 +78,11 @@ void callbackDisplay () {
 
 			batch.m_effectParameters.m_modelviewMatrix = Angel::RotateX(theta) * Angel::RotateY(theta)* Angel::RotateZ(theta);
 		
-			batch.m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 0.7f;
-			batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.7f;
-			batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.8f) * 0.4f;
+			batch.m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 0.4f;
+			batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.4f;
+			batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.8f) * 0.5f;
 			batch.m_effectParameters.m_materialSpecularExponent = 14.0f;
-			batch.m_effectParameters.m_materialGloss = 0.15f;
+			batch.m_effectParameters.m_materialGloss = 0.05f;
 
 			batch.m_effectParameters.m_diffuseTexture = "monster";	
 			batch.m_effectParameters.m_normalMap = "monsterNormal";	
@@ -85,7 +90,7 @@ void callbackDisplay () {
 			graphicsManager->Render(batch);
 
 			// tin foil mode lol
-			batch.m_effectParameters.m_modelviewMatrix =  Angel::Translate(vec4(2.0f, 0.0f, 0.0f, 0.0f)) * Angel::RotateX(theta) * Angel::RotateY(theta)* Angel::RotateZ(theta);
+			batch.m_effectParameters.m_modelviewMatrix =  Angel::Translate(vec4(6.0f, 0.0f, 0.0f, 0.0f)) * Angel::RotateX(theta) * Angel::RotateY(theta)* Angel::RotateZ(theta);
 			batch.m_effectParameters.m_materialGloss = 1.0f;
 			graphicsManager->Render(batch);
 		}
@@ -157,10 +162,28 @@ int main (int argc, char** argv) {
 	
 	RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
 	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, 2.0f);
-	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f);
-	renderParameters.m_lightDiffuse = vec3(1.0f, 1.0f, 0.6f) * 0.4f;
-	renderParameters.m_lightSpecular = vec3(1.0f, 1.0f, 0.7f);
+	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.1f;
+	renderParameters.m_lightDiffuse = vec3(1.0f, 1.0f, 0.6f) * 0.0f;
+	renderParameters.m_lightSpecular = vec3(1.0f, 1.0f, 0.7f) * 0.3f;
 	renderParameters.m_environmentMap = "envMap";
+
+	renderParameters.m_pointLightPosition[0] = vec3(-5.0f, 1.0f, 0.0f);
+	renderParameters.m_pointLightDiffuse[0] = vec3(1.0f, 0.0f, 0.0f);
+	renderParameters.m_pointLightSpecular[0] = vec3(1.0f, 0.0f, 0.0f);
+	renderParameters.m_pointLightRange[0] = 8.0f;
+	renderParameters.m_pointLightFalloff[0] = 3.0f;
+
+	renderParameters.m_pointLightPosition[1] = vec3(5.0f, 1.0f, 0.0f);
+	renderParameters.m_pointLightDiffuse[1] = vec3(0.0f, 0.0f, 1.0f);
+	renderParameters.m_pointLightSpecular[1] = vec3(0.0f, 0.0f, 1.0f);
+	renderParameters.m_pointLightRange[1] = 8.0f;
+	renderParameters.m_pointLightFalloff[1] = 2.0f;
+	
+	renderParameters.m_pointLightPosition[2] = vec3(0.0f, 1.0f, 5.0f);
+	renderParameters.m_pointLightDiffuse[2] = vec3(0.0f, 1.0f, 0.0f);
+	renderParameters.m_pointLightSpecular[2] = vec3(0.0f, 1.0f, 0.0f);
+	renderParameters.m_pointLightRange[2] = 8.0f;
+	renderParameters.m_pointLightFalloff[2] = 2.0f;
 
 	glutMainLoop();
 	return 0;

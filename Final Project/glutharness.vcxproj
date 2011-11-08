@@ -95,6 +95,7 @@
     <ClInclude Include="Code\Geometry.h" />
     <ClInclude Include="Code\GeometryManager.h" />
     <ClInclude Include="Code\GraphicsManager.h" />
+    <ClInclude Include="Code\GraphicsSettings.h" />
     <ClInclude Include="Code\RenderBatch.h" />
     <ClInclude Include="Code\RenderParameters.h" />
     <ClInclude Include="Code\ShaderState.h" />

@@ -1,6 +1,8 @@
 #include "UberShader.h"
 
 #include "Angel.h"
+
+#include "GraphicsSettings.h"
 #include "Vertex.h"
 
 UberShader::UberShader (const std::string& vertShader, const std::string& fragShader) {
@@ -28,6 +30,14 @@ UberShader::UberShader (const std::string& vertShader, const std::string& fragSh
 	m_lightCombinedSpecular = glGetUniformLocation(m_program, "lightCombinedSpecular");
 	m_materialSpecularExponent = glGetUniformLocation(m_program, "materialSpecularExponent");
 	m_materialGloss = glGetUniformLocation(m_program, "materialGloss");
+
+	b_usePointLight = glGetUniformLocation(m_program, "b_usePointLight");
+	m_pointLightPosition = glGetUniformLocation(m_program, "pointLightPosition");
+	m_pointLightCombinedAmbient = glGetUniformLocation(m_program, "pointLightCombinedAmbient");
+	m_pointLightCombinedDiffuse = glGetUniformLocation(m_program, "pointLightCombinedDiffuse");
+	m_pointLightCombinedSpecular = glGetUniformLocation(m_program, "pointLightCombinedSpecular");
+	m_pointLightRange = glGetUniformLocation(m_program, "pointLightRange");
+	m_pointLightAttenuationMultiplier = glGetUniformLocation(m_program, "pointLightAttenuationMultiplier");
 
     glEnableVertexAttribArray(m_vPosition);
     glVertexAttribPointer(m_vPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(c_positionDataOffset));
@@ -67,6 +77,14 @@ void UberShader::SetShaderState (const ShaderState& shaderState) {
 	glUniform3fv(m_lightCombinedSpecular, 1, shaderState.m_lightCombinedSpecular);
 	glUniform1f(m_materialSpecularExponent, shaderState.m_materialSpecularExponent);
 	glUniform1f(m_materialGloss, shaderState.m_materialGloss);
+
+	glUniform1iv(b_usePointLight, c_num_point_lights, shaderState.b_usePointLight);
+	glUniform3fv(m_pointLightPosition, c_num_point_lights, (GLfloat*)shaderState.m_pointLightPosition);
+	glUniform3fv(m_pointLightCombinedAmbient, c_num_point_lights, (GLfloat*)shaderState.m_pointLightCombinedAmbient);
+	glUniform3fv(m_pointLightCombinedDiffuse, c_num_point_lights, (GLfloat*)shaderState.m_pointLightCombinedDiffuse);
+	glUniform3fv(m_pointLightCombinedSpecular, c_num_point_lights, (GLfloat*)shaderState.m_pointLightCombinedSpecular);
+	glUniform1fv(m_pointLightRange, c_num_point_lights, shaderState.m_pointLightRange);
+	glUniform1fv(m_pointLightAttenuationMultiplier, c_num_point_lights, shaderState.m_pointLightAttenuationMultiplier);
 
 	m_currentState = shaderState;
 }
