@@ -1,4 +1,7 @@
 10000
+screenQuad ../Data/Geometry/screenQuad.obj
 cube ../Data/Geometry/cube.obj
 sphere ../Data/Geometry/sphere.obj
 monster ../Data/Geometry/monster.obj
+plane ../Data/Geometry/plane.obj
+cone ../Data/Geometry/cone.obj

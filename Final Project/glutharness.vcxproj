@@ -92,9 +92,12 @@
     <ClInclude Include="Code\Angel.h" />
     <ClInclude Include="Code\BMPTexture.h" />
     <ClInclude Include="Code\EffectParameters.h" />
+    <ClInclude Include="Code\ForwardShader.h" />
     <ClInclude Include="Code\Geometry.h" />
     <ClInclude Include="Code\GeometryManager.h" />
     <ClInclude Include="Code\GraphicsManager.h" />
+    <ClInclude Include="Code\GraphicsSettings.h" />
+    <ClInclude Include="Code\PostProcessShader.h" />
     <ClInclude Include="Code\RenderBatch.h" />
     <ClInclude Include="Code\RenderParameters.h" />
     <ClInclude Include="Code\ShaderState.h" />
@@ -114,18 +117,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\BMPTexture.cpp" />
-    <ClCompile Include="Code\GameManager.cpp" />
+    <ClCompile Include="Code\ForwardShader.cpp" />
     <ClCompile Include="Code\GeometryManager.cpp" />
     <ClCompile Include="Code\GraphicsManager.cpp" />
     <ClCompile Include="Code\InitShader.cpp" />
+    <ClCompile Include="Code\Object.cpp" />
+    <ClCompile Include="Code\Player.cpp" />
+    <ClCompile Include="Code\PostProcessShader.cpp" />
     <ClCompile Include="Code\TextureManager.cpp" />
     <ClCompile Include="Code\UberShader.cpp" />
     <ClCompile Include="Code\Timer.cpp" />
     <ClCompile Include="Code\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\Shaders\frag.txt" />
-    <None Include="Data\Shaders\vert.txt" />
+    <None Include="Data\Shaders\forwardFrag.txt" />
+    <None Include="Data\Shaders\forwardVert.txt" />
+    <None Include="Data\Shaders\postFrag.txt" />
+    <None Include="Data\Shaders\postVert.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

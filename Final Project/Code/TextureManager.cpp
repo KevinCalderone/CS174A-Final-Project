@@ -1,7 +1,6 @@
 #include "TextureManager.h"
 
 #include <fstream>
-#include <string>
 
 #include "BMPTexture.h"
 
@@ -13,13 +12,35 @@ TextureManager::TextureManager (const std::string& assetLibrary) {
 		printf("TextureManager::TextureManager: Error opening asset library.\n");
 	}
 	else {
-		std::string textureName;
-		std::string textureFile;
-       
 		while (is.good()) {
-			is >> textureName;
-			is >> textureFile;           
-			LoadTextureFile(textureName, textureFile);      
+			std::string textureType;
+			is >> textureType;
+			
+			std::vector<const std::string> textureFiles;
+
+			if (textureType == "2d") {
+				std::string textureName;
+				std::string textureFile;
+
+				is >> textureName;
+				is >> textureFile;
+
+				textureFiles.push_back(textureFile);
+
+				LoadTextureFile(textureName, e_TextureType2d, e_TextureModeTriLinear, textureFiles);      
+			}
+			else if (textureType == "cube") {
+				std::string textureName;
+				is >> textureName;
+
+				std::string textureFile;
+				for (int i = 0; i < 6; ++i) {
+					is >> textureFile;
+					textureFiles.push_back(textureFile);
+				}
+
+				LoadTextureFile(textureName, e_TextureTypeCube, e_TextureModeBiLinear, textureFiles);      
+			}
 		}
 
 		is.close();
@@ -31,25 +52,24 @@ TextureManager::~TextureManager () {
 		delete iter->second;
 }
 
-void TextureManager::SetTexture (const std::string& textureName) {
+void TextureManager::SetTexture (TextureChannel channel, const std::string& textureName) {
 	std::map<std::string, BMPTexture*>::iterator iter = m_textures.find(textureName);
 
 	if (iter == m_textures.end()) 
 		return;
 
-	glEnable(GL_TEXTURE_2D);
-	iter->second->Apply();
+	iter->second->Apply(channel);
 }
 
 bool TextureManager::HasTexture (const std::string& textureName) {
 	return m_textures.find(textureName) != m_textures.end();
 }
 
-void TextureManager::LoadTextureFile (const std::string& textureName, const std::string& textureFile) {
+void TextureManager::LoadTextureFile (const std::string& textureName, TextureType type, TextureMode mode, const std::vector<const std::string>& textureFiles) {
 	std::map<std::string, BMPTexture*>::iterator iter = m_textures.find(textureName);
 
 	if (iter != m_textures.end())
 		return;
 
-	m_textures[textureName] = new BMPTexture(textureFile, e_TextureModeLinear);
+	m_textures[textureName] = new BMPTexture(type, mode, textureFiles);
 }

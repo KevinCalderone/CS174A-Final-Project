@@ -8,17 +8,12 @@
 struct RenderBatch;
 struct EffectParameters;
 
-class UberShader;
+class ForwardShader;
+class PostProcessShader;
 class GeometryManager;
 class TextureManager;
 
 struct ShaderState;
-
-/*
- TODO
- - Model Loading
- - Only submit diff of state change to GPU
-*/
 
 class GraphicsManager
 {
@@ -27,23 +22,31 @@ public:
 	~GraphicsManager ();
 
 	void ClearScreen ();
-	void SetRenderParameters (const RenderParameters& renderParameters);
 	void Render (const RenderBatch& batch);
 	void SwapBuffers ();
 
 	void ReloadAssets ();
 
+	RenderParameters& GetRenderParameters () { return m_renderParameters; }
+
 private:
 	void ClearAssets ();
+	void InitRenderBuffers ();
+
 	ShaderState CalculateShaderState (const EffectParameters& effectParameters);
 
 	const std::string m_assetLibrary;
 
 	RenderParameters m_renderParameters;
 
-	UberShader* m_uberShader;
+	ForwardShader* m_forwardShader;
+	PostProcessShader* m_postProcessShader;
 	GeometryManager* m_geometryManager;
 	TextureManager* m_textureManager;
+
+	GLuint m_fbo;
+	GLuint m_fboDepth;
+	GLuint m_fboColor;  
 };
 
 #endif

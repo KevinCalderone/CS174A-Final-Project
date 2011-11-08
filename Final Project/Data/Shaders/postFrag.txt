@@ -1,0 +1,32 @@
+#version 140
+
+in vec2 texCoord;
+out vec4 fColor; 
+
+uniform sampler2D forwardRenderedResult;
+
+void main() { 
+	vec2 displace = texCoord - vec2(0.5f, 0.5f);
+	float dist = length(displace);
+
+	if (dist > 0.3f) {
+		displace = vec2(0.0f, 0.0f);
+	}
+	else {
+		displace = (displace / dist) * 0.3f * sin(3.14159 * (dist / 0.3f));
+	}
+	
+	float dx = 1.0f / 800.0f;
+	float dy = 1.0f / 600.0f;
+	for (int i = -2; i <= 2; ++i)
+		for (int j = -2; j <= 2; ++j) 
+		{
+			if (i != 0 && j != 0)
+				fColor += 0.1 * max(texture(forwardRenderedResult, vec2(texCoord.x + i * dx, texCoord.y + j * dy)) - 1.0f, 0.0f)  / (abs(i) + abs(j));
+		}
+
+		fColor += texture(forwardRenderedResult, texCoord);
+
+
+}
+

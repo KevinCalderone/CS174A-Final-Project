@@ -19,6 +19,7 @@ struct EffectParameters
 	vec3 m_materialDiffuse;
 	vec3 m_materialSpecular;
 	float m_materialSpecularExponent;
+	float m_materialGloss;
 };
 
 #endif

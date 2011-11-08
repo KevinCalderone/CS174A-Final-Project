@@ -11,10 +11,9 @@ public:
 	~Player ();
 
 	bool shoot();
-	void kill();
+	bool kill();
 
 	void setWeaponDelay(int delay);
-	void setCooldown(int cooldown);
 	void addLife(int add);
 	void removeLife();
 

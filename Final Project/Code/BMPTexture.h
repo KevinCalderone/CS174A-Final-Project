@@ -2,32 +2,31 @@
 #define __BMPTEXTURE_H__
 
 #include <string>
+#include <vector>
 #include <fstream>
 
 #include "Angel.h"
 
-enum TextureMode { e_TextureModeNearest, e_TextureModeLinear };
+#include "GraphicsSettings.h"
 
 class BMPTexture
 {
 public:
-	BMPTexture (const std::string& fileName, TextureMode mode);
+	BMPTexture (TextureType type, TextureMode mode, const std::vector<const std::string>& fileNames);
 	~BMPTexture (); 
 
-	void Apply ();
-
-	int GetWidth () { return width; }
-    int GetHeight () { return height; }   
+	void Apply (TextureChannel channel);
 	
 private:
      
-	void LoadTexture (char* data, TextureMode mode);
-        
+    char* ReadTextureFile (const std::string& fileName);
+	void Load2dTexture (const std::vector<const std::string>& fileNames);
+    void LoadCubeTexture (const std::vector<const std::string>& fileNames);
+
 	std::string file;
      
-	GLuint textureID;
-	unsigned int width;
-	unsigned int height;
+	TextureType m_type;
+	GLuint m_textureID;
 };
 
 #endif

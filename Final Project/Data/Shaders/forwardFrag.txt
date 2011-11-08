@@ -1,0 +1,102 @@
+#version 140
+
+in vec2 texCoord;
+in vec3 normal;
+in vec3 tangent;
+in vec3 binormal;
+in vec4 position;
+out vec4 fColor; 
+
+uniform bool b_useDiffuseTexture;
+uniform sampler2D diffuseTexture;
+
+uniform bool b_useEnvironmentMap;
+uniform samplerCube environmentMap;
+
+uniform bool b_useNormalMap;
+uniform sampler2D normalMap;
+
+uniform vec3 eyePosition;
+uniform vec3 lightDirection;
+uniform vec3 lightCombinedAmbient;
+uniform vec3 lightCombinedDiffuse;
+uniform vec3 lightCombinedSpecular;
+uniform float materialSpecularExponent;
+uniform float materialGloss;
+
+uniform bool b_usePointLight[3];
+uniform vec3 pointLightPosition[3];
+uniform vec3 pointLightCombinedAmbient[3];
+uniform vec3 pointLightCombinedDiffuse[3];
+uniform vec3 pointLightCombinedSpecular[3];
+uniform float pointLightRange[3];
+uniform float pointLightAttenuationMultiplier[3];
+
+void main() { 
+	fColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+	vec3 pointLightVec[3];
+	float pointLightAttenuation[3];
+	for (int i = 0; i < 3; ++i) {
+		pointLightVec[i] = pointLightPosition[i] - position.xyz;
+		float pointLightDist = length(pointLightVec[i]);
+		pointLightAttenuation[i] = max(min( pointLightAttenuationMultiplier[i] * (pointLightRange[i] - pointLightDist) , 1.0f), 0.0f);
+		pointLightVec[i] /= pointLightDist;
+	}
+
+	vec3 lightVec = normalize(lightDirection);
+	vec3 normalVec;
+	
+	// apply normal map to geometry normal
+	if (b_useNormalMap) {
+		mat3 tangentSpaceTransform = mat3(normalize(tangent), normalize(normal), normalize(binormal));
+		normalVec = tangentSpaceTransform * normalize( texture2D(normalMap, texCoord).xzy * 2.0f - 1.0f);
+	}
+	else {
+		normalVec = normalize(normal);
+	}
+
+	vec3 eyeVec = normalize(position.xyz - eyePosition);
+	vec3 reflectedVec = normalize(reflect(eyeVec, normalVec));
+
+	// ambient and diffuse lighting
+	fColor +=	vec4(
+				lightCombinedAmbient +
+				max(dot(normalVec, lightVec), 0.0f) * lightCombinedDiffuse
+				, 0.0f);	
+
+	// add point light contributions
+	for (int i = 0; i < 3; ++i) {
+		if (!b_usePointLight[i]) 
+			continue;
+
+		fColor +=	vec4(
+					pointLightCombinedAmbient[i] +
+					max(dot(normalVec, pointLightVec[i]), 0.0f) * pointLightCombinedDiffuse[i]
+					, 0.0f) * pointLightAttenuation[i];	
+	}
+
+	// diffuse texture
+	if (b_useDiffuseTexture) {
+		fColor *= texture2D(diffuseTexture, texCoord);
+	}
+
+	// specular highlight
+	vec3 shine = pow(max(dot(reflectedVec, lightVec), 0.0f), materialSpecularExponent) * lightCombinedSpecular;
+
+	// add point light contributions
+	for (int i = 0; i < 3; ++i) {
+		if (!b_usePointLight[i]) 
+			continue;
+
+		shine += pow(max(dot(reflectedVec, pointLightVec[i]), 0.0f), materialSpecularExponent) * pointLightCombinedSpecular[i] * pointLightAttenuation[i];	
+	}
+
+	// environment highlight
+	if (b_useEnvironmentMap) {
+		shine += texture(environmentMap, reflectedVec).xyz * materialGloss;
+	}
+
+	// add shine component to color
+	fColor += vec4(shine, 0.0f);
+}
