@@ -1,6 +1,22 @@
 #ifndef __GRAPHICSSETTINGS_H__
 #define __GRAPHICSSETTINGS_H__
 
+const unsigned int c_window_width = 800;
+const unsigned int c_window_height = 600;
+
 const unsigned int c_num_point_lights = 3;		// must be same value in shaders
+
+enum TextureType { e_TextureType2d = GL_TEXTURE_2D, e_TextureTypeCube = GL_TEXTURE_CUBE_MAP };
+
+enum TextureChannel { 
+	e_TextureChannelDiffuse = GL_TEXTURE0, 
+	e_TextureChannelEnvMap = GL_TEXTURE1, 
+	e_TextureChannelNormalMap = GL_TEXTURE2, 
+	e_TextureChannelForwardRender = GL_TEXTURE3 ,
+
+	e_TextureChannelFirst = GL_TEXTURE0
+};
+
+enum TextureMode { e_TextureModeNearest, e_TextureModeBiLinear, e_TextureModeTriLinear };
 
 #endif

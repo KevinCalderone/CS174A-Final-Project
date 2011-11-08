@@ -8,7 +8,8 @@
 struct RenderBatch;
 struct EffectParameters;
 
-class UberShader;
+class ForwardShader;
+class PostProcessShader;
 class GeometryManager;
 class TextureManager;
 
@@ -30,15 +31,22 @@ public:
 
 private:
 	void ClearAssets ();
+	void InitRenderBuffers ();
+
 	ShaderState CalculateShaderState (const EffectParameters& effectParameters);
 
 	const std::string m_assetLibrary;
 
 	RenderParameters m_renderParameters;
 
-	UberShader* m_uberShader;
+	ForwardShader* m_forwardShader;
+	PostProcessShader* m_postProcessShader;
 	GeometryManager* m_geometryManager;
 	TextureManager* m_textureManager;
+
+	GLuint m_fbo;
+	GLuint m_fboDepth;
+	GLuint m_fboColor;  
 };
 
 #endif

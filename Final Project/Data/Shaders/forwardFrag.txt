@@ -81,9 +81,6 @@ void main() {
 		fColor *= texture2D(diffuseTexture, texCoord);
 	}
 
-	// Clamp higher than 1.0f so it has a bit of fake HDR bleed
-	fColor = vec4(clamp(fColor.x, 0.0f, 2.0f), clamp(fColor.y, 0.0f, 2.0f), clamp(fColor.z, 0.0f, 2.0f), 1.0f);
-
 	// specular highlight
 	vec3 shine = pow(max(dot(reflectedVec, lightVec), 0.0f), materialSpecularExponent) * lightCombinedSpecular;
 

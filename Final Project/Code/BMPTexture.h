@@ -7,9 +7,7 @@
 
 #include "Angel.h"
 
-enum TextureType { e_TextureType2d = GL_TEXTURE_2D, e_TextureTypeCube = GL_TEXTURE_CUBE_MAP };
-enum TextureChannel { e_TextureChannelDiffuse = GL_TEXTURE0, e_TextureChannelEnvMap = GL_TEXTURE1, e_TextureChannelNormalMap = GL_TEXTURE2 };
-enum TextureMode { e_TextureModeNearest, e_TextureModeBiLinear, e_TextureModeTriLinear };
+#include "GraphicsSettings.h"
 
 class BMPTexture
 {

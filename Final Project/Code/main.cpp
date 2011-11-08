@@ -6,6 +6,7 @@
 #include "Timer.h"
 #include "GameManager.h"
 #include "GraphicsManager.h"
+#include "GraphicsSettings.h"
 
 // This is just for testing until you get this incorportated into GameManager
 GraphicsManager* graphicsManager;
@@ -16,7 +17,7 @@ void initGlut (int& argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 50);
-	glutInitWindowSize(800, 600);
+	glutInitWindowSize(c_window_width, c_window_height);
 	glutCreateWindow("CS17A Final Project");
 }
 
@@ -82,7 +83,7 @@ void callbackDisplay () {
 			batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.4f;
 			batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.8f) * 0.5f;
 			batch.m_effectParameters.m_materialSpecularExponent = 14.0f;
-			batch.m_effectParameters.m_materialGloss = 0.05f;
+			batch.m_effectParameters.m_materialGloss = 0.1f;
 
 			batch.m_effectParameters.m_diffuseTexture = "monster";	
 			batch.m_effectParameters.m_normalMap = "monsterNormal";	
@@ -163,15 +164,15 @@ int main (int argc, char** argv) {
 	RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
 	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, 2.0f);
 	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.1f;
-	renderParameters.m_lightDiffuse = vec3(1.0f, 1.0f, 0.6f) * 0.0f;
+	renderParameters.m_lightDiffuse = vec3(1.0f, 1.0f, 0.6f) * 0.3f;
 	renderParameters.m_lightSpecular = vec3(1.0f, 1.0f, 0.7f) * 0.3f;
 	renderParameters.m_environmentMap = "envMap";
 
 	renderParameters.m_pointLightPosition[0] = vec3(-5.0f, 1.0f, 0.0f);
 	renderParameters.m_pointLightDiffuse[0] = vec3(1.0f, 0.0f, 0.0f);
-	renderParameters.m_pointLightSpecular[0] = vec3(1.0f, 0.0f, 0.0f);
+	renderParameters.m_pointLightSpecular[0] = vec3(20.0f, 0.0f, 0.0f);
 	renderParameters.m_pointLightRange[0] = 8.0f;
-	renderParameters.m_pointLightFalloff[0] = 3.0f;
+	renderParameters.m_pointLightFalloff[0] = 2.0f;
 
 	renderParameters.m_pointLightPosition[1] = vec3(5.0f, 1.0f, 0.0f);
 	renderParameters.m_pointLightDiffuse[1] = vec3(0.0f, 0.0f, 1.0f);

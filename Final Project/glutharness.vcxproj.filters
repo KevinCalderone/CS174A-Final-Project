@@ -25,6 +25,12 @@
     </ClCompile>
     <ClCompile Include="Code\Object.cpp" />
     <ClCompile Include="Code\Player.cpp" />
+    <ClCompile Include="Code\PostProcessShader.cpp">
+      <Filter>Graphics\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ForwardShader.cpp">
+      <Filter>Graphics\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Angel.h">
@@ -82,6 +88,12 @@
     <ClInclude Include="Code\GraphicsSettings.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Code\PostProcessShader.h">
+      <Filter>Graphics\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ForwardShader.h">
+      <Filter>Graphics\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">
@@ -104,10 +116,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\Shaders\frag.txt">
+    <None Include="Data\Shaders\forwardFrag.txt">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Data\Shaders\vert.txt">
+    <None Include="Data\Shaders\forwardVert.txt">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Data\Shaders\postFrag.txt">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Data\Shaders\postVert.txt">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

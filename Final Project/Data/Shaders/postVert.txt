@@ -1,0 +1,11 @@
+#version 140
+
+in vec3 vPosition;
+out vec2 texCoord;
+
+void main() { 
+    gl_Position = vec4(vPosition, 1.0f); 
+
+	// transform standard cube space into texture space
+	texCoord = vec2(vPosition.x + 1.0f, vPosition.y + 1.0f) / 2.0f;		
+}
