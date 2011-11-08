@@ -2,7 +2,7 @@
 
 in vec2 texCoord;
 in vec3 normal;
-in vec4 position;
+in vec3 reflected;
 out vec4 fColor; 
 
 uniform bool b_useDiffuseTexture;
@@ -11,35 +11,42 @@ uniform sampler2D diffuseTexture;
 uniform bool b_useEnvironmentMap;
 uniform samplerCube environmentMap;
 
-uniform vec3 eyePosition;
 uniform vec3 lightDirection;
 uniform vec3 lightCombinedAmbient;
 uniform vec3 lightCombinedDiffuse;
 uniform vec3 lightCombinedSpecular;
 uniform float materialSpecularExponent;
+uniform float materialGloss;
 
 void main() { 
 	fColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
 	vec3 lightVec = normalize(lightDirection);
-	vec3 eyeVec = normalize(position.xyz - eyePosition);
 	vec3 normalVec = normalize(normal);
-	vec3 halfVec = normalize(lightDirection + eyeVec);
+	vec3 reflectedVec = normalize(reflected);
 
+	// ambient and diffuse lighting
 	fColor +=	vec4(
 				lightCombinedAmbient +
-				max(dot(normalVec, lightVec), 0.0f) * lightCombinedDiffuse +
-				pow(max(dot(halfVec, normalVec), 0.0f), materialSpecularExponent) * lightCombinedSpecular
+				max(dot(normalVec, lightVec), 0.0f) * lightCombinedDiffuse
 				, 0.0f);	
 
-	if (b_useEnvironmentMap) {
-		fColor += texture(environmentMap, reflect(-eyeVec, normalVec)) * 0.3f;
+	// diffuse texture
+	if (b_useDiffuseTexture) {
+		fColor *= texture2D(diffuseTexture, texCoord);
 	}
 
 	// Clamp higher than 1.0f so it has a bit of fake HDR bleed
 	fColor = vec4(clamp(fColor.x, 0.0f, 2.0f), clamp(fColor.y, 0.0f, 2.0f), clamp(fColor.z, 0.0f, 2.0f), 1.0f);
 
-	if (b_useDiffuseTexture) {
-		fColor *= texture2D(diffuseTexture, texCoord);
+	// specular highlight
+	vec3 shine = pow(max(dot(reflectedVec, lightVec), 0.0f), materialSpecularExponent) * lightCombinedSpecular;
+
+	// environment highlight
+	if (b_useEnvironmentMap) {
+		shine += texture(environmentMap, reflectedVec).xyz * materialGloss;
 	}
+
+	// add shine component to color
+	fColor += vec4(shine, 0.0f);
 }

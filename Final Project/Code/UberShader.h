@@ -32,6 +32,7 @@ private:
 	GLuint m_lightCombinedDiffuse;
 	GLuint m_lightCombinedSpecular;
 	GLuint m_materialSpecularExponent;
+	GLuint m_materialGloss;
 
 	ShaderState m_currentState;
 };

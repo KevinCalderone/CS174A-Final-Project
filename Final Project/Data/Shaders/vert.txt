@@ -4,16 +4,22 @@ in vec3 vPosition;
 in vec3 vNormal;
 in vec2 vTexCoord;
 
-out vec4 position;
 out vec3 normal;
+out vec3 reflected;
 out vec2 texCoord;
 
 uniform mat4 projectionMatrix;
 uniform mat4 modelviewMatrix;
 
+uniform vec3 eyePosition;
+
 void main() { 
 	texCoord = vTexCoord;	
-	normal = (modelviewMatrix * vec4(vNormal, 0.0f)).xyz;
-	position = modelviewMatrix * vec4(vPosition, 1.0f);
+	normal = normalize((modelviewMatrix * vec4(vNormal, 0.0f)).xyz);
+	
+	vec4 position = modelviewMatrix * vec4(vPosition, 1.0f);
+	vec3 eyeVec = normalize(position.xyz - eyePosition);
+	reflected = reflect(eyeVec, normal);
+
     gl_Position = projectionMatrix * position; 
 }

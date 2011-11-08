@@ -26,6 +26,7 @@ UberShader::UberShader (const std::string& vertShader, const std::string& fragSh
 	m_lightCombinedDiffuse = glGetUniformLocation(m_program, "lightCombinedDiffuse");
 	m_lightCombinedSpecular = glGetUniformLocation(m_program, "lightCombinedSpecular");
 	m_materialSpecularExponent = glGetUniformLocation(m_program, "materialSpecularExponent");
+	m_materialGloss = glGetUniformLocation(m_program, "materialGloss");
 
     glEnableVertexAttribArray(m_vPosition);
     glVertexAttribPointer(m_vPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(c_positionDataOffset));
@@ -62,6 +63,7 @@ void UberShader::SetShaderState (const ShaderState& shaderState) {
 	glUniform3fv(m_lightCombinedDiffuse, 1, shaderState.m_lightCombinedDiffuse);
 	glUniform3fv(m_lightCombinedSpecular, 1, shaderState.m_lightCombinedSpecular);
 	glUniform1f(m_materialSpecularExponent, shaderState.m_materialSpecularExponent);
+	glUniform1f(m_materialGloss, shaderState.m_materialGloss);
 
 	m_currentState = shaderState;
 }

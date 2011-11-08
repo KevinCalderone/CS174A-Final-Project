@@ -20,6 +20,17 @@ void initGlut (int& argc, char** argv) {
 	glutCreateWindow("CS17A Final Project");
 }
 
+void SetupCamera (vec4 playerPos) {
+	vec4 playerPosition = playerPos;
+	vec4 eyePosition = playerPosition + vec4(0.0f, 2.0f, 2.0f, 1.0f);
+	RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
+
+	renderParameters.m_eyePosition = vec3(eyePosition.x, eyePosition.y, eyePosition.z);
+	renderParameters.m_projectionMatrix = 
+		Angel::Perspective(45.0f, 4.0f/3.0f, 0.5f, 50.0f) * 
+		Angel::LookAt(playerPosition + vec4(0.0f, 10.0f, 10.0f, 1.0f), playerPosition, vec4(0.0f, 1.0f, 0.0f, 0.0f));
+}
+
 // Called when the window needs to be redrawn.
 void callbackDisplay () {
 	// This is just for testing until you get this incorportated into GameManager
@@ -29,24 +40,44 @@ void callbackDisplay () {
 		static float theta = 0.0f;
 		theta += 1.0f;
 
-		RenderBatch batch;
+		SetupCamera(vec4(sin(theta * DegreesToRadians), 0.0f, cos(theta* DegreesToRadians), 0.0f));
 		
-		// This will take in names specified in the GeometryLibrary.txt file
-		batch.m_geometryID = "monster";	
-
-		// Modelview matrix that you will calculate from the objects position, rotation, scale
-		batch.m_effectParameters.m_modelviewMatrix = Angel::Scale(0.5f, 0.5f, 0.5f) * Angel::RotateX(theta) * Angel::RotateY(theta)* Angel::RotateZ(theta);
+		{
+			RenderBatch batch;
 		
-		// Material lighting properties
-		batch.m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
-		batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f);
-		batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f);
-		batch.m_effectParameters.m_materialSpecularExponent = 100.0f;
+			batch.m_geometryID = "plane";	
 
-		// Use a name that is specified in the TextureLibrary.txt file, or else it will will just draw black
-		batch.m_effectParameters.m_diffuseTexture = "none";	
+			batch.m_effectParameters.m_modelviewMatrix = mat4();
+		
+			batch.m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
+			batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f);
+			batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f) * 0.4f;
+			batch.m_effectParameters.m_materialSpecularExponent = 15.0f;
+			batch.m_effectParameters.m_materialGloss = 0.1f;
+			
+			batch.m_effectParameters.m_diffuseTexture = "stone";	
 
-		graphicsManager->Render(batch);
+			graphicsManager->Render(batch);
+		}
+		
+		{
+			RenderBatch batch;
+		
+			batch.m_geometryID = "monster";	
+
+			batch.m_effectParameters.m_modelviewMatrix = mat4();//Angel::RotateX(theta) * Angel::RotateY(theta)* Angel::RotateZ(theta);
+		
+			batch.m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
+			batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f);
+			batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f) * 0.4f;
+			batch.m_effectParameters.m_materialSpecularExponent = 20.0f;
+			batch.m_effectParameters.m_materialGloss = 0.15f;
+
+			batch.m_effectParameters.m_diffuseTexture = "monster";	
+
+			graphicsManager->Render(batch);
+		}
+
 	}
 
 	// This is just for testing until you get this incorportated into GameManager
@@ -112,16 +143,12 @@ int main (int argc, char** argv) {
 	// This is just for testing until you get this incorportated into GameManager
 	graphicsManager = new GraphicsManager("../Data/AssetLibrary.txt");
 	
-	RenderParameters renderParameters;
-	renderParameters.m_projectionMatrix = mat4();
-	renderParameters.m_eyePosition = vec3(0.0f, 0.0f, 1.0f);
-	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, -2.0f);
-	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.1f;
+	RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
+	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, 2.0f);
+	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f);
 	renderParameters.m_lightDiffuse = vec3(1.0f, 1.0f, 0.6f) * 0.4f;
-	renderParameters.m_lightSpecular = vec3(1.0f, 1.0f, 0.5f) * 0.8f;
+	renderParameters.m_lightSpecular = vec3(1.0f, 1.0f, 0.7f);
 	renderParameters.m_environmentMap = "envMap";
-
-	graphicsManager->SetRenderParameters(renderParameters);
 
 	glutMainLoop();
 	return 0;

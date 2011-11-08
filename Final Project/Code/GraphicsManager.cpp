@@ -75,8 +75,12 @@ void GraphicsManager::ClearScreen () {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void GraphicsManager::SetRenderParameters(const RenderParameters& renderParameters) {
-	m_renderParameters = renderParameters;
+void SetCameraProjection (vec3 playerPosition) {
+
+}
+
+void SetCameraOrthogonal () {
+
 }
 
 void GraphicsManager::Render (const RenderBatch& batch) {
@@ -112,6 +116,7 @@ ShaderState GraphicsManager::CalculateShaderState (const EffectParameters& effec
 	state.m_lightCombinedDiffuse = m_renderParameters.m_lightDiffuse * effectParameters.m_materialDiffuse;
 	state.m_lightCombinedSpecular = m_renderParameters.m_lightSpecular * effectParameters.m_materialSpecular;
 	state.m_materialSpecularExponent = effectParameters.m_materialSpecularExponent;
+	state.m_materialGloss = effectParameters.m_materialGloss;
 
 	return state;
 }

@@ -1,5 +1,11 @@
-2d panda ../Data/Textures/panda.bmp
-2d monster ../Data/Textures/monster.bmp
+2d panda 
+	../Data/Textures/panda.bmp
+2d monster 
+	../Data/Textures/monster.bmp
+2d stone 
+	../Data/Textures/stone.bmp
+2d stoneNormal 
+	../Data/Textures/stoneNormal.bmp
 cube envMap
 	../Data/Textures/envMap_+x.bmp
 	../Data/Textures/envMap_+y.bmp

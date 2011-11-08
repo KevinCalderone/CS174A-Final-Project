@@ -20,15 +20,13 @@ public:
 	GraphicsManager (const std::string& assetLibrary);
 	~GraphicsManager ();
 
-	void SetCameraProjection (vec3 playerPosition);
-	void SetCameraOrthogonal ();
-
 	void ClearScreen ();
-	void SetRenderParameters (const RenderParameters& renderParameters);
 	void Render (const RenderBatch& batch);
 	void SwapBuffers ();
 
 	void ReloadAssets ();
+
+	RenderParameters& GetRenderParameters () { return m_renderParameters; }
 
 private:
 	void ClearAssets ();

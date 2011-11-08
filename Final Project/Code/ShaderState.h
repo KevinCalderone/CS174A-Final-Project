@@ -20,6 +20,7 @@ struct ShaderState
 	vec3 m_lightCombinedDiffuse;
 	vec3 m_lightCombinedSpecular;
 	float m_materialSpecularExponent;
+	float m_materialGloss;
 };
 
 #endif
