@@ -67,5 +67,5 @@ void GameManager::initGame()
 	initEnviro();
 	initPlayer();
 	initMonsters();
-	
+
 }

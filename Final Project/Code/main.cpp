@@ -10,6 +10,7 @@
 
 // This is just for testing until you get this incorportated into GameManager
 GraphicsManager* graphicsManager;
+static GameManager* gameManager;
 
 const int FPS = 60;
 
@@ -112,11 +113,7 @@ void callbackReshape (int width, int height) {
 
 // Called when a key is pressed. x, y is the current mouse position.
 void callbackKeyboard (unsigned char key, int x, int y) {
-	switch (key) {
-		case 27:	// esc
-			exit(0);
-		break;
-	}
+	gameManager->callbackKeyboard(key, x, y);
 }
 
 // Called when a mouse button is pressed or released
@@ -161,9 +158,10 @@ int main (int argc, char** argv) {
 	initCallbacks();
 	glewInit();
 
-	// This is just for testing until you get this incorportated into GameManager
-	graphicsManager = new GraphicsManager("../Data/AssetLibrary.txt");
-	
+	gameManager = new GameManager();
+	gameManager->initGame();
+	graphicsManager = gameManager->getGraphicsManager();
+
 	RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
 	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, 2.0f);
 	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.1f;
