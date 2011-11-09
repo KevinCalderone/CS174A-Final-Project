@@ -46,7 +46,10 @@ private:
 
 	GLuint m_fbo;
 	GLuint m_fboDepth;
-	GLuint m_fboColor;  
+	GLuint m_fboColor;
+	GLuint m_fboColorHalf;
+	GLuint m_fboColorBlurX;
+	GLuint m_fboColorBlurXY;
 };
 
 #endif
