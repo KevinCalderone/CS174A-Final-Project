@@ -11,6 +11,7 @@ PostProcessShader::PostProcessShader (const std::string& vertShader, const std::
 
 	b_blurX = glGetUniformLocation(m_program, "b_blurX");
 	b_blurY = glGetUniformLocation(m_program, "b_blurY");
+	b_depthOfField = glGetUniformLocation(m_program, "b_depthOfField");
 
 	glEnableVertexAttribArray(m_vPosition);
 	glVertexAttribPointer(m_vPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(c_positionDataOffset));
@@ -25,8 +26,9 @@ PostProcessShader::~PostProcessShader () {
 }
 
 void PostProcessShader::SetShaderState () {
-		
+
 	glUniform1i(b_blurX, m_blurX);
 	glUniform1i(b_blurY, m_blurY);
+	glUniform1i(b_depthOfField, m_depthOfField);
 
 }
