@@ -13,12 +13,14 @@ public:
 
 	bool m_blurX;
 	bool m_blurY;
+	bool m_depthOfField;
 
 private:
 	GLuint m_vPosition;
 
 	GLuint b_blurX;
 	GLuint b_blurY;
+	GLuint b_depthOfField;
 };
 
 #endif

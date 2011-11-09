@@ -164,7 +164,7 @@ int main (int argc, char** argv) {
 
 	RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
 	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, 2.0f);
-	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.1f;
+	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.15f;
 	renderParameters.m_lightDiffuse = vec3(1.0f, 1.0f, 0.6f) * 0.3f;
 	renderParameters.m_lightSpecular = vec3(1.0f, 1.0f, 0.7f) * 0.3f;
 	renderParameters.m_environmentMap = "envMap";

@@ -190,6 +190,7 @@ void GraphicsManager::SwapBuffers () {
 	m_postProcessShader->Apply();
 	m_postProcessShader->m_blurX = false;
 	m_postProcessShader->m_blurY = false;
+	m_postProcessShader->m_depthOfField = false;
 	m_postProcessShader->SetShaderState();
 	glActiveTexture(e_TextureChannelForwardRender);
 	glBindTexture(GL_TEXTURE_2D, m_fboColor);
@@ -201,6 +202,7 @@ void GraphicsManager::SwapBuffers () {
 	m_postProcessShader->Apply();
 	m_postProcessShader->m_blurX = true;
 	m_postProcessShader->m_blurY = false;
+	m_postProcessShader->m_depthOfField = false;
 	m_postProcessShader->SetShaderState();
 	glActiveTexture(e_TextureChannelForwardRender);
 	glBindTexture(GL_TEXTURE_2D, m_fboColorHalf);
@@ -211,6 +213,7 @@ void GraphicsManager::SwapBuffers () {
 	m_postProcessShader->Apply();
 	m_postProcessShader->m_blurX = false;
 	m_postProcessShader->m_blurY = true;
+	m_postProcessShader->m_depthOfField = false;
 	m_postProcessShader->SetShaderState();
 	glActiveTexture(e_TextureChannelForwardRender);
 	glBindTexture(GL_TEXTURE_2D, m_fboColorBlurX);
@@ -222,6 +225,7 @@ void GraphicsManager::SwapBuffers () {
 	m_postProcessShader->Apply();
 	m_postProcessShader->m_blurX = false;
 	m_postProcessShader->m_blurY = false;
+	m_postProcessShader->m_depthOfField = true;
 	m_postProcessShader->SetShaderState();
 
 	glActiveTexture(e_TextureChannelForwardRender);

@@ -8,6 +8,7 @@ uniform sampler2D forwardRenderedResultBlur;
 
 uniform bool b_blurX;
 uniform bool b_blurY;
+uniform bool b_depthOfField;
 
 void main() { 
 
@@ -37,16 +38,12 @@ void main() {
 		sum += texture2D(forwardRenderedResult, vec2(texCoord.x + 3.0*blurWidth, texCoord.y)) * 0.09;
 		sum += texture2D(forwardRenderedResult, vec2(texCoord.x + 4.0*blurWidth, texCoord.y)) * 0.05;
 	}
+	else if (b_depthOfField) {
+		float interp = pow(sin(texCoord.y * 3.14159), 3.0f);
+		sum = max((1.0f - interp), 0.2f) * texture(forwardRenderedResultBlur, texCoord) + interp * texture(forwardRenderedResult, texCoord);
+	}
 	else {
 		sum = 0.8 * texture(forwardRenderedResult, texCoord) + 0.2 * texture(forwardRenderedResultBlur, texCoord);
-		/*
-		if (texCoord.x < 0.5f) {
-			sum = texture(forwardRenderedResult, texCoord);
-		}
-		else {
-			sum = texture(forwardRenderedResultBlur, texCoord);
-		}
-		*/
 	}
 
 	fColor = sum;
