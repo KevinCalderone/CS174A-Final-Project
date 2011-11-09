@@ -18,15 +18,15 @@ void Object::setPosition (const vec3& position) {
 }
 
 void Object::setVelocity (const vec3& velocity) {
-	m_velocity = velocity;
-}
-
-void Object::setDirection (const vec3& direction) {
-	m_direction = direction;
+	m_velocity = velocity * m_speed;
 }
 
 void Object::setSize (float size) {
 	m_size = size;
+}
+
+void Object::setSpeed(float speed) {
+	m_speed = speed;
 }
 
 void Object::setRenderBatch(RenderBatch* rb) {
@@ -35,10 +35,6 @@ void Object::setRenderBatch(RenderBatch* rb) {
 
 vec3* Object::getPosition () {
 	return &m_position;
-}
-
-vec3* Object::getDirection () {
-	return &m_direction;
 }
 
 RenderBatch* Object::getRenderBatch () {

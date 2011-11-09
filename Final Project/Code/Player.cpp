@@ -44,3 +44,11 @@ void Player::addLife(int add) {
 void Player::removeLife() {
 	m_lives--;
 }
+
+void Player::setDirection (const vec3& direction) {
+	m_direction = direction;
+}
+
+vec3* Player::getDirection () {
+	return &m_direction;
+}

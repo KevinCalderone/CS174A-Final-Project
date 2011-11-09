@@ -38,13 +38,12 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 
 void GameManager::initPlayer() // gotta wait for implementation of Player
 {
-	//m_player = new Player();
-	//m_player->setCooldown(0); // do we need this?
-	//m_player->setWeaponDelay(100); // default?
-	//m_player->setDirection(Angel::vec3(0.0f)); // default?
-	//m_player->setPosition(Angel::vec3(0.0f,0.0f,0.0f)); // default?
-	//m_player->setSize(10.f); // default?
-	//m_player->addLife(3); // default?
+	m_player = new Player();
+	m_player->setWeaponDelay(100); // default?
+	m_player->setDirection(Angel::vec3(0.0f)); // default?
+	m_player->setPosition(Angel::vec3(0.0f,0.0f,0.0f)); // default?
+	m_player->setSize(10.f); // default?
+	m_player->addLife(3); // default?
 }
 
 void GameManager::initMonsters() // gotta wait for implementation of Monster
@@ -53,13 +52,41 @@ void GameManager::initMonsters() // gotta wait for implementation of Monster
 	float x, y;
 	//do
 	//{
-	//	x = 12 - 24 * rand(); // horizontal screen range of 20 units? Left = -10, Right = +10
+	//	x = 12 - rand()%24; // horizontal screen range of 20 units? Left = -10, Right = +10
 	//	y = 12; // vertical screen range of 20 units? Top = +10, Bottom = -10
-	//} while(Spawn(MONSTER,Angel::vec3(x,y,0.0f),20.f*rand(),m_monsters.size() <= MONSTERCAP));
+	//	Spawn(MONSTER,Angel::vec3(x,y,0.0f),rand()%20);
+	//} while(m_monsters.size() <= MONSTERCAP);
 	//Spawn(MONSTER,Angel::vec3(0.0f,0.0f,0.0f)); //Needs to be changed, of course.							\
 													Again, do we want a file to specify, or do it manually?	\
 													I think manually would be better here, since we could	\
 													then randomly create the position of each Monster.
+}
+
+void GameManager::Spawn(objectType type, vec3 position, double size){
+	/*switch(type){
+	case PLAYER:
+		break;
+	case MONSTER:
+		{
+			Monster* monster = spawnMonster();
+			monster->setPosition(position);
+			monster->setSize(size);
+			monster->setSpeed(size/2.0);
+			monster->setVelocity(position - *m_player->getPosition());
+		}
+		break;
+	case BULLET:
+		break;
+	case BUSH:
+		break;
+	}*/
+}
+
+Monster* spawnMonster()
+{
+	Monster* monster = new Monster();
+	//monster->setRenderBatch
+	return monster;
 }
 void GameManager::initGame()
 {
@@ -67,5 +94,5 @@ void GameManager::initGame()
 	initEnviro();
 	initPlayer();
 	initMonsters();
-
+	//m_graphicsManager->Render(*m_player->getRenderBatch());
 }

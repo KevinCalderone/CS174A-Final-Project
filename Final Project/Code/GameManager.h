@@ -30,7 +30,8 @@ private:
 	GraphicsManager* m_graphicsManager;
 	int m_score;
 	static const int MONSTERCAP = 50;
-	bool Spawn(objectType type, vec3 position, double size=10.0, bool permit=true);
+	void Spawn(objectType type, vec3 position, double size=10.0);
+	Monster* spawnMonster();
 	void Delete(Object* object);
 	void Update();
 	void CollisionDetection();
