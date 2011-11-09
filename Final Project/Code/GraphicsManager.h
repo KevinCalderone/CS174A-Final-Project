@@ -15,6 +15,29 @@ class TextureManager;
 
 struct ShaderState;
 
+/*
+Kevin TODO
+
+INTERNAL STUFF
+- Make sure everything is gettings released in the destructors
+- Abstract render passes so it is no longer hard coded
+- Add a shader state class for PostProcessShader
+- Add a texture class for frame buffer textures
+- Only send diff of state to GPU
+
+FEATURES
+- Add access to depth buffer in post process stage
+- Expose more options in RenderParameters such as DOF
+- Cache RenderBatches to allow multipass effects
+- Add some kind of shadows, probably point light shadows
+- Add transparency option in EffectParameters
+- Add dynamic geometry
+	- Add particles for a torch
+	- Add some kind of animation
+- Add gloss maps
+- Add SSAO
+*/
+
 class GraphicsManager
 {
 public:
