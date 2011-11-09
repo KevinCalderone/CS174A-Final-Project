@@ -117,10 +117,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\BMPTexture.cpp" />
+    <ClCompile Include="Code\EnviroObj.cpp" />
     <ClCompile Include="Code\ForwardShader.cpp" />
     <ClCompile Include="Code\GameManager.cpp" />
     <ClCompile Include="Code\GeometryManager.cpp" />
     <ClCompile Include="Code\GraphicsManager.cpp" />
+    <ClCompile Include="Code\Ground.cpp" />
     <ClCompile Include="Code\InitShader.cpp" />
     <ClCompile Include="Code\Object.cpp" />
     <ClCompile Include="Code\Player.cpp" />
