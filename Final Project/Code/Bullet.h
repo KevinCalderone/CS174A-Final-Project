@@ -5,6 +5,8 @@
 
 class Bullet : public Object
 {
+	Bullet();
+	~Bullet();
 };
 
 
