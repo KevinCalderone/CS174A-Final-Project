@@ -39,6 +39,14 @@ void main() {
 	}
 	else {
 		sum = 0.8 * texture(forwardRenderedResult, texCoord) + 0.2 * texture(forwardRenderedResultBlur, texCoord);
+		/*
+		if (texCoord.x < 0.5f) {
+			sum = texture(forwardRenderedResult, texCoord);
+		}
+		else {
+			sum = texture(forwardRenderedResultBlur, texCoord);
+		}
+		*/
 	}
 
 	fColor = sum;
