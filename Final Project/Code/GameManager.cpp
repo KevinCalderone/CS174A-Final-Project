@@ -61,7 +61,18 @@ GraphicsManager* GameManager::getGraphicsManager()
 
 void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & Ground
 {
-	//m_ground = new Ground();
+	m_ground = new Ground();
+	RenderBatch* batch = new RenderBatch();
+	batch->m_geometryID = "plane";	
+	batch->m_effectParameters.m_modelviewMatrix =  mat4();
+	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
+	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.5f;
+	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f) * 0.3f;
+	batch->m_effectParameters.m_materialSpecularExponent = 6.0f;
+	batch->m_effectParameters.m_materialGloss = 0.0f;
+	batch->m_effectParameters.m_diffuseTexture = "stone";	
+	batch->m_effectParameters.m_normalMap = "stoneNormal";
+	m_ground->setRenderBatch(batch);
 	//m_enviro.push_back(new EnviroObj(/* type, position */)); // OK do we want to have some sort of file specify		\
 																all the parameters for where every tree/rock/etc	\
 																is located at? Or do we want initEnviro to just		\
@@ -164,6 +175,7 @@ void GameManager::Render()
 	for(int i=0;i<m_monsters.size();i++)
 		m_graphicsManager->Render(*m_monsters.at(i)->getRenderBatch());
 	m_graphicsManager->Render(*m_player->getRenderBatch());
+	m_graphicsManager->Render(*m_ground->getRenderBatch());
 }
 
 void GameManager::initGame()

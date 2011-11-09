@@ -59,50 +59,6 @@ void callbackDisplay () {
 		renderParameters.m_pointLightSpecular[2] = vec3(0.0f, 500.0f * pow(abs(sin((theta + 240) * DegreesToRadians)), 20.0f), 0.0f);
 
 		gameManager->Render();
-
-		{
-			RenderBatch batch;
-		
-			batch.m_geometryID = "plane";	
-
-			batch.m_effectParameters.m_modelviewMatrix =  mat4();
-		
-			batch.m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
-			batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.5f;
-			batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f) * 0.3f;
-			batch.m_effectParameters.m_materialSpecularExponent = 6.0f;
-			batch.m_effectParameters.m_materialGloss = 0.0f;
-		
-			batch.m_effectParameters.m_diffuseTexture = "stone";	
-			batch.m_effectParameters.m_normalMap = "stoneNormal";	
-
-			graphicsManager->Render(batch);
-		}
-		
-		/*{
-			RenderBatch batch;
-		
-			batch.m_geometryID = "monster";	
-
-			batch.m_effectParameters.m_modelviewMatrix = Angel::RotateX(theta) * Angel::RotateY(theta)* Angel::RotateZ(theta);
-		
-			batch.m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 0.4f;
-			batch.m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.4f;
-			batch.m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.8f) * 0.5f;
-			batch.m_effectParameters.m_materialSpecularExponent = 14.0f;
-			batch.m_effectParameters.m_materialGloss = 0.1f;
-
-			batch.m_effectParameters.m_diffuseTexture = "monster";	
-			batch.m_effectParameters.m_normalMap = "monsterNormal";	
-
-			graphicsManager->Render(batch);
-
-			// tin foil mode lol
-			batch.m_effectParameters.m_modelviewMatrix =  Angel::Translate(vec4(6.0f, 0.0f, 0.0f, 0.0f)) * Angel::RotateX(theta) * Angel::RotateY(theta)* Angel::RotateZ(theta);
-			batch.m_effectParameters.m_materialGloss = 1.0f;
-			graphicsManager->Render(batch);
-		}*/
-
 	}
 
 	// This is just for testing until you get this incorportated into GameManager
