@@ -32,6 +32,8 @@
       <Filter>Graphics\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Code\GameManager.cpp" />
+    <ClCompile Include="Code\Ground.cpp" />
+    <ClCompile Include="Code\EnviroObj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Angel.h">

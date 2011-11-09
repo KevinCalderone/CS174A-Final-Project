@@ -5,6 +5,10 @@
 
 class EnviroObj : public Object
 {
+
+public:
+	EnviroObj();
+	~EnviroObj();
 };
 
 
