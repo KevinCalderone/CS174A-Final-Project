@@ -74,6 +74,7 @@ void GameManager::initPlayer()
 {
 	m_player = spawnPlayer();
 	m_player->setSize(2.f); // default?
+	m_player->setSpeed(0.2f);
 	m_player->setWeaponDelay(100); // default?
 	m_player->setDirection(Angel::vec3(0.0f)); // default?
 	m_player->setPosition(Angel::vec3(0.0f,0.0f,0.0f)); // default?
@@ -87,8 +88,8 @@ void GameManager::initMonsters()
 	srand((unsigned)time(0));
 	do
 	{
-		x = 7 - rand()%14;
-		z = 7 - rand()%12;
+		x = 20 - rand()%40;
+		z = 20 - rand()%40;
 		Spawn(MONSTER,Angel::vec3(x,0.0f,z),1);
 	} while(m_monsters.size() < MONSTERCAP);
 }
@@ -102,8 +103,8 @@ void GameManager::Spawn(objectType type, vec3 position, double size){
 			Monster* monster = spawnMonster();
 			monster->setSize(size);
 			monster->setPosition(position);
-			monster->setSpeed(size/4.0);
-			monster->setVelocity(*m_player->getPosition() - position);
+			monster->setSpeed(0.01);
+			monster->setVelocity(normalize(*m_player->getPosition() - position));
 			m_monsters.push_back(monster);
 		}
 		break;
@@ -149,7 +150,7 @@ Player* GameManager::spawnPlayer()
 void GameManager::Update()
 {
 	for(int i=0;i<m_monsters.size();i++){
-		m_monsters.at(i)->setVelocity(*m_player->getPosition() - *m_monsters.at(i)->getPosition());
+		m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
 		m_monsters.at(i)->Update(1.0f);
 	}
 	m_player->Update(1.0f);

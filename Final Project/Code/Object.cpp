@@ -47,6 +47,7 @@ RenderBatch* Object::getRenderBatch () {
 }
 
 void Object::Update(float delta) {
+	m_position += m_velocity;
 	if(m_render!=NULL)
 		m_render->m_effectParameters.m_modelviewMatrix = Angel::Translate(m_position) * Angel::Scale(vec3(m_size))
 														* Angel::RotateY((GLfloat)90+atan2(m_velocity.x,m_velocity.z)*R2D);
