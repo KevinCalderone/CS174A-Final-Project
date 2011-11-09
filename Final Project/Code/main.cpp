@@ -57,6 +57,7 @@ void callbackDisplay () {
 		renderParameters.m_pointLightSpecular[1] = vec3(0.0f, 0.0f, 500.0f * pow(abs(sin((theta + 120) * DegreesToRadians)), 20.0f));
 		renderParameters.m_pointLightSpecular[2] = vec3(0.0f, 500.0f * pow(abs(sin((theta + 240) * DegreesToRadians)), 20.0f), 0.0f);
 
+		gameManager->Render();
 		{
 			RenderBatch batch;
 		
@@ -76,7 +77,7 @@ void callbackDisplay () {
 			graphicsManager->Render(batch);
 		}
 		
-		{
+		/*{
 			RenderBatch batch;
 		
 			batch.m_geometryID = "monster";	
@@ -98,7 +99,7 @@ void callbackDisplay () {
 			batch.m_effectParameters.m_modelviewMatrix =  Angel::Translate(vec4(6.0f, 0.0f, 0.0f, 0.0f)) * Angel::RotateX(theta) * Angel::RotateY(theta)* Angel::RotateZ(theta);
 			batch.m_effectParameters.m_materialGloss = 1.0f;
 			graphicsManager->Render(batch);
-		}
+		}*/
 
 	}
 

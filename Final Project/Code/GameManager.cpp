@@ -49,13 +49,13 @@ void GameManager::initPlayer() // gotta wait for implementation of Player
 void GameManager::initMonsters() // gotta wait for implementation of Monster
 {
 	// this is just a random spawning algorithm at the moment
-	float x, y;
-	//do
-	//{
-	//	x = 12 - rand()%24; // horizontal screen range of 20 units? Left = -10, Right = +10
-	//	y = 12; // vertical screen range of 20 units? Top = +10, Bottom = -10
-	//	Spawn(MONSTER,Angel::vec3(x,y,0.0f),rand()%20);
-	//} while(m_monsters.size() <= MONSTERCAP);
+	float x, z;
+	do
+	{
+		x = 7 - rand()%14; // horizontal screen range of 20 units? Left = -10, Right = +10
+		z = 7 - rand()%12; // vertical screen range of 20 units? Top = +10, Bottom = -10
+		Spawn(MONSTER,Angel::vec3(x,0.0f,z),rand()%20);
+	} while(m_monsters.size() < MONSTERCAP);
 	//Spawn(MONSTER,Angel::vec3(0.0f,0.0f,0.0f)); //Needs to be changed, of course.							\
 													Again, do we want a file to specify, or do it manually?	\
 													I think manually would be better here, since we could	\
@@ -63,36 +63,55 @@ void GameManager::initMonsters() // gotta wait for implementation of Monster
 }
 
 void GameManager::Spawn(objectType type, vec3 position, double size){
-	/*switch(type){
+	std::cout << position.x << " " << position.y << " " << position.z << std::endl;
+	switch(type){
 	case PLAYER:
 		break;
 	case MONSTER:
 		{
 			Monster* monster = spawnMonster();
 			monster->setPosition(position);
+			monster->getRenderBatch()->m_effectParameters.m_modelviewMatrix = Angel::Translate(position);
 			monster->setSize(size);
-			monster->setSpeed(size/2.0);
+			monster->setSpeed(size/4.0);
 			monster->setVelocity(position - *m_player->getPosition());
+			m_monsters.push_back(monster);
 		}
 		break;
 	case BULLET:
 		break;
 	case BUSH:
 		break;
-	}*/
+	}
 }
 
-Monster* spawnMonster()
+Monster* GameManager::spawnMonster()
 {
 	Monster* monster = new Monster();
-	//monster->setRenderBatch
+	RenderBatch* batch = new RenderBatch();
+	batch->m_geometryID = "monster";	
+	//batch->m_effectParameters.m_modelviewMatrix = Angel::RotateX(0.0);
+	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 0.4f;
+	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.4f;
+	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.8f) * 0.5f;
+	batch->m_effectParameters.m_materialSpecularExponent = 14.0f;
+	batch->m_effectParameters.m_materialGloss = 1.0f;
+	batch->m_effectParameters.m_diffuseTexture = "monster";	
+	batch->m_effectParameters.m_normalMap = "monsterNormal";
+	monster->setRenderBatch(batch);
 	return monster;
 }
+
+void GameManager::Render()
+{
+	for(int i=0;i<m_monsters.size();i++)
+		m_graphicsManager->Render(*m_monsters.at(i)->getRenderBatch());
+}
+
 void GameManager::initGame()
 {
 	m_graphicsManager = new GraphicsManager("../Data/AssetLibrary.txt");
 	initEnviro();
 	initPlayer();
 	initMonsters();
-	//m_graphicsManager->Render(*m_player->getRenderBatch());
 }

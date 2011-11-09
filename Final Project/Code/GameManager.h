@@ -19,6 +19,7 @@ public:
 	GameManager();
 	~GameManager();
 	void initGame();
+	void Render();
 	void callbackKeyboard (unsigned char key, int x, int y);
 	GraphicsManager* getGraphicsManager(); // temporary?
 private:
@@ -35,7 +36,6 @@ private:
 	void Delete(Object* object);
 	void Update();
 	void CollisionDetection();
-	void Render();
 	void initPlayer();
 	void initMonsters();
 	void initEnviro();
