@@ -117,6 +117,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\BMPTexture.cpp" />
+    <ClCompile Include="Code\Bullet.cpp" />
     <ClCompile Include="Code\EnviroObj.cpp" />
     <ClCompile Include="Code\ForwardShader.cpp" />
     <ClCompile Include="Code\GameManager.cpp" />
