@@ -73,7 +73,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 void GameManager::initPlayer()
 {
 	m_player = spawnPlayer();
-	m_player->setSize(2.f); // default?
+	m_player->setSize(1.f); // default?
 	m_player->setSpeed(0.2f);
 	m_player->setWeaponDelay(100); // default?
 	m_player->setDirection(Angel::vec3(0.0f)); // default?
@@ -135,7 +135,7 @@ Player* GameManager::spawnPlayer()
 {
 	Player* player = new Player();
 	RenderBatch* batch = new RenderBatch();
-	batch->m_geometryID = "cone";
+	batch->m_geometryID = "cube";
 	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 5.0f;
 	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 5.0f;
 	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.8f) * 0.1f;
