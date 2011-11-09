@@ -29,13 +29,13 @@ static void SetCameraOrthogonal () {
 
 static void SetupCamera (vec4 playerPos) {
 	vec4 playerPosition = playerPos;
-	vec4 eyePosition = playerPosition + vec4(0.0f, 2.0f, 2.0f, 1.0f);
+	vec4 eyePosition = playerPosition + vec4(0.0f, 15.0f, 15.0f, 0.0f);
 	RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
 
 	renderParameters.m_eyePosition = vec3(eyePosition.x, eyePosition.y, eyePosition.z);
 	renderParameters.m_projectionMatrix = 
 		Angel::Perspective(45.0f, 4.0f/3.0f, 0.5f, 50.0f) * 
-		Angel::LookAt(playerPosition + vec4(0.0f, 10.0f, 10.0f, 1.0f), playerPosition, vec4(0.0f, 1.0f, 0.0f, 0.0f));
+		Angel::LookAt(eyePosition, playerPosition, vec4(0.0f, 1.0f, 0.0f, 0.0f));
 }
 
 // Called when the window needs to be redrawn.
