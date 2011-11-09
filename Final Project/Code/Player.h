@@ -15,9 +15,11 @@ public:
 
 	void setDirection (const vec3& direction);
 	vec3* getDirection ();
+	vec3* getVelocity ();
 	void setWeaponDelay(int delay);
 	void addLife(int add);
 	void removeLife();
+	void Update(float delta);
 
 
 private:

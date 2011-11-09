@@ -1,8 +1,5 @@
 #include "Object.h"
 
-const GLfloat R2D = 180.0f/(atan(1.0f)*4.0f);
-
-
 Object::Object ()
 	: m_render(NULL)
 {
@@ -50,5 +47,5 @@ void Object::Update(float delta) {
 	m_position += m_velocity;
 	if(m_render!=NULL)
 		m_render->m_effectParameters.m_modelviewMatrix = Angel::Translate(m_position) * Angel::Scale(vec3(m_size))
-														* Angel::RotateY((GLfloat)90+atan2(m_velocity.x,m_velocity.z)*R2D);
+														* Angel::RotateY((GLfloat)90+atan2(m_velocity.x,m_velocity.z)/DegreesToRadians);
 }

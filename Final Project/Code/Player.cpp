@@ -4,7 +4,7 @@
 
 
 Player::Player () 
-	: m_lives(3), m_cooldown(0), m_weaponDelay(5)
+	: m_lives(3), m_cooldown(0), m_weaponDelay(60)
 {
 }
 
@@ -51,4 +51,16 @@ void Player::setDirection (const vec3& direction) {
 
 vec3* Player::getDirection () {
 	return &m_direction;
+}
+
+vec3* Player::getVelocity () {
+	return &m_velocity;
+}
+
+void Player::Update(float delta)
+{
+	m_position += m_velocity;
+	if(m_render!=NULL)
+		m_render->m_effectParameters.m_modelviewMatrix = Angel::Translate(m_position) * Angel::Scale(vec3(m_size))
+														* Angel::RotateY((GLfloat)90+atan2(m_direction.x,m_direction.z)/DegreesToRadians);
 }

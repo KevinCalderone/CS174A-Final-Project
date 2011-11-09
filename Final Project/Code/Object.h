@@ -24,8 +24,6 @@ public:
 protected:
 
 	RenderBatch* m_render;
-
-private:
 	vec3 m_position;
 	vec3 m_velocity;
 	float m_size;
