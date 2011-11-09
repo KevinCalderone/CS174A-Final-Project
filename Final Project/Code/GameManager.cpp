@@ -1,4 +1,7 @@
 #include "GameManager.h"
+#include <ctime>
+
+
 
 GameManager::GameManager()
 {
@@ -16,6 +19,18 @@ void GameManager::callbackKeyboard(unsigned char key, int x, int y)
 			break;
 		case '`':
 			m_graphicsManager->ReloadAssets();
+			break;
+		case 'w':
+			m_player->setPosition(vec3(m_player->getPosition()->x, m_player->getPosition()->y, m_player->getPosition()->z-1));
+			break;
+		case 's':
+			m_player->setPosition(vec3(m_player->getPosition()->x, m_player->getPosition()->y, m_player->getPosition()->z+1));
+			break;
+		case 'a':
+			m_player->setPosition(vec3(m_player->getPosition()->x-1, m_player->getPosition()->y, m_player->getPosition()->z));
+			break;
+		case 'd':
+			m_player->setPosition(vec3(m_player->getPosition()->x+1, m_player->getPosition()->y, m_player->getPosition()->z));
 			break;
 	}
 }
@@ -36,31 +51,27 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 																which can let it know if it's a rock, tree, etc.
 }
 
-void GameManager::initPlayer() // gotta wait for implementation of Player
+void GameManager::initPlayer()
 {
 	m_player = spawnPlayer();
+	m_player->setSize(2.f); // default?
 	m_player->setWeaponDelay(100); // default?
 	m_player->setDirection(Angel::vec3(0.0f)); // default?
 	m_player->setPosition(Angel::vec3(0.0f,0.0f,0.0f)); // default?
-	m_player->setSize(10.f); // default?
-	m_player->getRenderBatch()->m_effectParameters.m_modelviewMatrix *= Angel::Scale(vec3(1.0,4.0,1.0));
 	m_player->addLife(3); // default?
 }
 
-void GameManager::initMonsters() // gotta wait for implementation of Monster
+void GameManager::initMonsters()
 {
 	// this is just a random spawning algorithm at the moment
 	float x, z;
+	srand((unsigned)time(0));
 	do
 	{
-		x = 7 - rand()%14; // horizontal screen range of 20 units? Left = -10, Right = +10
-		z = 7 - rand()%12; // vertical screen range of 20 units? Top = +10, Bottom = -10
-		Spawn(MONSTER,Angel::vec3(x,0.0f,z),rand()%20);
+		x = 7 - rand()%14;
+		z = 7 - rand()%12;
+		Spawn(MONSTER,Angel::vec3(x,0.0f,z),1);
 	} while(m_monsters.size() < MONSTERCAP);
-	//Spawn(MONSTER,Angel::vec3(0.0f,0.0f,0.0f)); //Needs to be changed, of course.							\
-													Again, do we want a file to specify, or do it manually?	\
-													I think manually would be better here, since we could	\
-													then randomly create the position of each Monster.
 }
 
 void GameManager::Spawn(objectType type, vec3 position, double size){
@@ -70,8 +81,8 @@ void GameManager::Spawn(objectType type, vec3 position, double size){
 	case MONSTER:
 		{
 			Monster* monster = spawnMonster();
-			monster->setPosition(position);
 			monster->setSize(size);
+			monster->setPosition(position);
 			monster->setSpeed(size/4.0);
 			monster->setVelocity(*m_player->getPosition() - position);
 			m_monsters.push_back(monster);
@@ -116,8 +127,19 @@ Player* GameManager::spawnPlayer()
 	return player;
 }
 
+void GameManager::Update()
+{
+	for(int i=0;i<m_monsters.size();i++){
+		m_monsters.at(i)->setVelocity(*m_player->getPosition() - *m_monsters.at(i)->getPosition());
+		m_monsters.at(i)->Update(1.0f);
+	}
+	m_player->Update(1.0f);
+}
+	
+
 void GameManager::Render()
 {
+	Update();
 	for(int i=0;i<m_monsters.size();i++)
 		m_graphicsManager->Render(*m_monsters.at(i)->getRenderBatch());
 	m_graphicsManager->Render(*m_player->getRenderBatch());

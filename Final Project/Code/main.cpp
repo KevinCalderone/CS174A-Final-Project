@@ -58,6 +58,7 @@ void callbackDisplay () {
 		renderParameters.m_pointLightSpecular[2] = vec3(0.0f, 500.0f * pow(abs(sin((theta + 240) * DegreesToRadians)), 20.0f), 0.0f);
 
 		gameManager->Render();
+
 		{
 			RenderBatch batch;
 		
