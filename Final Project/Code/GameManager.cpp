@@ -5,6 +5,7 @@
 
 GameManager::GameManager()
 {
+	m_w=m_a=m_s=m_d=m_i=m_j=m_k=m_l = false;
 }
 
 GameManager::~GameManager()
@@ -14,25 +15,43 @@ GameManager::~GameManager()
 void GameManager::callbackKeyboard(unsigned char key, int x, int y)
 {
 	switch (key) {
-		case 27:	// esc
-			exit(0);
-			break;
-		case '`':
-			m_graphicsManager->ReloadAssets();
-			break;
-		case 'w':
-			m_player->setPosition(vec3(m_player->getPosition()->x, m_player->getPosition()->y, m_player->getPosition()->z-1));
-			break;
-		case 's':
-			m_player->setPosition(vec3(m_player->getPosition()->x, m_player->getPosition()->y, m_player->getPosition()->z+1));
-			break;
-		case 'a':
-			m_player->setPosition(vec3(m_player->getPosition()->x-1, m_player->getPosition()->y, m_player->getPosition()->z));
-			break;
-		case 'd':
-			m_player->setPosition(vec3(m_player->getPosition()->x+1, m_player->getPosition()->y, m_player->getPosition()->z));
-			break;
+	case 27:	// esc
+		exit(0);
+		break;
+	case '`':
+		m_graphicsManager->ReloadAssets();
+		break;
+	case 'w':
+		m_w = true; break;
+	case 's':
+		m_s = true; break;
+	case 'a':
+		m_a = true; break;
+	case 'd':
+		m_d = true; break;
 	}
+}
+
+void GameManager::callbackKeyUp(unsigned char key, int x, int y)
+{
+	switch(key) {
+	case 'w':
+		m_w = false; break;
+	case 'a':
+		m_a = false; break;
+	case 's':
+		m_s = false; break;
+	case 'd':
+		m_d = false; break;
+	}
+}
+
+void GameManager::keyboardUpdate()
+{
+	if(m_w) m_player->setPosition(vec3(m_player->getPosition()->x, m_player->getPosition()->y, m_player->getPosition()->z-0.1));
+	if(m_s) m_player->setPosition(vec3(m_player->getPosition()->x, m_player->getPosition()->y, m_player->getPosition()->z+0.1));
+	if(m_a) m_player->setPosition(vec3(m_player->getPosition()->x-0.1, m_player->getPosition()->y, m_player->getPosition()->z));
+	if(m_d) m_player->setPosition(vec3(m_player->getPosition()->x+0.1, m_player->getPosition()->y, m_player->getPosition()->z));
 }
 
 GraphicsManager* GameManager::getGraphicsManager()
@@ -139,6 +158,7 @@ void GameManager::Update()
 
 void GameManager::Render()
 {
+	keyboardUpdate();
 	Update();
 	for(int i=0;i<m_monsters.size();i++)
 		m_graphicsManager->Render(*m_monsters.at(i)->getRenderBatch());
@@ -151,4 +171,9 @@ void GameManager::initGame()
 	initEnviro();
 	initPlayer();
 	initMonsters();
+}
+
+Player* GameManager::getPlayer()
+{
+	return m_player;
 }

@@ -47,7 +47,8 @@ void callbackDisplay () {
 		static float theta = 0.0f;
 		theta += 1.0f;
 
-		SetupCamera(vec4(sin(theta * DegreesToRadians), 0.0f, cos(theta * DegreesToRadians), 0.0f));
+		//SetupCamera(vec4(sin(theta * DegreesToRadians), 0.0f, cos(theta * DegreesToRadians), 0.0f));
+		SetupCamera(*gameManager->getPlayer()->getPosition());
 
 		RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
 		renderParameters.m_pointLightPosition[0] = vec3(5.0f * sin((theta + 0) * DegreesToRadians), 1.0f, 5.0f * cos((theta + 0) * DegreesToRadians));
@@ -118,6 +119,10 @@ void callbackKeyboard (unsigned char key, int x, int y) {
 	gameManager->callbackKeyboard(key, x, y);
 }
 
+void callbackKeyUp(unsigned char key, int x, int y) {
+	gameManager->callbackKeyUp(key, x, y);
+}
+
 // Called when a mouse button is pressed or released
 void callbackMouse (int button, int state, int x, int y) {
 
@@ -148,6 +153,7 @@ void initCallbacks () {
 	glutDisplayFunc(callbackDisplay);
 	glutReshapeFunc(callbackReshape);
 	glutKeyboardFunc(callbackKeyboard);
+	glutKeyboardUpFunc(callbackKeyUp);
 	glutMouseFunc(callbackMouse);
 	glutMotionFunc(callbackMotion);
 	glutPassiveMotionFunc(callbackPassiveMotion);

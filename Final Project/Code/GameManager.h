@@ -21,7 +21,9 @@ public:
 	void initGame();
 	void Render();
 	void callbackKeyboard (unsigned char key, int x, int y);
+	void callbackKeyUp (unsigned char key, int x, int y);
 	GraphicsManager* getGraphicsManager(); // temporary?
+	Player* getPlayer();
 private:
 	Player* m_player;
 	std::vector<Monster*> m_monsters;
@@ -34,8 +36,10 @@ private:
 	void Spawn(objectType type, vec3 position, double size=10.0);
 	Monster* spawnMonster();
 	Player* spawnPlayer();
+	bool m_w,m_a,m_s,m_d,m_i,m_j,m_k,m_l;
 	void Delete(Object* object);
 	void Update();
+	void keyboardUpdate();
 	void CollisionDetection();
 	void initPlayer();
 	void initMonsters();
