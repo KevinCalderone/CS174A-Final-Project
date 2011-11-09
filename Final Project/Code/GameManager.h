@@ -33,6 +33,7 @@ private:
 	static const int MONSTERCAP = 50;
 	void Spawn(objectType type, vec3 position, double size=10.0);
 	Monster* spawnMonster();
+	Player* spawnPlayer();
 	void Delete(Object* object);
 	void Update();
 	void CollisionDetection();
