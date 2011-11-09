@@ -4,29 +4,43 @@ in vec2 texCoord;
 out vec4 fColor; 
 
 uniform sampler2D forwardRenderedResult;
+uniform sampler2D forwardRenderedResultBlur;
+
+uniform bool b_blurX;
+uniform bool b_blurY;
 
 void main() { 
-	vec2 displace = texCoord - vec2(0.5f, 0.5f);
-	float dist = length(displace);
 
-	if (dist > 0.3f) {
-		displace = vec2(0.0f, 0.0f);
+	vec4 sum = vec4(0.0);
+
+	if (b_blurY) {
+		float blurHeight = 1.0f / 600.0f;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y - 4.0*blurHeight)) * 0.05;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y - 3.0*blurHeight)) * 0.09;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y - 2.0*blurHeight)) * 0.12;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y - blurHeight)) * 0.15;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y)) * 0.16;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y + blurHeight)) * 0.15;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y + 2.0*blurHeight)) * 0.12;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y + 3.0*blurHeight)) * 0.09;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y + 4.0*blurHeight)) * 0.05;
+	}
+	else if (b_blurX) {
+		float blurWidth = 1.0f / 600.0f;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x - 4.0*blurWidth, texCoord.y)) * 0.05;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x - 3.0*blurWidth, texCoord.y)) * 0.09;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x - 2.0*blurWidth, texCoord.y)) * 0.12;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x - blurWidth, texCoord.y)) * 0.15;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y)) * 0.16;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x + blurWidth, texCoord.y)) * 0.15;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x + 2.0*blurWidth, texCoord.y)) * 0.12;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x + 3.0*blurWidth, texCoord.y)) * 0.09;
+		sum += texture2D(forwardRenderedResult, vec2(texCoord.x + 4.0*blurWidth, texCoord.y)) * 0.05;
 	}
 	else {
-		displace = (displace / dist) * 0.3f * sin(3.14159 * (dist / 0.3f));
+		sum = 0.8 * texture(forwardRenderedResult, texCoord) + 0.2 * texture(forwardRenderedResultBlur, texCoord);
 	}
-	
-	float dx = 1.0f / 800.0f;
-	float dy = 1.0f / 600.0f;
-	for (int i = -2; i <= 2; ++i)
-		for (int j = -2; j <= 2; ++j) 
-		{
-			if (i != 0 && j != 0)
-				fColor += 0.1 * max(texture(forwardRenderedResult, vec2(texCoord.x + i * dx, texCoord.y + j * dy)) - 1.0f, 0.0f)  / (abs(i) + abs(j));
-		}
 
-		fColor += texture(forwardRenderedResult, texCoord);
-
-
+	fColor = sum;
 }
 

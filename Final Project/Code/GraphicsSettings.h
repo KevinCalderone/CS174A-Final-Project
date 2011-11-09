@@ -12,7 +12,8 @@ enum TextureChannel {
 	e_TextureChannelDiffuse = GL_TEXTURE0, 
 	e_TextureChannelEnvMap = GL_TEXTURE1, 
 	e_TextureChannelNormalMap = GL_TEXTURE2, 
-	e_TextureChannelForwardRender = GL_TEXTURE3 ,
+	e_TextureChannelForwardRender = GL_TEXTURE3,
+	e_TextureChannelForwardRenderBlur = GL_TEXTURE4,
 
 	e_TextureChannelFirst = GL_TEXTURE0
 };

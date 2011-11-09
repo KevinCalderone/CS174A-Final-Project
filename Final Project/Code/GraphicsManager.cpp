@@ -102,6 +102,26 @@ void GraphicsManager::InitRenderBuffers () {
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);  
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
+
+	// Generate FBO color buffer
+	glGenTextures(1, &m_fboColorBlurX); 
+	glBindTexture(GL_TEXTURE_2D, m_fboColorBlurX);  
+  
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, c_window_width, c_window_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL); 
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);  
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
+
+	// Generate FBO color buffer
+	glGenTextures(1, &m_fboColorBlurXY); 
+	glBindTexture(GL_TEXTURE_2D, m_fboColorBlurXY);  
+  
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, c_window_width, c_window_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL); 
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);  
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
 	glBindTexture(GL_TEXTURE_2D, 0);  
 
 	// Generate FBO
@@ -109,7 +129,7 @@ void GraphicsManager::InitRenderBuffers () {
 	glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_fbo); 
 	glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_fboColor, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, m_fboDepth);
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER_EXT, 0);
 
 	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT); 
   
@@ -122,7 +142,9 @@ void GraphicsManager::InitRenderBuffers () {
 void GraphicsManager::ClearScreen () {
 	// Clear HDR FBO
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, m_fbo); 
+	glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_fboColor, 0);
 	
+	glEnable(GL_DEPTH_TEST);
 	glClearColor (0.0f, 0.0f, 1.0f, 1.0f); // Set the clear colour 
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear the depth and colour buffers 
 }
@@ -149,13 +171,42 @@ void GraphicsManager::Render (const RenderBatch& batch) {
 }
 
 void GraphicsManager::SwapBuffers () {
-	// Postprocess HDR FBO and write result into screen buffer
+	glDisable(GL_DEPTH_TEST);
+
+	glBindFramebuffer(GL_FRAMEBUFFER_EXT, m_fbo); 
+	glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_fboColorBlurX, 0);
+
+	m_postProcessShader->Apply();
+	m_postProcessShader->m_blurX = true;
+	m_postProcessShader->m_blurY = false;
+	m_postProcessShader->SetShaderState();
+	glActiveTexture(e_TextureChannelForwardRender);
+	glBindTexture(GL_TEXTURE_2D, m_fboColor);
+	m_geometryManager->RenderGeometry("screenQuad");
+	
+	glFramebufferTexture2D(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, m_fboColorBlurXY, 0);
+
+	m_postProcessShader->Apply();
+	m_postProcessShader->m_blurX = false;
+	m_postProcessShader->m_blurY = true;
+	m_postProcessShader->SetShaderState();
+	glActiveTexture(e_TextureChannelForwardRender);
+	glBindTexture(GL_TEXTURE_2D, m_fboColorBlurX);
+	m_geometryManager->RenderGeometry("screenQuad");
+	
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); 
 	glClear(GL_DEPTH_BUFFER_BIT);
 	
 	m_postProcessShader->Apply();
+	m_postProcessShader->m_blurX = false;
+	m_postProcessShader->m_blurY = false;
+	m_postProcessShader->SetShaderState();
+
 	glActiveTexture(e_TextureChannelForwardRender);
 	glBindTexture(GL_TEXTURE_2D, m_fboColor);
+	
+	glActiveTexture(e_TextureChannelForwardRenderBlur);
+	glBindTexture(GL_TEXTURE_2D, m_fboColorBlurXY);
 
 	m_geometryManager->RenderGeometry("screenQuad");
 

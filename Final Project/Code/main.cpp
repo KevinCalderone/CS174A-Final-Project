@@ -52,6 +52,9 @@ void callbackDisplay () {
 		renderParameters.m_pointLightPosition[0] = vec3(5.0f * sin((theta + 0) * DegreesToRadians), 1.0f, 5.0f * cos((theta + 0) * DegreesToRadians));
 		renderParameters.m_pointLightPosition[1] = vec3(5.0f * sin((theta + 120) * DegreesToRadians), 1.0f, 5.0f * cos((theta + 120) * DegreesToRadians));
 		renderParameters.m_pointLightPosition[2] = vec3(5.0f * sin((theta + 240) * DegreesToRadians), 1.0f, 5.0f * cos((theta + 240) * DegreesToRadians));
+		renderParameters.m_pointLightSpecular[0] = vec3(500.0f * pow(abs(sin((theta + 0) * DegreesToRadians)), 20.0f), 0.0f, 0.0f);
+		renderParameters.m_pointLightSpecular[1] = vec3(0.0f, 0.0f, 500.0f * pow(abs(sin((theta + 120) * DegreesToRadians)), 20.0f));
+		renderParameters.m_pointLightSpecular[2] = vec3(0.0f, 500.0f * pow(abs(sin((theta + 240) * DegreesToRadians)), 20.0f), 0.0f);
 
 		{
 			RenderBatch batch;
@@ -170,7 +173,7 @@ int main (int argc, char** argv) {
 
 	renderParameters.m_pointLightPosition[0] = vec3(-5.0f, 1.0f, 0.0f);
 	renderParameters.m_pointLightDiffuse[0] = vec3(1.0f, 0.0f, 0.0f);
-	renderParameters.m_pointLightSpecular[0] = vec3(20.0f, 0.0f, 0.0f);
+	renderParameters.m_pointLightSpecular[0] = vec3(200.0f, 0.0f, 0.0f);
 	renderParameters.m_pointLightRange[0] = 8.0f;
 	renderParameters.m_pointLightFalloff[0] = 2.0f;
 
