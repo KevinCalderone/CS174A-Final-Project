@@ -8,6 +8,7 @@ class Player : public Object
 
 public:
 	Player ();
+	Player (vec3 position, vec3 direction, float size, float speed, int lives, int weaponDelay);
 	~Player ();
 
 	bool shoot();

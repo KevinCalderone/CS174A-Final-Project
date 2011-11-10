@@ -9,6 +9,7 @@ class Object
 public:
 	Object ();
 	Object (vec3 position);
+	Object (vec3 position, vec3 velocity, float size, float speed);
 	~Object ();
 
 	void setPosition (const vec3& position);
