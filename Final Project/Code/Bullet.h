@@ -6,7 +6,8 @@
 class Bullet : public Object
 {
 public:
-	Bullet(vec3 position) : Object(position){};
+	Bullet(vec3 position);
+	Bullet(vec3 position, vec3 velocity, float size, float speed);
 };
 
 

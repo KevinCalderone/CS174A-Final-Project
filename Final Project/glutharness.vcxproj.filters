@@ -35,6 +35,7 @@
     <ClCompile Include="Code\Ground.cpp" />
     <ClCompile Include="Code\EnviroObj.cpp" />
     <ClCompile Include="Code\Bullet.cpp" />
+    <ClCompile Include="Code\Monster.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Angel.h">

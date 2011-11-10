@@ -4,8 +4,23 @@
 
 
 Player::Player () 
-	: m_lives(3), m_cooldown(0), m_weaponDelay(60)
+	: m_lives(0), m_cooldown(0), m_weaponDelay(0)
 {
+}
+
+Player::Player (vec3 position, vec3 direction, float size, float speed, int lives, int weaponDelay)
+	: Object(position, vec3(0.0f), size, speed), m_direction(direction), m_lives(lives), m_weaponDelay(weaponDelay)
+{
+	RenderBatch* batch = new RenderBatch();
+	batch->m_geometryID = "cube";
+	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 5.0f;
+	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 5.0f;
+	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.8f) * 0.1f;
+	batch->m_effectParameters.m_materialSpecularExponent = 14.0f;
+	batch->m_effectParameters.m_materialGloss = 0.1f;
+	batch->m_effectParameters.m_diffuseTexture = "monster";	
+	batch->m_effectParameters.m_normalMap = "monsterNormal";
+	this->setRenderBatch(batch);
 }
 
 Player::~Player () {

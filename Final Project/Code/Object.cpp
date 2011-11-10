@@ -9,7 +9,11 @@ Object::Object()
 Object::Object (vec3 position)
 	: m_render(NULL), m_position(position)
 {
-	//m_size = 0.01;
+}
+
+Object::Object (vec3 position, vec3 velocity, float size, float speed)
+	: m_position(position), m_velocity(velocity), m_size(size), m_speed(speed)
+{
 }
 
 Object::~Object () {

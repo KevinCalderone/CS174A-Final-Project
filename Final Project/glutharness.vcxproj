@@ -125,6 +125,7 @@
     <ClCompile Include="Code\GraphicsManager.cpp" />
     <ClCompile Include="Code\Ground.cpp" />
     <ClCompile Include="Code\InitShader.cpp" />
+    <ClCompile Include="Code\Monster.cpp" />
     <ClCompile Include="Code\Object.cpp" />
     <ClCompile Include="Code\Player.cpp" />
     <ClCompile Include="Code\PostProcessShader.cpp" />
