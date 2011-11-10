@@ -36,7 +36,7 @@ private:
 	void Spawn(objectType type, vec3 position, double size=10.0);
 	Monster* spawnMonster();
 	Player* spawnPlayer();
-	Bullet* spawnBullet();
+	Bullet* spawnBullet(vec3 position);
 	bool m_w,m_a,m_s,m_d,m_i,m_j,m_k,m_l,m_auto;
 	void Delete(Object* object);
 	void Update();

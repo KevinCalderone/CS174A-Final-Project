@@ -140,7 +140,7 @@ void GameManager::Spawn(objectType type, vec3 position, double size){
 		break;
 	case BULLET:
 		{
-			Bullet* bullet = spawnBullet();
+			Bullet* bullet = spawnBullet(*m_player->getPosition());
 			bullet->setSize(0.1);
 			bullet->setPosition(position);
 			bullet->setSpeed(0.5);
@@ -185,9 +185,9 @@ Player* GameManager::spawnPlayer()
 	return player;
 }
 
-Bullet* GameManager::spawnBullet()
+Bullet* GameManager::spawnBullet(vec3 position)
 {
-	Bullet* bullet = new Bullet();
+	Bullet* bullet = new Bullet(position);
 	RenderBatch* batch = new RenderBatch();
 	batch->m_geometryID = "sphere";
 	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 5.0f;
