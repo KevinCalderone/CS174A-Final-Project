@@ -104,7 +104,7 @@ void GameManager::initPlayer()
 	m_player->setSpeed(0.2f);
 	m_player->setWeaponDelay(30); // default?
 	m_player->setDirection(Angel::vec3(0.0f)); // default?
-	m_player->setPosition(Angel::vec3(0.0f,0.0f,1.0f)); // default?
+	m_player->setPosition(Angel::vec3(0.0f,0.0f,0.0f)); // default?
 	m_player->addLife(3); // default?
 }
 
