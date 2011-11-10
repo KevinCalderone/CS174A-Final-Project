@@ -18,24 +18,29 @@ struct ShaderState;
 /*
 Kevin TODO
 
-INTERNAL STUFF
+ON DECK
 - Make sure everything is gettings released in the destructors
-- Abstract render passes so it is no longer hard coded
-- Add a shader state class for PostProcessShader
-- Add a texture class for frame buffer textures
-- Only send diff of state to GPU
+- Refactoring: Abstract render passes so it is no longer hard coded
+	- Add a shader state class for PostProcessShader
+	- Add a texture class for frame buffer textures
+- Add cubemap shadowmapping for point light shadows
+- Add skeletal animation	
+	- Change model file format to one that supports blend weights
+	- Try to find models/figure out how to make animations in blender
 
-FEATURES
+FUTURE FEATURES
 - Add access to depth buffer in post process stage
 - Expose more options in RenderParameters such as DOF
-- Cache RenderBatches to allow multipass effects
-- Add some kind of shadows, probably point light shadows
+- Optimization: Only send diff of state to GPU
 - Add transparency option in EffectParameters
 - Add dynamic geometry
 	- Add particles for a torch
 	- Add some kind of animation
 - Add gloss maps
+- Cache RenderBatches to allow multipass effects
 - Add SSAO
+- Optimization: Combine final pipeline into MRT passes to reduce total passes
+- Optimization: Use minimal texture formats(eg. get rid of alpha channel I am not using everywhere)
 */
 
 class GraphicsManager
