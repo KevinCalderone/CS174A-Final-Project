@@ -37,7 +37,8 @@ private:
 	Monster* spawnMonster();
 	Player* spawnPlayer();
 	Bullet* spawnBullet(vec3 position);
-	bool m_w,m_a,m_s,m_d,m_i,m_j,m_k,m_l,m_auto;
+	float angle;
+	bool m_w,m_a,m_s,m_d,m_j,m_l,m_auto;
 	void Delete(Object* object);
 	void Update();
 	void keyboardUpdate();

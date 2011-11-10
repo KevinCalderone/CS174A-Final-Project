@@ -5,7 +5,8 @@
 
 GameManager::GameManager()
 {
-	m_w=m_a=m_s=m_d=m_i=m_j=m_k=m_l=m_auto = false;
+	m_w=m_a=m_s=m_d=m_j=m_l=m_auto = false;
+	angle = 0.0f;
 }
 
 GameManager::~GameManager()
@@ -33,10 +34,6 @@ void GameManager::callbackKeyboard(unsigned char key, int x, int y)
 		m_d = true; break;
 	case 'j':
 		m_j = true; break;
-	case 'i':
-		m_i = true; break;
-	case 'k':
-		m_k = true; break;
 	case 'l':
 		m_l = true; break;
 	}
@@ -53,12 +50,8 @@ void GameManager::callbackKeyUp(unsigned char key, int x, int y)
 		m_s = false; break;
 	case 'd':
 		m_d = false; break;
-	case 'i':
-		m_i = false; break;
 	case 'j':
 		m_j = false; break;
-	case 'k':
-		m_k = false; break;
 	case 'l':
 		m_l = false; break;
 	}
@@ -67,10 +60,14 @@ void GameManager::callbackKeyUp(unsigned char key, int x, int y)
 void GameManager::keyboardUpdate()
 {
 	m_player->setVelocity(vec3(m_d-m_a,0.0f,m_s-m_w));
-	if(m_l-m_j==0 && m_k-m_i==0)
-		m_player->setDirection(vec3(0.0f,0.0f,1.0f));
-	else
-		m_player->setDirection(vec3(m_l-m_j,0.0f,m_k-m_i));
+	//if(m_l-m_j==0 && m_k-m_i==0)
+	//	m_player->setDirection(vec3(0.0f,0.0f,1.0f));
+	//else
+	//	m_player->setDirection(vec3(m_l-m_j,0.0f,m_k-m_i));
+	if(m_j) angle += 0.05;
+	if(m_l) angle -= 0.05;
+	if(angle>360 || angle<-360) angle = 0.0;
+	m_player->setDirection(vec3(-sin(angle),0.0f,-cos(angle)));
 }
 
 GraphicsManager* GameManager::getGraphicsManager()
@@ -203,6 +200,8 @@ Bullet* GameManager::spawnBullet(vec3 position)
 
 void GameManager::Update()
 {
+	if(m_auto && m_player->shoot())
+		Spawn(BULLET,*m_player->getPosition());
 	for(int i=0;i<m_monsters.size();i++){
 		m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
 		m_monsters.at(i)->Update(1.0f);
@@ -210,8 +209,6 @@ void GameManager::Update()
 	for(int i=0;i<m_bullets.size();i++)
 		m_bullets.at(i)->Update(1.0f);
 	m_player->Update(1.0f);
-	if(m_auto && m_player->shoot())
-		Spawn(BULLET,*m_player->getPosition());
 }
 	
 
