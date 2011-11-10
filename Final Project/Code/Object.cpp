@@ -1,8 +1,15 @@
 #include "Object.h"
 
-Object::Object ()
+
+Object::Object()
 	: m_render(NULL)
 {
+}
+
+Object::Object (vec3 position)
+	: m_render(NULL), m_position(position)
+{
+	//m_size = 0.01;
 }
 
 Object::~Object () {

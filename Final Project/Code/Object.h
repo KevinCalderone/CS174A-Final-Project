@@ -8,6 +8,7 @@ class Object
 
 public:
 	Object ();
+	Object (vec3 position);
 	~Object ();
 
 	void setPosition (const vec3& position);

@@ -5,6 +5,8 @@
 
 class Bullet : public Object
 {
+public:
+	Bullet(vec3 position) : Object(position){};
 };
 
 
