@@ -150,6 +150,32 @@ int main (int argc, char** argv) {
 	renderParameters.m_pointLightSpecular[2] = vec3(0.0f, 1.0f, 0.0f);
 	renderParameters.m_pointLightRange[2] = 8.0f;
 	renderParameters.m_pointLightFalloff[2] = 2.0f;
+	
+	// No color correction
+	renderParameters.m_colorCorrection = mat4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f, 
+		0.0f, 0.0f, 1.0f, 0.0f, 
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+	/*
+	// Under water looking
+	renderParameters.m_colorCorrection = mat4(
+		0.5f, 0.0f, 0.5f, 0.0f,
+		0.0f, 0.5f, 0.5f, 0.0f, 
+		0.0f, 0.0f, 1.0f, 0.0f, 
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+	*/
+	/*
+	// Black and White
+	renderParameters.m_colorCorrection = mat4(
+		0.33f, 0.33f, 0.33f, 0.0f,
+		0.33f, 0.33f, 0.33f, 0.0f, 
+		0.33f, 0.33f, 0.33f, 0.0f, 
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+	*/
 
 	glutMainLoop();
 	return 0;

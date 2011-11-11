@@ -14,6 +14,8 @@ struct PostProcessShaderState : public ShaderState
 	static_branch b_blurX;
 	static_branch b_blurY;
 	static_branch b_depthOfField;
+
+	mat4 m_colorCorrection;
 };
 
 #endif

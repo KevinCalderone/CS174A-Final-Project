@@ -316,7 +316,7 @@ void GraphicsManager::SwapBuffers () {
 			case e_ShaderTypePostProcess:
 				m_postProcessShader->Apply();
 
-				PostProcessShaderState postProcessShaderState;
+				PostProcessShaderState postProcessShaderState = CalculatePostProcessShaderState();
 				postProcessShaderState.HandleShaderFlags(shaderStateFlags);
 
 				m_postProcessShader->SetShaderState(postProcessShaderState);
@@ -373,8 +373,12 @@ ForwardShaderState GraphicsManager::CalculateForwardShaderState (const EffectPar
 	return state;
 }
 
-PostProcessShaderState GraphicsManager::CalculatePostProcessShaderState (const EffectParameters& effectParameters) {
-	return PostProcessShaderState();
+PostProcessShaderState GraphicsManager::CalculatePostProcessShaderState () {
+	PostProcessShaderState postProcessShaderState;
+
+	postProcessShaderState.m_colorCorrection = m_renderParameters.m_colorCorrection;
+
+	return postProcessShaderState;
 }
 
 const FrameBufferTexture* GraphicsManager::GetFrameBufferTexture (const std::string& frameBufferTextureName) {

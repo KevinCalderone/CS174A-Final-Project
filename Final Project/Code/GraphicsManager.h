@@ -73,7 +73,7 @@ private:
 	void LoadEffectFile (const std::string& effectFile);
 
 	ForwardShaderState CalculateForwardShaderState (const EffectParameters& effectParameters);
-	PostProcessShaderState CalculatePostProcessShaderState (const EffectParameters& effectParameters);
+	PostProcessShaderState CalculatePostProcessShaderState ();
 
 	const FrameBufferTexture* GetFrameBufferTexture (const std::string& frameBufferTextureName);
 

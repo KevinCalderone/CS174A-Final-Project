@@ -21,6 +21,8 @@ private:
 	GLuint b_blurY;
 	GLuint b_depthOfField;
 
+	GLuint m_colorCorrection;
+
 	PostProcessShaderState m_currentState;
 };
 

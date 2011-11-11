@@ -10,6 +10,8 @@ uniform bool b_blurX;
 uniform bool b_blurY;
 uniform bool b_depthOfField;
 
+uniform mat4 colorCorrection;
+
 void main() { 
 
 	vec4 sum = vec4(0.0);
@@ -41,9 +43,11 @@ void main() {
 	else if (b_depthOfField) {
 		float interp = pow(sin(texCoord.y * 3.14159), 3.0f);
 		sum = max((1.0f - interp), 0.2f) * texture(renderPassSource1, texCoord) + interp * texture(renderPassSource0, texCoord);
+		sum = min(sum, 1.0f);
+		sum = colorCorrection * vec4(sum.xyz, 1.0f);
 	}
 	else {
-		sum = 0.8 * texture(renderPassSource0, texCoord) + 0.2 * texture(renderPassSource1, texCoord);
+		sum = texture(renderPassSource0, texCoord);
 	}
 
 	fColor = sum;
