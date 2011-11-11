@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "Angel.h"
+
 #include "ShaderState.h"
 
 class UberShader

@@ -44,7 +44,7 @@ InitShader(const char* vShaderFile, const char* fShaderFile)
 	Shader& s = shaders[i];
 	s.source = readShaderSource( s.filename );
 	if ( shaders[i].source == NULL ) {
-	    std::cerr << "Failed to read " << s.filename << std::endl;
+	    std::cerr << "InitShader: Failed to read " << s.filename << std::endl;
 		system("pause");
 	    exit( EXIT_FAILURE );
 	}
@@ -56,7 +56,7 @@ InitShader(const char* vShaderFile, const char* fShaderFile)
 	GLint  compiled;
 	glGetShaderiv( shader, GL_COMPILE_STATUS, &compiled );
 	if ( !compiled ) {
-	    std::cerr << s.filename << " failed to compile:" << std::endl;
+	    std::cerr << "InitShader: " << s.filename << " failed to compile:" << std::endl;
 	    GLint  logSize;
 	    glGetShaderiv( shader, GL_INFO_LOG_LENGTH, &logSize );
 	    char* logMsg = new char[logSize];
@@ -79,7 +79,7 @@ InitShader(const char* vShaderFile, const char* fShaderFile)
     GLint  linked;
     glGetProgramiv( program, GL_LINK_STATUS, &linked );
     if ( !linked ) {
-		std::cerr << "Shader program failed to link" << std::endl;
+		std::cerr << "InitShader: Shader program failed to link" << std::endl;
 		GLint  logSize;
 		glGetProgramiv( program, GL_INFO_LOG_LENGTH, &logSize);
 		char* logMsg = new char[logSize];

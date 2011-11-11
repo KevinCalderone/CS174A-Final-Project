@@ -3,6 +3,7 @@
 BMPTexture::BMPTexture (TextureType type, TextureMode mode, const std::vector<const std::string>& fileNames)
   : m_type(type), m_textureID(0) 
 {
+
 	switch (type) {
 		case e_TextureType2d:
 			Load2dTexture(fileNames);	 
@@ -22,14 +23,13 @@ BMPTexture::BMPTexture (TextureType type, TextureMode mode, const std::vector<co
 		glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	}
 	else if (mode == e_TextureModeTriLinear) {
-		glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(m_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 		glTexParameteri(m_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(m_type, GL_TEXTURE_WRAP_S, GL_TEXTURE_WRAP_S);
-		glTexParameteri(m_type, GL_TEXTURE_WRAP_T, GL_TEXTURE_WRAP_T);
+		glTexParameteri(m_type, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(m_type, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		glGenerateMipmap(m_type);
-	}
-	                    
+	}                    
 }
                                    
 BMPTexture::~BMPTexture() {

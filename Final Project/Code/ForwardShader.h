@@ -4,7 +4,7 @@
 #include <string>
 
 #include "UberShader.h"
-#include "ShaderState.h"
+#include "ForwardShaderState.h"
 
 class ForwardShader : public UberShader
 {
@@ -12,7 +12,7 @@ public:
 	ForwardShader (const std::string& vertShader, const std::string& fragShader);
 	~ForwardShader ();
 
-	void SetShaderState (const ShaderState& shaderState);
+	void SetShaderState (const ForwardShaderState& shaderState);
 
 private:	
 	GLuint m_vPosition;
@@ -43,7 +43,7 @@ private:
 	GLuint m_pointLightRange;
 	GLuint m_pointLightAttenuationMultiplier;
 
-	ShaderState m_currentState;
+	ForwardShaderState m_currentState;
 };
 
 #endif

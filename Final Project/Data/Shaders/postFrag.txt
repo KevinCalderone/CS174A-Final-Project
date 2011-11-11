@@ -3,8 +3,8 @@
 in vec2 texCoord;
 out vec4 fColor; 
 
-uniform sampler2D forwardRenderedResult;
-uniform sampler2D forwardRenderedResultBlur;
+uniform sampler2D renderPassSource0;
+uniform sampler2D renderPassSource1;
 
 uniform bool b_blurX;
 uniform bool b_blurY;
@@ -15,35 +15,35 @@ void main() {
 	vec4 sum = vec4(0.0);
 
 	if (b_blurY) {
-		float blurHeight = 1.0f / 600.0f;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y - 4.0*blurHeight)) * 0.05;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y - 3.0*blurHeight)) * 0.09;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y - 2.0*blurHeight)) * 0.12;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y - blurHeight)) * 0.15;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y)) * 0.16;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y + blurHeight)) * 0.15;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y + 2.0*blurHeight)) * 0.12;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y + 3.0*blurHeight)) * 0.09;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y + 4.0*blurHeight)) * 0.05;
+		float blurHeight = 2.0f / 600.0f;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y - 4.0*blurHeight)) * 0.05;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y - 3.0*blurHeight)) * 0.09;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y - 2.0*blurHeight)) * 0.12;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y - blurHeight)) * 0.15;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y)) * 0.16;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y + blurHeight)) * 0.15;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y + 2.0*blurHeight)) * 0.12;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y + 3.0*blurHeight)) * 0.09;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y + 4.0*blurHeight)) * 0.05;
 	}
 	else if (b_blurX) {
-		float blurWidth = 1.0f / 600.0f;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x - 4.0*blurWidth, texCoord.y)) * 0.05;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x - 3.0*blurWidth, texCoord.y)) * 0.09;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x - 2.0*blurWidth, texCoord.y)) * 0.12;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x - blurWidth, texCoord.y)) * 0.15;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x, texCoord.y)) * 0.16;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x + blurWidth, texCoord.y)) * 0.15;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x + 2.0*blurWidth, texCoord.y)) * 0.12;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x + 3.0*blurWidth, texCoord.y)) * 0.09;
-		sum += texture2D(forwardRenderedResult, vec2(texCoord.x + 4.0*blurWidth, texCoord.y)) * 0.05;
+		float blurWidth = 2.0f / 800.0f;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x - 4.0*blurWidth, texCoord.y)) * 0.05;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x - 3.0*blurWidth, texCoord.y)) * 0.09;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x - 2.0*blurWidth, texCoord.y)) * 0.12;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x - blurWidth, texCoord.y)) * 0.15;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y)) * 0.16;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x + blurWidth, texCoord.y)) * 0.15;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x + 2.0*blurWidth, texCoord.y)) * 0.12;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x + 3.0*blurWidth, texCoord.y)) * 0.09;
+		sum += texture2D(renderPassSource0, vec2(texCoord.x + 4.0*blurWidth, texCoord.y)) * 0.05;
 	}
 	else if (b_depthOfField) {
 		float interp = pow(sin(texCoord.y * 3.14159), 3.0f);
-		sum = max((1.0f - interp), 0.2f) * texture(forwardRenderedResultBlur, texCoord) + interp * texture(forwardRenderedResult, texCoord);
+		sum = max((1.0f - interp), 0.2f) * texture(renderPassSource1, texCoord) + interp * texture(renderPassSource0, texCoord);
 	}
 	else {
-		sum = 0.8 * texture(forwardRenderedResult, texCoord) + 0.2 * texture(forwardRenderedResultBlur, texCoord);
+		sum = 0.8 * texture(renderPassSource0, texCoord) + 0.2 * texture(renderPassSource1, texCoord);
 	}
 
 	fColor = sum;
