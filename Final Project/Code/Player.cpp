@@ -63,9 +63,6 @@ void Player::removeLife() {
 }
 
 void Player::setDirection (const vec3& direction) {
-	//double theta = acos(dot(normalize(m_direction),normalize(direction)));
-	//m_bb->rotate(theta/DegreesToRadians);
-	//std::cout << theta/DegreesToRadians <<"   " << *m_position << std::endl;
 	m_bb->setDirection(vec2(direction.x,direction.z));
 	m_direction = direction;
 }

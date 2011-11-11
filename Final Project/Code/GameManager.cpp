@@ -60,10 +60,6 @@ void GameManager::callbackKeyUp(unsigned char key, int x, int y)
 void GameManager::keyboardUpdate()
 {
 	m_player->setVelocity(vec3(m_d-m_a,0.0f,m_s-m_w));
-	//if(m_l-m_j==0 && m_k-m_i==0)
-	//	m_player->setDirection(vec3(0.0f,0.0f,1.0f));
-	//else
-	//	m_player->setDirection(vec3(m_l-m_j,0.0f,m_k-m_i));
 	if(m_j) angle += 0.05;
 	if(m_l) angle -= 0.05;
 	if(angle>360 || angle<-360) angle = 0.0;
@@ -113,7 +109,6 @@ void GameManager::Spawn(objectType type, vec3 position, double size){
 		break;
 	case MONSTER:
 		{
-			//Monster* monster = new Monster(position, vec3(1.0,0.0,0.0) , size, 0.1);
 			Monster* monster = new Monster(position, normalize(*m_player->getPosition() - position), size, 0.01);
 			m_monsters.push_back(monster);
 		}
@@ -155,8 +150,6 @@ void GameManager::CollisionDetection()
 		if(m_bullets.size()!=0 && m_monsters.size()!=0
 			&& collision(*m_bullets.at(j)->getBoundingBox(), *m_monsters.at(i)->getBoundingBox()))
 		{
-			//m_monsters.erase(m_monsters.begin()+i);
-			//m_bullets.erase(m_bullets.begin()+j);
 			Delete(MONSTER,i);
 			Delete(BULLET,j);
 			i--;
@@ -181,7 +174,6 @@ void GameManager::Update()
 	CollisionDetection();
 
 	for(int i=0;i<m_monsters.size();i++){
-		//std::cout << acos(dot(normalize(*m_monsters.at(i)->getVelocity()), normalize(*m_player->getDirection()))) << std::endl;
 		//m_monsters.at(i)->setVelocity(*m_player->getDirection());
 		m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
 		m_monsters.at(i)->Update(1.0f);

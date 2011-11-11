@@ -24,15 +24,10 @@ Object::~Object () {
 void Object::setPosition (const vec3& position) {
 	m_position = position;
 	m_bb->setCenter(vec2(m_position.x,m_position.z));
-	//if(m_render!=NULL)
-	//	m_render->m_effectParameters.m_modelviewMatrix = Angel::Translate(m_position) * Angel::Scale(vec3(m_size))
-	//													* Angel::RotateY((GLfloat)90+atan2(m_velocity.x,m_velocity.z)*R2D);
 }
 
 void Object::setVelocity (const vec3& velocity) {
 	m_velocity = velocity * m_speed;
-	//if(m_render!=NULL)
-	//	m_render->m_effectParameters.m_modelviewMatrix *= Angel::RotateY((GLfloat)90+atan2(velocity.x,velocity.z)*R2D);
 }
 
 vec3* Object::getVelocity() {

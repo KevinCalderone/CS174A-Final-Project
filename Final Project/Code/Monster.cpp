@@ -23,8 +23,6 @@ Monster::Monster(vec3 position, vec3 velocity, float size, float speed)
 
 void Monster::setVelocity(const vec3& velocity)
 {
-	//double theta = acos(dot(normalize(m_velocity),normalize(velocity)));
-	//m_bb->rotate(theta/DegreesToRadians);
 	m_bb->setDirection(vec2(velocity.x,velocity.z));
 	m_velocity = velocity * m_speed;
 }
