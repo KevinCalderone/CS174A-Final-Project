@@ -9,7 +9,7 @@ Player::Player ()
 }
 
 Player::Player (vec3 position, vec3 direction, float size, float speed, int lives, int weaponDelay)
-	: Object(position, vec3(0.0f), size, speed), m_direction(direction), m_lives(lives), m_weaponDelay(weaponDelay)
+	: Object(position, vec3(0.0f), size, speed), m_direction(direction), m_lives(lives), m_weaponDelay(weaponDelay), m_cooldown(0)
 {
 	RenderBatch* batch = new RenderBatch();
 	batch->m_geometryID = "cube";

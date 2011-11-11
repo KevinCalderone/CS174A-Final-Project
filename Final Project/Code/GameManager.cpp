@@ -78,17 +78,7 @@ GraphicsManager* GameManager::getGraphicsManager()
 void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & Ground
 {
 	m_ground = new Ground();
-	RenderBatch* batch = new RenderBatch();
-	batch->m_geometryID = "plane";	
-	batch->m_effectParameters.m_modelviewMatrix =  mat4();
-	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
-	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.5f;
-	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f) * 0.3f;
-	batch->m_effectParameters.m_materialSpecularExponent = 6.0f;
-	batch->m_effectParameters.m_materialGloss = 0.0f;
-	batch->m_effectParameters.m_diffuseTexture = "stone";	
-	batch->m_effectParameters.m_normalMap = "stoneNormal";
-	m_ground->setRenderBatch(batch);
+
 	//m_enviro.push_back(new EnviroObj(/* type, position */)); // OK do we want to have some sort of file specify		\
 																all the parameters for where every tree/rock/etc	\
 																is located at? Or do we want initEnviro to just		\
@@ -99,13 +89,8 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 
 void GameManager::initPlayer()
 {
-	m_player = spawnPlayer();
-	m_player->setSize(1.f); // default?
-	m_player->setSpeed(0.2f);
-	m_player->setWeaponDelay(30); // default?
-	m_player->setDirection(Angel::vec3(0.0f)); // default?
-	m_player->setPosition(Angel::vec3(0.0f,0.0f,1.0f)); // default?
-	m_player->addLife(3); // default?
+	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 1.0f, 0.2f, 3, 30);
+
 }
 
 void GameManager::initMonsters()
@@ -127,21 +112,13 @@ void GameManager::Spawn(objectType type, vec3 position, double size){
 		break;
 	case MONSTER:
 		{
-			Monster* monster = spawnMonster();
-			monster->setSize(size);
-			monster->setPosition(position);
-			monster->setSpeed(0.01);
-			monster->setVelocity(normalize(*m_player->getPosition() - position));
+			Monster* monster = new Monster(position, normalize(*m_player->getPosition() - position), size, 0.01);
 			m_monsters.push_back(monster);
 		}
 		break;
 	case BULLET:
 		{
-			Bullet* bullet = spawnBullet(*m_player->getPosition());
-			bullet->setSize(0.1);
-			bullet->setPosition(position);
-			bullet->setSpeed(0.5);
-			bullet->setVelocity(normalize(*m_player->getDirection()));
+			Bullet* bullet = new Bullet(*m_player->getPosition(), normalize(*m_player->getDirection()), 0.1, 0.5);
 			m_bullets.push_back(bullet);
 		}
 		break;
@@ -150,53 +127,6 @@ void GameManager::Spawn(objectType type, vec3 position, double size){
 	}
 }
 
-Monster* GameManager::spawnMonster()
-{
-	Monster* monster = new Monster();
-	RenderBatch* batch = new RenderBatch();
-	batch->m_geometryID = "monster";
-	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 5.0f;
-	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 5.0f;
-	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.8f) * 0.1f;
-	batch->m_effectParameters.m_materialSpecularExponent = 14.0f;
-	batch->m_effectParameters.m_materialGloss = 0.1f;
-	batch->m_effectParameters.m_diffuseTexture = "monster";	
-	batch->m_effectParameters.m_normalMap = "monsterNormal";
-	monster->setRenderBatch(batch);
-	return monster;
-}
-
-Player* GameManager::spawnPlayer()
-{
-	Player* player = new Player();
-	RenderBatch* batch = new RenderBatch();
-	batch->m_geometryID = "cube";
-	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 5.0f;
-	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 5.0f;
-	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.8f) * 0.1f;
-	batch->m_effectParameters.m_materialSpecularExponent = 14.0f;
-	batch->m_effectParameters.m_materialGloss = 0.1f;
-	batch->m_effectParameters.m_diffuseTexture = "monster";	
-	batch->m_effectParameters.m_normalMap = "monsterNormal";
-	player->setRenderBatch(batch);
-	return player;
-}
-
-Bullet* GameManager::spawnBullet(vec3 position)
-{
-	Bullet* bullet = new Bullet(position);
-	RenderBatch* batch = new RenderBatch();
-	batch->m_geometryID = "sphere";
-	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 5.0f;
-	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 5.0f;
-	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.8f) * 0.1f;
-	batch->m_effectParameters.m_materialSpecularExponent = 14.0f;
-	batch->m_effectParameters.m_materialGloss = 100.f;
-	batch->m_effectParameters.m_diffuseTexture = "panda";	
-	batch->m_effectParameters.m_normalMap = "monsterNormal";
-	bullet->setRenderBatch(batch);
-	return bullet;
-}
 
 void GameManager::Update()
 {
