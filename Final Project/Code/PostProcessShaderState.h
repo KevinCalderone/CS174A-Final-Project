@@ -2,6 +2,7 @@
 #define __POSTPROCESSSHADERSTATE_H__
 
 #include "ShaderState.h"
+#include "mat.h"
 
 struct PostProcessShaderState : public ShaderState
 {
