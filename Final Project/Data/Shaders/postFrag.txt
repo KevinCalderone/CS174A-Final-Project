@@ -43,7 +43,8 @@ void main() {
 		sum += texture2D(renderPassSource0, vec2(texCoord.x + 4.0*blurWidth, texCoord.y)) * 0.05;
 	}
 	else if (b_depthOfField) {
-		float interp = pow(sin(texCoord.y * 3.14159), 3.0f);
+		//float interp = pow(sin(texCoord.y * 3.14159), 3.0f);
+		float interp = max(0.45f - length(texCoord - vec2(0.5f, 0.5f)), 0.0f);
 		sum = max((1.0f - interp), 0.2f) * texture(renderPassSource1, texCoord) + interp * texture(renderPassSource0, texCoord);
 		sum = min(sum, 1.0f);
 		sum = colorCorrection * vec4(sum.xyz, 1.0f);

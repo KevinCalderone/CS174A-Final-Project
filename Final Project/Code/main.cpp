@@ -47,16 +47,24 @@ void callbackDisplay () {
 		static float theta = 0.0f;
 		theta += 1.0f;
 
-		//SetupCamera(vec4(sin(theta * DegreesToRadians), 0.0f, cos(theta * DegreesToRadians), 0.0f));
 		SetupCamera(*gameManager->getPlayer()->getPosition());
 
 		RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
-		renderParameters.m_pointLightPosition[0] = vec3(5.0f * sin((theta + 0) * DegreesToRadians), 1.0f, 5.0f * cos((theta + 0) * DegreesToRadians));
-		renderParameters.m_pointLightPosition[1] = vec3(5.0f * sin((theta + 120) * DegreesToRadians), 1.0f, 5.0f * cos((theta + 120) * DegreesToRadians));
-		renderParameters.m_pointLightPosition[2] = vec3(5.0f * sin((theta + 240) * DegreesToRadians), 1.0f, 5.0f * cos((theta + 240) * DegreesToRadians));
-		renderParameters.m_pointLightSpecular[0] = vec3(500.0f * pow(abs(sin((theta + 0) * DegreesToRadians)), 20.0f), 0.0f, 0.0f);
-		renderParameters.m_pointLightSpecular[1] = vec3(0.0f, 0.0f, 500.0f * pow(abs(sin((theta + 120) * DegreesToRadians)), 20.0f));
-		renderParameters.m_pointLightSpecular[2] = vec3(0.0f, 500.0f * pow(abs(sin((theta + 240) * DegreesToRadians)), 20.0f), 0.0f);
+
+		// Position lights at player postion
+		renderParameters.m_pointLightPosition[0] = *gameManager->getPlayer()->getPosition() + vec3(0.0f, 1.5f, -1.5f);
+		renderParameters.m_pointLightPosition[1] = *gameManager->getPlayer()->getPosition() + vec3(0.0f, 0.5f, -2.5f);
+		
+		// Muzzle flash
+		float flashIntensity = cos((3.14159 / 2.0f) * (fmod(theta, 20.0f) < 13.0f ? fmod(theta, 20.0f) / 13.0f : 1.0f));
+		renderParameters.m_pointLightDiffuse[1] = vec3(3.0f, 3.0f, 0.0f) * flashIntensity;
+		renderParameters.m_pointLightSpecular[1] = vec3(2.0f, 2.0f, 0.0f) * flashIntensity;
+		renderParameters.m_pointLightRange[1] = 8.0f * flashIntensity;
+		renderParameters.m_pointLightFalloff[1] = 2.0f * flashIntensity;
+
+		// Flickering Torch
+		renderParameters.m_pointLightRange[0] = 11.0f + 2.0f * (sin(theta * 0.12f) + sin(theta * 0.14f) + sin(theta * 0.09f))/3.0f ;
+		renderParameters.m_pointLightFalloff[0] = 2.0f + 1.0f * (sin(theta * 0.12f) + sin(theta * 0.14f) + sin(theta * 0.09f))/3.0f;
 
 		gameManager->Render();
 	}
@@ -128,29 +136,29 @@ int main (int argc, char** argv) {
 
 	RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
 	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, 2.0f);
-	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.15f;
-	renderParameters.m_lightDiffuse = vec3(1.0f, 1.0f, 0.6f) * 0.3f;
-	renderParameters.m_lightSpecular = vec3(1.0f, 1.0f, 0.7f) * 0.3f;
+	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.0f;
+	renderParameters.m_lightDiffuse = vec3(1.0f, 1.0f, 0.6f) * 0.0f;
+	renderParameters.m_lightSpecular = vec3(1.0f, 1.0f, 0.7f) * 0.0f;
 	renderParameters.m_environmentMap = "envMap";
-
-	renderParameters.m_pointLightPosition[0] = vec3(-5.0f, 1.0f, 0.0f);
-	renderParameters.m_pointLightDiffuse[0] = vec3(1.0f, 0.0f, 0.0f);
-	renderParameters.m_pointLightSpecular[0] = vec3(200.0f, 0.0f, 0.0f);
-	renderParameters.m_pointLightRange[0] = 8.0f;
-	renderParameters.m_pointLightFalloff[0] = 2.0f;
-
-	renderParameters.m_pointLightPosition[1] = vec3(5.0f, 1.0f, 0.0f);
-	renderParameters.m_pointLightDiffuse[1] = vec3(0.0f, 0.0f, 1.0f);
-	renderParameters.m_pointLightSpecular[1] = vec3(0.0f, 0.0f, 1.0f);
-	renderParameters.m_pointLightRange[1] = 8.0f;
-	renderParameters.m_pointLightFalloff[1] = 2.0f;
 	
+	renderParameters.m_pointLightAmbient[0] = vec3(0.1f, 0.0f, 0.0f);
+	renderParameters.m_pointLightDiffuse[0] = vec3(1.5f, 0.5f, 0.0f);
+	renderParameters.m_pointLightSpecular[0] = vec3(2.5f, 1.5f, 0.0f);
+	renderParameters.m_pointLightRange[0] = 12.0f;
+	renderParameters.m_pointLightFalloff[0] = 5.0f;
+	
+	renderParameters.m_pointLightPosition[1] = vec3(5.0f, 1.0f, 0.0f);
+	renderParameters.m_pointLightDiffuse[1] = vec3(0.0f, 0.0f, 0.0f);
+	renderParameters.m_pointLightSpecular[1] = vec3(0.0f, 0.0f, 0.0f);
+	renderParameters.m_pointLightRange[1] = 10.0f;
+	renderParameters.m_pointLightFalloff[1] = 2.0f;
+	/*
 	renderParameters.m_pointLightPosition[2] = vec3(0.0f, 1.0f, 5.0f);
 	renderParameters.m_pointLightDiffuse[2] = vec3(0.0f, 1.0f, 0.0f);
 	renderParameters.m_pointLightSpecular[2] = vec3(0.0f, 1.0f, 0.0f);
 	renderParameters.m_pointLightRange[2] = 8.0f;
 	renderParameters.m_pointLightFalloff[2] = 2.0f;
-	
+	*/
 	// No color correction
 	renderParameters.m_colorCorrection = mat4(
 		1.0f, 0.0f, 0.0f, 0.0f,
