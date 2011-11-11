@@ -144,11 +144,11 @@ void GameManager::Delete(objectType type, int index)
 
 void GameManager::CollisionDetection()
 {
-	if(collision(*m_player->getBoundingBox(),*m_monsters.at(0)->getBoundingBox()))
+	/*if(collision(*m_player->getBoundingBox(),*m_monsters.at(0)->getBoundingBox()))
 		std::cout << "COLLISION BITCH!" << std::endl;
 	else
-		std::cout << "You're good!" << std::endl;
-	/*
+		std::cout << "You're good!" << std::endl;*/
+	
 	for(int j=0; j<m_bullets.size();j++){
 	for(int i=0; i<m_monsters.size();i++)
 	{
@@ -164,7 +164,13 @@ void GameManager::CollisionDetection()
 		}
 	}
 	}
-	*/
+
+	for(int k=0; k<m_monsters.size();k++)
+	{
+		if(collision(*m_monsters.at(k)->getBoundingBox(),*m_player->getBoundingBox()))
+			std::cout << "YOU GOT KILLED BY: " << k << std::endl;
+	}
+	
 }
 
 void GameManager::Update()
@@ -176,8 +182,8 @@ void GameManager::Update()
 
 	for(int i=0;i<m_monsters.size();i++){
 		//std::cout << acos(dot(normalize(*m_monsters.at(i)->getVelocity()), normalize(*m_player->getDirection()))) << std::endl;
-		m_monsters.at(i)->setVelocity(*m_player->getDirection());
-		//m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
+		//m_monsters.at(i)->setVelocity(*m_player->getDirection());
+		m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
 		m_monsters.at(i)->Update(1.0f);
 	}
 	for(int i=0;i<m_bullets.size();i++)

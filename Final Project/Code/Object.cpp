@@ -65,7 +65,7 @@ RenderBatch* Object::getRenderBatch () {
 }
 
 void Object::Update(float delta) {
-	//m_position += m_velocity;
+	m_position += m_velocity;
 	m_bb->setCenter(vec2(m_position.x,m_position.z));
 	if(m_render!=NULL)
 		m_render->m_effectParameters.m_modelviewMatrix = Angel::Translate(m_position) * Angel::Scale(vec3(m_size))

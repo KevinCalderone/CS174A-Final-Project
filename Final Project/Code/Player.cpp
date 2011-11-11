@@ -22,7 +22,7 @@ Player::Player (vec3 position, vec3 direction, float size, float speed, int live
 	batch->m_effectParameters.m_normalMap = "monsterNormal";
 	this->setRenderBatch(batch);
 
-	m_bb = new BoundingBox(vec2(position.x,position.z),0.9,0.9);
+	m_bb = new BoundingBox(vec2(position.x,position.z),1,1);
 }
 
 Player::~Player () {
