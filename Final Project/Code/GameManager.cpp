@@ -68,6 +68,7 @@ void GameManager::keyboardUpdate()
 	if(m_l) angle -= 0.05;
 	if(angle>360 || angle<-360) angle = 0.0;
 	m_player->setDirection(vec3(-sin(angle),0.0f,-cos(angle)));
+	m_player->getBoundingBox()->rotate((m_l-m_j)*(0.05/DegreesToRadians));
 }
 
 GraphicsManager* GameManager::getGraphicsManager()
@@ -112,6 +113,7 @@ void GameManager::Spawn(objectType type, vec3 position, double size){
 		break;
 	case MONSTER:
 		{
+			//Monster* monster = new Monster(position, vec3(1.0,0.0,0.0) , size, 0.1);
 			Monster* monster = new Monster(position, normalize(*m_player->getPosition() - position), size, 0.01);
 			m_monsters.push_back(monster);
 		}
@@ -127,17 +129,65 @@ void GameManager::Spawn(objectType type, vec3 position, double size){
 	}
 }
 
+void GameManager::Delete(objectType type, int index)
+{
+	switch(type)
+	{
+	case PLAYER:
+		delete m_player; break;
+	case MONSTER:
+		m_monsters.erase(m_monsters.begin()+index); break;
+	case BULLET:
+		m_bullets.erase(m_bullets.begin()+index); break;
+	}
+}
+
+void GameManager::CollisionDetection()
+{
+	if(collision(*m_player->getBoundingBox(),*m_monsters.at(0)->getBoundingBox()))
+		std::cout << "COLLISION BITCH!" << std::endl;
+	else
+		std::cout << "You're good!" << std::endl;
+	/*
+	for(int j=0; j<m_bullets.size();j++){
+	for(int i=0; i<m_monsters.size();i++)
+	{
+		if(m_bullets.size()!=0 && m_monsters.size()!=0
+			&& collision(*m_bullets.at(j)->getBoundingBox(), *m_monsters.at(i)->getBoundingBox()))
+		{
+			//m_monsters.erase(m_monsters.begin()+i);
+			//m_bullets.erase(m_bullets.begin()+j);
+			Delete(MONSTER,i);
+			Delete(BULLET,j);
+			i--;
+			j--;
+		}
+	}
+	}
+	*/
+}
 
 void GameManager::Update()
 {
 	if(m_auto && m_player->shoot())
 		Spawn(BULLET,*m_player->getPosition());
+
+	CollisionDetection();
+
 	for(int i=0;i<m_monsters.size();i++){
-		m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
+		//std::cout << acos(dot(normalize(*m_monsters.at(i)->getVelocity()), normalize(*m_player->getDirection()))) << std::endl;
+		m_monsters.at(i)->setVelocity(*m_player->getDirection());
+		//m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
 		m_monsters.at(i)->Update(1.0f);
 	}
 	for(int i=0;i<m_bullets.size();i++)
-		m_bullets.at(i)->Update(1.0f);
+	{
+		if(m_bullets.size() != 0){
+			m_bullets.at(i)->Update(1.0f);
+			if(length(*m_bullets.at(i)->getPosition()-*m_player->getPosition()) > 100){
+				Delete(BULLET,i); i--;std::cout << i << std::endl;}
+		}
+	}
 	m_player->Update(1.0f);
 }
 	

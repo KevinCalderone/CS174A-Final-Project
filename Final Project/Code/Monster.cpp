@@ -17,4 +17,14 @@ Monster::Monster(vec3 position, vec3 velocity, float size, float speed)
 	batch->m_effectParameters.m_diffuseTexture = "monster";	
 	batch->m_effectParameters.m_normalMap = "monsterNormal";
 	this->setRenderBatch(batch);
+
+	m_bb = new BoundingBox(vec2(position.x,position.z),0.9*size,0.9*size);//0.9,1.8?
+}
+
+void Monster::setVelocity(const vec3& velocity)
+{
+	//double theta = acos(dot(normalize(m_velocity),normalize(velocity)));
+	//m_bb->rotate(theta/DegreesToRadians);
+	m_bb->setDirection(vec2(velocity.x,velocity.z));
+	m_velocity = velocity * m_speed;
 }

@@ -36,6 +36,7 @@
     <ClCompile Include="Code\EnviroObj.cpp" />
     <ClCompile Include="Code\Bullet.cpp" />
     <ClCompile Include="Code\Monster.cpp" />
+    <ClCompile Include="Code\BoundingBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Angel.h">
@@ -99,6 +100,7 @@
     <ClInclude Include="Code\ForwardShader.h">
       <Filter>Graphics\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Code\BoundingBox.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">

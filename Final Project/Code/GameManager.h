@@ -32,14 +32,14 @@ private:
 	Ground* m_ground;
 	GraphicsManager* m_graphicsManager;
 	int m_score;
-	static const int MONSTERCAP = 50;
+	static const int MONSTERCAP = 1;
 	void Spawn(objectType type, vec3 position, double size=10.0);
 	Monster* spawnMonster();
 	Player* spawnPlayer();
 	Bullet* spawnBullet(vec3 position);
 	float angle;
 	bool m_w,m_a,m_s,m_d,m_j,m_l,m_auto;
-	void Delete(Object* object);
+	void Delete(objectType type, int index=0);
 	void Update();
 	void keyboardUpdate();
 	void CollisionDetection();

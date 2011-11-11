@@ -91,6 +91,7 @@
   <ItemGroup>
     <ClInclude Include="Code\Angel.h" />
     <ClInclude Include="Code\BMPTexture.h" />
+    <ClInclude Include="Code\BoundingBox.h" />
     <ClInclude Include="Code\EffectParameters.h" />
     <ClInclude Include="Code\ForwardShader.h" />
     <ClInclude Include="Code\Geometry.h" />
@@ -117,6 +118,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Code\BMPTexture.cpp" />
+    <ClCompile Include="Code\BoundingBox.cpp" />
     <ClCompile Include="Code\Bullet.cpp" />
     <ClCompile Include="Code\EnviroObj.cpp" />
     <ClCompile Include="Code\ForwardShader.cpp" />

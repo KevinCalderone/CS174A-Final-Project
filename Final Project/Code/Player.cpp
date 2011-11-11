@@ -21,6 +21,8 @@ Player::Player (vec3 position, vec3 direction, float size, float speed, int live
 	batch->m_effectParameters.m_diffuseTexture = "monster";	
 	batch->m_effectParameters.m_normalMap = "monsterNormal";
 	this->setRenderBatch(batch);
+
+	m_bb = new BoundingBox(vec2(position.x,position.z),0.9,0.9);
 }
 
 Player::~Player () {
@@ -61,6 +63,10 @@ void Player::removeLife() {
 }
 
 void Player::setDirection (const vec3& direction) {
+	//double theta = acos(dot(normalize(m_direction),normalize(direction)));
+	//m_bb->rotate(theta/DegreesToRadians);
+	//std::cout << theta/DegreesToRadians <<"   " << *m_position << std::endl;
+	m_bb->setDirection(vec2(direction.x,direction.z));
 	m_direction = direction;
 }
 
@@ -75,6 +81,7 @@ vec3* Player::getVelocity () {
 void Player::Update(float delta)
 {
 	m_position += m_velocity;
+	m_bb->setCenter(vec2(m_position.x,m_position.z));
 	if(m_render!=NULL)
 		m_render->m_effectParameters.m_modelviewMatrix = Angel::Translate(m_position) * Angel::Scale(vec3(m_size))
 														* Angel::RotateY((GLfloat)90+atan2(m_direction.x,m_direction.z)/DegreesToRadians);

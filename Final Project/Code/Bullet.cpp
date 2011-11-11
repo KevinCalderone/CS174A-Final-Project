@@ -18,4 +18,6 @@ Bullet::Bullet(vec3 position, vec3 velocity, float size, float speed)
 	batch->m_effectParameters.m_diffuseTexture = "panda";	
 	batch->m_effectParameters.m_normalMap = "monsterNormal";
 	this->setRenderBatch(batch);
+
+	m_bb = new BoundingBox(vec2(position.x,position.z),1*size,1*size);
 }

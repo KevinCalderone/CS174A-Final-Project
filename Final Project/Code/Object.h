@@ -2,6 +2,7 @@
 #define __OBJECT_H__
 
 #include "RenderBatch.h"
+#include "BoundingBox.h"
 
 class Object
 {
@@ -18,13 +19,16 @@ public:
 	void setSpeed (float speed);
 	void setRenderBatch(RenderBatch* rb);
 
+	vec3* getVelocity();
+
+	BoundingBox* getBoundingBox();
 	vec3* getPosition ();
 	RenderBatch* getRenderBatch ();
 
 	void Update(float delta);
 
 protected:
-
+	BoundingBox* m_bb;
 	RenderBatch* m_render;
 	vec3 m_position;
 	vec3 m_velocity;

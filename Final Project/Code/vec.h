@@ -148,6 +148,11 @@ vec2 normalize( const vec2& v ) {
     return v / length(v);
 }
 
+inline
+vec2 normal(const vec2& v) {
+	return vec2(v.y,-v.x);
+}
+
 //////////////////////////////////////////////////////////////////////////////
 //
 //  vec3.h - 3D vector
