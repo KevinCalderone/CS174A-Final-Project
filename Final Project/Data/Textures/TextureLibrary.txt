@@ -20,3 +20,6 @@ cube envMap
 	../Data/Textures/envMap_-x.bmp
 	../Data/Textures/envMap_-y.bmp
 	../Data/Textures/envMap_-z.bmp
+
+2d noise
+	../Data/Textures/noise.bmp

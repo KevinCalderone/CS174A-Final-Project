@@ -22,6 +22,7 @@ private:
 	GLuint b_depthOfField;
 
 	GLuint m_colorCorrection;
+	GLuint m_randSeed;
 
 	PostProcessShaderState m_currentState;
 };

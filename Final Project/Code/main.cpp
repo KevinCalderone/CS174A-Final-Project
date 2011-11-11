@@ -158,6 +158,7 @@ int main (int argc, char** argv) {
 		0.0f, 0.0f, 1.0f, 0.0f, 
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
+	
 	/*
 	// Under water looking
 	renderParameters.m_colorCorrection = mat4(

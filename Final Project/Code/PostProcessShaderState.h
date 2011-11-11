@@ -1,6 +1,8 @@
 #ifndef __POSTPROCESSSHADERSTATE_H__
 #define __POSTPROCESSSHADERSTATE_H__
 
+#include "Angel.h"
+
 #include "ShaderState.h"
 #include "mat.h"
 
@@ -17,6 +19,7 @@ struct PostProcessShaderState : public ShaderState
 	static_branch b_depthOfField;
 
 	mat4 m_colorCorrection;
+	int m_randSeed;
 };
 
 #endif
