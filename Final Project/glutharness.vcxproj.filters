@@ -128,6 +128,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{4a409850-85d5-47d8-b434-5d5a8044de84}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{c5abab42-63e8-499e-8e68-059fe20849eb}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{4606b1fd-a183-46cb-9316-fca1ec1e4f16}</UniqueIdentifier>
     </Filter>
@@ -140,17 +143,14 @@
     <Filter Include="Graphics\Shader">
       <UniqueIdentifier>{f4474ff5-268f-45fb-b8b9-2845cd2ac771}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Effect">
-      <UniqueIdentifier>{6177ba50-10cb-47f9-995e-da337f0d3974}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Data">
-      <UniqueIdentifier>{c5abab42-63e8-499e-8e68-059fe20849eb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics\Shader\ForwardShader">
       <UniqueIdentifier>{4e267423-56d8-4539-9717-866fce418ff6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\Shader\PostProcessShader">
       <UniqueIdentifier>{947fdced-fbe0-45c2-8d32-067430002b7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Effect">
+      <UniqueIdentifier>{6177ba50-10cb-47f9-995e-da337f0d3974}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

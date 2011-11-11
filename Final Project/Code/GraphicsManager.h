@@ -26,9 +26,6 @@ Kevin TODO
 
 ON DECK
 - Make sure everything is gettings released in the destructors
-- Refactoring: Abstract render passes so it is no longer hard coded
-	- Add a shader state class for PostProcessShader
-	- Add a texture class for frame buffer textures
 - Handle depth test as a parameter
 - Add cubemap shadowmapping for point light shadows
 - Add skeletal animation	
@@ -36,13 +33,13 @@ ON DECK
 	- Try to find models/figure out how to make animations in blender
 - Assign constants from GraphicsSettings into shaders
 - Remove dependency to "ScreenQuad" geometry name
-- ShadeState doesn't seem properly abstracted
 - Double check I am turning depth testing on/off correctly
 - Pass blur widths into post process shader 
 - Make render passes and frame buffer textures const
+- Add options for depth testing and writing into RenderPass
+- Optimization: Reduce Gausian sampling taps depending on how much color bleed we end up wanting
 
 FUTURE FEATURES
-- Add access to depth buffer in post process stage
 - Expose more options in RenderParameters such as DOF
 - Optimization: Only send diff of state to GPU
 - Optimization: Figure out if blitting or generateMipMaps if faster for downsampleing
@@ -74,7 +71,6 @@ public:
 private:
 	void ClearAssets ();
 	void LoadEffectFile (const std::string& effectFile);
-	void InitRenderBuffers ();
 
 	ForwardShaderState CalculateForwardShaderState (const EffectParameters& effectParameters);
 	PostProcessShaderState CalculatePostProcessShaderState (const EffectParameters& effectParameters);
