@@ -377,6 +377,7 @@ PostProcessShaderState GraphicsManager::CalculatePostProcessShaderState () {
 	PostProcessShaderState postProcessShaderState;
 
 	postProcessShaderState.m_colorCorrection = m_renderParameters.m_colorCorrection;
+	postProcessShaderState.m_randSeed = rand();
 
 	return postProcessShaderState;
 }

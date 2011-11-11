@@ -3,6 +3,8 @@
 in vec2 texCoord;
 out vec4 fColor; 
 
+uniform int randSeed;
+
 uniform sampler2D renderPassSource0;
 uniform sampler2D renderPassSource1;
 

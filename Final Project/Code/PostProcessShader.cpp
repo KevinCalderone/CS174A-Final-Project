@@ -15,6 +15,7 @@ PostProcessShader::PostProcessShader (const std::string& vertShader, const std::
 	b_depthOfField = glGetUniformLocation(m_program, "b_depthOfField");
 
 	m_colorCorrection = glGetUniformLocation(m_program, "colorCorrection");
+	m_randSeed = glGetUniformLocation(m_program, "randSeed");
 
 	glEnableVertexAttribArray(m_vPosition);
 	glVertexAttribPointer(m_vPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(c_positionDataOffset));
@@ -29,12 +30,12 @@ PostProcessShader::~PostProcessShader () {
 }
 
 void PostProcessShader::SetShaderState (const PostProcessShaderState& shaderState) {
-
 	glUniform1i(b_blurX, shaderState.b_blurX);
 	glUniform1i(b_blurY, shaderState.b_blurY);
 	glUniform1i(b_depthOfField, shaderState.b_depthOfField);
 
 	glUniformMatrix4fv(m_colorCorrection, 1, GL_TRUE, (GLfloat*)&shaderState.m_colorCorrection);
+	glUniform1i(m_randSeed, shaderState.m_randSeed);
 
 	m_currentState = shaderState;
 }
