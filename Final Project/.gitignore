@@ -2,5 +2,7 @@ Build/
 ipch
 glutharness.sdf
 glutharness.vcxproj.user
+glutharness.vcxproj.filters
 Debug/
 Release/
+glutharness.suo

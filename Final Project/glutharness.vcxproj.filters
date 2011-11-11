@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Code\main.cpp" />
@@ -25,18 +25,27 @@
     </ClCompile>
     <ClCompile Include="Code\Object.cpp" />
     <ClCompile Include="Code\Player.cpp" />
-    <ClCompile Include="Code\PostProcessShader.cpp">
-      <Filter>Graphics\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="Code\ForwardShader.cpp">
-      <Filter>Graphics\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="Code\GameManager.cpp" />
     <ClCompile Include="Code\Ground.cpp" />
     <ClCompile Include="Code\EnviroObj.cpp" />
     <ClCompile Include="Code\Bullet.cpp" />
     <ClCompile Include="Code\Monster.cpp" />
     <ClCompile Include="Code\BoundingBox.cpp" />
+    <ClCompile Include="Code\FrameBufferTexture.cpp">
+      <Filter>Graphics\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ForwardShader.cpp">
+      <Filter>Graphics\Shader\ForwardShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\ForwardShaderState.cpp">
+      <Filter>Graphics\Shader\ForwardShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\PostProcessShader.cpp">
+      <Filter>Graphics\Shader\PostProcessShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Code\PostProcessShaderState.cpp">
+      <Filter>Graphics\Shader\PostProcessShader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Angel.h">
@@ -88,17 +97,29 @@
     <ClInclude Include="Code\UberShader.h">
       <Filter>Graphics\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Code\ShaderState.h">
-      <Filter>Graphics\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Code\GraphicsSettings.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Code\PostProcessShader.h">
+    <ClInclude Include="Code\FrameBufferTexture.h">
+      <Filter>Graphics\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\RenderPass.h">
+      <Filter>Graphics\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\ShaderState.h">
       <Filter>Graphics\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Code\ForwardShaderState.h">
+      <Filter>Graphics\Shader\ForwardShader</Filter>
+    </ClInclude>
     <ClInclude Include="Code\ForwardShader.h">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Graphics\Shader\ForwardShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\PostProcessShaderState.h">
+      <Filter>Graphics\Shader\PostProcessShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Code\PostProcessShader.h">
+      <Filter>Graphics\Shader\PostProcessShader</Filter>
     </ClInclude>
     <ClInclude Include="Code\BoundingBox.h" />
   </ItemGroup>
@@ -108,6 +129,9 @@
     </Filter>
     <Filter Include="Shaders">
       <UniqueIdentifier>{4a409850-85d5-47d8-b434-5d5a8044de84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Data">
+      <UniqueIdentifier>{c5abab42-63e8-499e-8e68-059fe20849eb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{4606b1fd-a183-46cb-9316-fca1ec1e4f16}</UniqueIdentifier>
@@ -120,6 +144,15 @@
     </Filter>
     <Filter Include="Graphics\Shader">
       <UniqueIdentifier>{f4474ff5-268f-45fb-b8b9-2845cd2ac771}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Shader\ForwardShader">
+      <UniqueIdentifier>{4e267423-56d8-4539-9717-866fce418ff6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Shader\PostProcessShader">
+      <UniqueIdentifier>{947fdced-fbe0-45c2-8d32-067430002b7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Effect">
+      <UniqueIdentifier>{6177ba50-10cb-47f9-995e-da337f0d3974}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +167,18 @@
     </None>
     <None Include="Data\Shaders\postVert.txt">
       <Filter>Shaders</Filter>
+    </None>
+    <None Include="Data\Geometry\GeometryLibrary.txt">
+      <Filter>Data</Filter>
+    </None>
+    <None Include="Data\Textures\TextureLibrary.txt">
+      <Filter>Data</Filter>
+    </None>
+    <None Include="Data\AssetLibrary.txt">
+      <Filter>Data</Filter>
+    </None>
+    <None Include="Data\Shaders\Effect.txt">
+      <Filter>Data</Filter>
     </None>
   </ItemGroup>
 </Project>

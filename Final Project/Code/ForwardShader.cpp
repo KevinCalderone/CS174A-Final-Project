@@ -51,7 +51,7 @@ ForwardShader::ForwardShader (const std::string& vertShader, const std::string& 
 	glUniform1i(glGetUniformLocation(m_program, "environmentMap"), e_TextureChannelEnvMap - e_TextureChannelFirst);
 	glUniform1i(glGetUniformLocation(m_program, "normalMap"), e_TextureChannelNormalMap - e_TextureChannelFirst);
 
-	ShaderState state;
+	ForwardShaderState state;
 	SetShaderState(state);
 }
 
@@ -59,7 +59,7 @@ ForwardShader::~ForwardShader () {
 
 }
 
-void ForwardShader::SetShaderState (const ShaderState& shaderState) {
+void ForwardShader::SetShaderState (const ForwardShaderState& shaderState) {\
 	glUniformMatrix4fv(m_projectionMatrix, 1, GL_TRUE, (GLfloat*)&shaderState.m_projectionMatrix);
 	glUniformMatrix4fv(m_modelviewMatrix, 1, GL_TRUE, (GLfloat*)&shaderState.m_modelviewMatrix);
 

@@ -1,6 +1,8 @@
 #ifndef __GRAPHICSMANAGER_H__
 #define __GRAPHICSMANAGER_H__
 
+#include <map>
+#include <vector>
 #include <string>
 
 #include "RenderParameters.h"
@@ -13,25 +15,34 @@ class PostProcessShader;
 class GeometryManager;
 class TextureManager;
 
-struct ShaderState;
+class FrameBufferTexture;
+struct RenderPass;
+
+struct ForwardShaderState;
+struct PostProcessShaderState;
 
 /*
 Kevin TODO
 
 ON DECK
 - Make sure everything is gettings released in the destructors
-- Refactoring: Abstract render passes so it is no longer hard coded
-	- Add a shader state class for PostProcessShader
-	- Add a texture class for frame buffer textures
+- Handle depth test as a parameter
 - Add cubemap shadowmapping for point light shadows
 - Add skeletal animation	
 	- Change model file format to one that supports blend weights
 	- Try to find models/figure out how to make animations in blender
+- Assign constants from GraphicsSettings into shaders
+- Remove dependency to "ScreenQuad" geometry name
+- Double check I am turning depth testing on/off correctly
+- Pass blur widths into post process shader 
+- Make render passes and frame buffer textures const
+- Add options for depth testing and writing into RenderPass
+- Optimization: Reduce Gausian sampling taps depending on how much color bleed we end up wanting
 
 FUTURE FEATURES
-- Add access to depth buffer in post process stage
 - Expose more options in RenderParameters such as DOF
 - Optimization: Only send diff of state to GPU
+- Optimization: Figure out if blitting or generateMipMaps if faster for downsampleing
 - Add transparency option in EffectParameters
 - Add dynamic geometry
 	- Add particles for a torch
@@ -59,9 +70,12 @@ public:
 
 private:
 	void ClearAssets ();
-	void InitRenderBuffers ();
+	void LoadEffectFile (const std::string& effectFile);
 
-	ShaderState CalculateShaderState (const EffectParameters& effectParameters);
+	ForwardShaderState CalculateForwardShaderState (const EffectParameters& effectParameters);
+	PostProcessShaderState CalculatePostProcessShaderState ();
+
+	const FrameBufferTexture* GetFrameBufferTexture (const std::string& frameBufferTextureName);
 
 	const std::string m_assetLibrary;
 
@@ -71,6 +85,11 @@ private:
 	PostProcessShader* m_postProcessShader;
 	GeometryManager* m_geometryManager;
 	TextureManager* m_textureManager;
+
+	std::vector<RenderBatch> m_renderBatches;
+
+	std::map<std::string, FrameBufferTexture*> m_frameBufferTextures;
+	std::vector<RenderPass> m_renderPasses;
 
 	GLuint m_fbo;
 	GLuint m_fboDepth;

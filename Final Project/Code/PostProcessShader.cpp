@@ -2,6 +2,7 @@
 
 #include "Angel.h"
 
+#include "GraphicsSettings.h"
 #include "Vertex.h"
 
 PostProcessShader::PostProcessShader (const std::string& vertShader, const std::string& fragShader)
@@ -13,22 +14,27 @@ PostProcessShader::PostProcessShader (const std::string& vertShader, const std::
 	b_blurY = glGetUniformLocation(m_program, "b_blurY");
 	b_depthOfField = glGetUniformLocation(m_program, "b_depthOfField");
 
+	m_colorCorrection = glGetUniformLocation(m_program, "colorCorrection");
+
 	glEnableVertexAttribArray(m_vPosition);
 	glVertexAttribPointer(m_vPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(c_positionDataOffset));
 
 	// bind samplers to texture units
-	glUniform1i(glGetUniformLocation(m_program, "forwardRenderedResult"), e_TextureChannelForwardRender - e_TextureChannelFirst);
-	glUniform1i(glGetUniformLocation(m_program, "forwardRenderedResultBlur"), e_TextureChannelForwardRenderBlur - e_TextureChannelFirst);
+	glUniform1i(glGetUniformLocation(m_program, "renderPassSource0"), e_TextureChannelRenderPassSource0 - e_TextureChannelFirst);
+	glUniform1i(glGetUniformLocation(m_program, "renderPassSource1"), e_TextureChannelRenderPassSource1 - e_TextureChannelFirst);
 }
 
 PostProcessShader::~PostProcessShader () {
 
 }
 
-void PostProcessShader::SetShaderState () {
+void PostProcessShader::SetShaderState (const PostProcessShaderState& shaderState) {
 
-	glUniform1i(b_blurX, m_blurX);
-	glUniform1i(b_blurY, m_blurY);
-	glUniform1i(b_depthOfField, m_depthOfField);
+	glUniform1i(b_blurX, shaderState.b_blurX);
+	glUniform1i(b_blurY, shaderState.b_blurY);
+	glUniform1i(b_depthOfField, shaderState.b_depthOfField);
 
+	glUniformMatrix4fv(m_colorCorrection, 1, GL_TRUE, (GLfloat*)&shaderState.m_colorCorrection);
+
+	m_currentState = shaderState;
 }

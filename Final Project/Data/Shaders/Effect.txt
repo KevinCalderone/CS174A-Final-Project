@@ -1,0 +1,54 @@
+shaders	2
+	
+	forward
+		../Data/Shaders/forwardVert.txt
+		../Data/Shaders/forwardFrag.txt
+
+	postProcess
+		../Data/Shaders/postVert.txt
+		../Data/Shaders/postFrag.txt
+
+buffers	5
+
+	color 		    RGBA16F		    1.0 	1.0
+	depth 		    DEPTHCOMPONENT 	1.0 	1.0
+	colorHalf	    RGBA16F		    0.5		0.5
+	colorHalfBlurX	RGBA16F		    0.5		0.5
+	colorHalfBlurXY RGBA16F		    0.5		0.5
+
+passes 5
+
+	forwardPass 4
+		shader		    forward
+		colorAttach0	color
+		depthAttach	    depth
+		flags 2
+            clearColor
+            clearDepth
+
+	downSample 3
+		shader		    postProcess
+		colorAttach0	colorHalf
+		source0		    color
+
+	blurHorizontle 4
+		shader		    postProcess
+		colorAttach0	colorHalfBlurX
+		source0		    colorHalf
+		flags 1
+			blurX
+
+	blurVerticle 4
+		shader		    postProcess
+		colorAttach0	colorHalfBlurXY
+		source0		    colorHalfBlurX
+		flags 1
+			blurY
+	
+	displayResult 5
+		shader		    postProcess
+		colorAttach0	screen
+		source0		    color
+		source1		    colorHalfBlurXY
+		flags 1
+			depthOfField

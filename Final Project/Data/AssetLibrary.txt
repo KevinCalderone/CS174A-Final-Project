@@ -1,6 +1,3 @@
-../Data/Shaders/forwardVert.txt
-../Data/Shaders/forwardFrag.txt
-../Data/Shaders/postVert.txt
-../Data/Shaders/postFrag.txt
+../Data/Shaders/Effect.txt
 ../Data/Geometry/GeometryLibrary.txt
 ../Data/Textures/TextureLibrary.txt

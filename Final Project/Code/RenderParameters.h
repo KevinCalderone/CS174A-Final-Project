@@ -17,6 +17,7 @@ struct RenderParameters
 	vec3 m_lightDiffuse;
 	vec3 m_lightSpecular;
 	std::string m_environmentMap;
+	mat4 m_colorCorrection;
 
 	// Point Light Parameters
 	vec3 m_pointLightPosition[c_num_point_lights];

@@ -3,17 +3,16 @@
 
 #include "UberShader.h"
 
+#include "PostProcessShaderState.h"
+
 class PostProcessShader : public UberShader
 {
 public:
 	PostProcessShader (const std::string& vertShader, const std::string& fragShader);
 	~PostProcessShader ();
 
-	void SetShaderState ();
-
-	bool m_blurX;
-	bool m_blurY;
-	bool m_depthOfField;
+	void SetShaderState (const PostProcessShaderState& shaderState);
+	void HandleShaderFlags (std::vector<std::string> shaderFlags);
 
 private:
 	GLuint m_vPosition;
@@ -21,6 +20,10 @@ private:
 	GLuint b_blurX;
 	GLuint b_blurY;
 	GLuint b_depthOfField;
+
+	GLuint m_colorCorrection;
+
+	PostProcessShaderState m_currentState;
 };
 
 #endif
