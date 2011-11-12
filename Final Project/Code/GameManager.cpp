@@ -86,7 +86,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 
 void GameManager::initPlayer()
 {
-	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 1.0f, 0.2f, 3, 30);
+	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 1.0f, 0.2f, 3, 20);
 
 }
 
@@ -150,8 +150,18 @@ void GameManager::CollisionDetection()
 		if(m_bullets.size()!=0 && m_monsters.size()!=0
 			&& collision(*m_bullets.at(j)->getBoundingBox(), *m_monsters.at(i)->getBoundingBox()))
 		{
-			Delete(MONSTER,i);
 			Delete(BULLET,j);
+			vec3 monsp = *m_monsters.at(i)->getPosition();
+			float monss = m_monsters.at(i)->getSize();
+			vec3 smons1p = monsp + (monss * normalize(normal(monsp-*m_player->getPosition())));
+			vec3 smons2p = monsp + (-monss * normalize(normal(monsp-*m_player->getPosition())));
+			Delete(MONSTER,i);
+			if(monss > 0.5)
+			{
+				Spawn(MONSTER,smons1p,monss/1.5);
+				Spawn(MONSTER,smons2p,monss/1.5);
+				i+=2;
+			}
 			i--;
 			j--;
 		}

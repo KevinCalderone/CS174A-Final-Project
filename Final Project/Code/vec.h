@@ -301,6 +301,11 @@ vec3 cross(const vec3& a, const vec3& b )
 		 a.x * b.y - a.y * b.x );
 }
 
+inline
+vec3 normal(const vec3& v) {
+	return vec3(v.z,v.y,-v.x);
+}
+
 
 //////////////////////////////////////////////////////////////////////////////
 //

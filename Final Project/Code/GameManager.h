@@ -32,7 +32,7 @@ private:
 	Ground* m_ground;
 	GraphicsManager* m_graphicsManager;
 	int m_score;
-	static const int MONSTERCAP = 50;
+	static const int MONSTERCAP = 20;
 	void Spawn(objectType type, vec3 position, double size=10.0);
 	Monster* spawnMonster();
 	Player* spawnPlayer();

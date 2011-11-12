@@ -26,3 +26,8 @@ void Monster::setVelocity(const vec3& velocity)
 	m_bb->setDirection(vec2(velocity.x,velocity.z));
 	m_velocity = velocity * m_speed;
 }
+
+float Monster::getSize()
+{
+	return m_size;
+}
