@@ -22,7 +22,6 @@ GraphicsManager::GraphicsManager (const std::string& assetLibrary)
 {
 	ReloadAssets();
 
-	glClearColor (0.0f, 0.0f, 1.0f, 1.0f);
 	glEnable(GL_CULL_FACE);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -51,6 +50,15 @@ void GraphicsManager::ClearAssets () {
 		delete m_textureManager;
 		m_textureManager = NULL;
 	}
+
+	m_renderPasses.clear();
+
+	for (std::map<std::string, FrameBufferTexture*>::iterator iter = m_frameBufferTextures.begin(); iter != m_frameBufferTextures.end(); ++iter)
+		delete iter->second;
+
+	m_frameBufferTextures.clear();
+
+	glDeleteFramebuffers(1, &m_fbo);
 }
 
 void GraphicsManager::ReloadAssets () {

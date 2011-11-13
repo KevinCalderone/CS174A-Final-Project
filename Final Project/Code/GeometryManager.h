@@ -23,6 +23,7 @@ private:
 
 	std::map<std::string, Geometry*> m_geometry;
 
+	GLuint m_vao;
 	GLuint m_buffer;
 	unsigned int m_vertexDataUsed;
 };

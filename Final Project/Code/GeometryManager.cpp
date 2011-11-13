@@ -37,15 +37,17 @@ GeometryManager::GeometryManager (const std::string& assetFile)
 }
 
 GeometryManager::~GeometryManager () {
+	glDeleteBuffers(1, &m_buffer);
+	glDeleteVertexArrays(1, &m_vao);
+
 	for (std::map<std::string, Geometry*>::iterator iter = m_geometry.begin(); iter != m_geometry.end(); ++iter) 
 		delete iter->second;
 }
 
 void GeometryManager::InitBuffer (unsigned int size) {
 	// Create a vertex array object
-    GLuint vao;
-    glGenVertexArrays( 1, &vao );
-    glBindVertexArray( vao );
+    glGenVertexArrays( 1, &m_vao );
+    glBindVertexArray( m_vao );
 
     // Create and initialize a buffer object
     glGenBuffers( 1, &m_buffer );

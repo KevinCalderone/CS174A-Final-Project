@@ -18,7 +18,7 @@ buffers	5
 
 passes 6
 
-	forwardPass 5
+	forwardPassOpaque 5
 		shader		    forward
 		geometry		opaqueRenderBatches
 		colorAttach0	color
@@ -27,7 +27,7 @@ passes 6
             clearColor
             clearDepth
 
-	forwardPass 5
+	forwardPassTransparent 5
 		shader		    forward
 		geometry		transparentRenderBatches
 		colorAttach0	color

@@ -31,5 +31,5 @@ FrameBufferTexture::FrameBufferTexture (const std::string& format, unsigned int 
 }
 
 FrameBufferTexture::~FrameBufferTexture () {
-
+	 glDeleteTextures(1, &m_bufferTextureID);
 }

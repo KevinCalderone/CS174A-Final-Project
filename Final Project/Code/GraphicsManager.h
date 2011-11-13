@@ -25,7 +25,6 @@ struct PostProcessShaderState;
 Kevin TODO
 
 ON DECK
-- Make sure everything is gettings released in the destructors
 - Handle depth test as a parameter
 - Add cubemap shadowmapping for point light shadows
 - Add skeletal animation	
@@ -43,15 +42,12 @@ FUTURE FEATURES
 - Expose more options in RenderParameters such as DOF
 - Optimization: Only send diff of state to GPU
 - Optimization: Figure out if blitting or generateMipMaps if faster for downsampleing
-- Add transparency option in EffectParameters
 - Add dynamic geometry
 	- Add particles for a torch
 	- Add some kind of animation
 - Add gloss maps
-- Cache RenderBatches to allow multipass effects
 - Add SSAO
 - Optimization: Combine final pipeline into MRT passes to reduce total passes
-- Optimization: Use minimal texture formats(eg. get rid of alpha channel I am not using everywhere)
 */
 
 class GraphicsManager
@@ -89,11 +85,6 @@ private:
 	std::vector<RenderPass> m_renderPasses;
 
 	GLuint m_fbo;
-	GLuint m_fboDepth;
-	GLuint m_fboColor;
-	GLuint m_fboColorHalf;
-	GLuint m_fboColorBlurX;
-	GLuint m_fboColorBlurXY;
 };
 
 #endif
