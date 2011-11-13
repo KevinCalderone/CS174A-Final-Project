@@ -28,6 +28,7 @@ ForwardShader::ForwardShader (const std::string& vertShader, const std::string& 
 	m_lightCombinedSpecular = glGetUniformLocation(m_program, "lightCombinedSpecular");
 	m_materialSpecularExponent = glGetUniformLocation(m_program, "materialSpecularExponent");
 	m_materialGloss = glGetUniformLocation(m_program, "materialGloss");
+	m_materialOpacity = glGetUniformLocation(m_program, "materialOpacity");
 
 	b_usePointLight = glGetUniformLocation(m_program, "b_usePointLight");
 	m_pointLightPosition = glGetUniformLocation(m_program, "pointLightPosition");
@@ -52,37 +53,40 @@ ForwardShader::ForwardShader (const std::string& vertShader, const std::string& 
 	glUniform1i(glGetUniformLocation(m_program, "normalMap"), e_TextureChannelNormalMap - e_TextureChannelFirst);
 
 	ForwardShaderState state;
-	SetShaderState(state);
+	SetShaderState(&state);
 }
 
 ForwardShader::~ForwardShader () {
 
 }
 
-void ForwardShader::SetShaderState (const ForwardShaderState& shaderState) {\
-	glUniformMatrix4fv(m_projectionMatrix, 1, GL_TRUE, (GLfloat*)&shaderState.m_projectionMatrix);
-	glUniformMatrix4fv(m_modelviewMatrix, 1, GL_TRUE, (GLfloat*)&shaderState.m_modelviewMatrix);
+void ForwardShader::SetShaderState (const ShaderState* shaderState) {
+	const ForwardShaderState* forwardShaderState = (ForwardShaderState*)shaderState;
 
-	glUniform1i(b_useDiffuseTexture, shaderState.b_useDiffuseTexture);
-	glUniform1i(b_useEnvironmentMap, shaderState.b_useEnvironmentMap);
-	glUniform1i(b_useNormalMap, shaderState.b_useNormalMap);
+	glUniformMatrix4fv(m_projectionMatrix, 1, GL_TRUE, (GLfloat*)&forwardShaderState->m_projectionMatrix);
+	glUniformMatrix4fv(m_modelviewMatrix, 1, GL_TRUE, (GLfloat*)&forwardShaderState->m_modelviewMatrix);
 
-	glUniform3fv(m_eyePosition, 1, shaderState.m_eyePosition);
+	glUniform1i(b_useDiffuseTexture, forwardShaderState->b_useDiffuseTexture);
+	glUniform1i(b_useEnvironmentMap, forwardShaderState->b_useEnvironmentMap);
+	glUniform1i(b_useNormalMap, forwardShaderState->b_useNormalMap);
 
-	glUniform3fv(m_lightDirection, 1, shaderState.m_lightDirection);
-	glUniform3fv(m_lightCombinedAmbient, 1, shaderState.m_lightCombinedAmbient);
-	glUniform3fv(m_lightCombinedDiffuse, 1, shaderState.m_lightCombinedDiffuse);
-	glUniform3fv(m_lightCombinedSpecular, 1, shaderState.m_lightCombinedSpecular);
-	glUniform1f(m_materialSpecularExponent, shaderState.m_materialSpecularExponent);
-	glUniform1f(m_materialGloss, shaderState.m_materialGloss);
+	glUniform3fv(m_eyePosition, 1, forwardShaderState->m_eyePosition);
 
-	glUniform1iv(b_usePointLight, c_num_point_lights, shaderState.b_usePointLight);
-	glUniform3fv(m_pointLightPosition, c_num_point_lights, (GLfloat*)shaderState.m_pointLightPosition);
-	glUniform3fv(m_pointLightCombinedAmbient, c_num_point_lights, (GLfloat*)shaderState.m_pointLightCombinedAmbient);
-	glUniform3fv(m_pointLightCombinedDiffuse, c_num_point_lights, (GLfloat*)shaderState.m_pointLightCombinedDiffuse);
-	glUniform3fv(m_pointLightCombinedSpecular, c_num_point_lights, (GLfloat*)shaderState.m_pointLightCombinedSpecular);
-	glUniform1fv(m_pointLightRange, c_num_point_lights, shaderState.m_pointLightRange);
-	glUniform1fv(m_pointLightAttenuationMultiplier, c_num_point_lights, shaderState.m_pointLightAttenuationMultiplier);
+	glUniform3fv(m_lightDirection, 1, forwardShaderState->m_lightDirection);
+	glUniform3fv(m_lightCombinedAmbient, 1, forwardShaderState->m_lightCombinedAmbient);
+	glUniform3fv(m_lightCombinedDiffuse, 1, forwardShaderState->m_lightCombinedDiffuse);
+	glUniform3fv(m_lightCombinedSpecular, 1, forwardShaderState->m_lightCombinedSpecular);
+	glUniform1f(m_materialSpecularExponent, forwardShaderState->m_materialSpecularExponent);
+	glUniform1f(m_materialGloss, forwardShaderState->m_materialGloss);
+	glUniform1f(m_materialOpacity, forwardShaderState->m_materialOpacity);
 
-	m_currentState = shaderState;
+	glUniform1iv(b_usePointLight, c_num_point_lights, forwardShaderState->b_usePointLight);
+	glUniform3fv(m_pointLightPosition, c_num_point_lights, (GLfloat*)forwardShaderState->m_pointLightPosition);
+	glUniform3fv(m_pointLightCombinedAmbient, c_num_point_lights, (GLfloat*)forwardShaderState->m_pointLightCombinedAmbient);
+	glUniform3fv(m_pointLightCombinedDiffuse, c_num_point_lights, (GLfloat*)forwardShaderState->m_pointLightCombinedDiffuse);
+	glUniform3fv(m_pointLightCombinedSpecular, c_num_point_lights, (GLfloat*)forwardShaderState->m_pointLightCombinedSpecular);
+	glUniform1fv(m_pointLightRange, c_num_point_lights, forwardShaderState->m_pointLightRange);
+	glUniform1fv(m_pointLightAttenuationMultiplier, c_num_point_lights, forwardShaderState->m_pointLightAttenuationMultiplier);
+
+	m_currentState = *forwardShaderState;
 }

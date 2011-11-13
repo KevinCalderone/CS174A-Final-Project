@@ -16,7 +16,7 @@ uniform mat4 colorCorrection;
 
 void main() { 
 
-	vec4 sum = vec4(0.0);
+	vec4 sum = vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	if (b_blurY) {
 		float blurHeight = 2.0f / 600.0f;

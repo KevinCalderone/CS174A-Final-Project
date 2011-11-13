@@ -14,6 +14,7 @@ public:
 	virtual ~UberShader ();
 
 	void Apply ();
+	virtual void SetShaderState (const ShaderState* shaderState) = 0;
 
 protected:
 	GLuint m_program;

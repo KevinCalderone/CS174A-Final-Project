@@ -17,14 +17,14 @@
 #include "ForwardShaderState.h"
 #include "Geometry.h"
 
-static const float c_num_falloff_range = 0.0001f;	// must be greater than 0
-
 GraphicsManager::GraphicsManager (const std::string& assetLibrary) 
 	: m_forwardShader(NULL), m_postProcessShader(NULL), m_geometryManager(NULL), m_textureManager(NULL), m_assetLibrary(assetLibrary)
 {
 	ReloadAssets();
 
 	glClearColor (0.0f, 0.0f, 1.0f, 1.0f);
+	glEnable(GL_CULL_FACE);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 GraphicsManager::~GraphicsManager () {
@@ -167,6 +167,21 @@ void GraphicsManager::LoadEffectFile (const std::string& effectFile) {
 							renderPass.m_shaderType = e_ShaderTypePostProcess;
 						}
 					}
+					else if (settingType == "geometry") {
+						std::string geometryType;
+
+						is >> geometryType;
+
+						if (geometryType == "opaqueRenderBatches") {
+							renderPass.m_geometryType = e_GeometryTypeOpaqueRenderBatches;
+						}
+						else if (geometryType == "transparentRenderBatches") {
+							renderPass.m_geometryType = e_GeometryTypeTransparentRenderBatches;
+						}
+						else if (geometryType == "screenQuad") {
+							renderPass.m_geometryType = e_GeometryTypeScreenQuad;
+						}
+					}
 					else if (settingType == "colorAttach0") {
 						is >> renderPass.m_colorAttach0;
 					}
@@ -213,7 +228,6 @@ void GraphicsManager::SwapBuffers () {
 		return;
 	
 	for (std::vector<RenderPass>::iterator passIter = m_renderPasses.begin(); passIter != m_renderPasses.end(); ++passIter) {
-
 		unsigned int destinationWidth;
 		unsigned int destinationHeight;
 
@@ -256,22 +270,9 @@ void GraphicsManager::SwapBuffers () {
 		// Setup Render Viewport to the full destination size
 		glViewport(0, 0, destinationWidth, destinationHeight);
 
-		// Setup source textures
-		const FrameBufferTexture* source0 = GetFrameBufferTexture(passIter->m_source0);
-		const FrameBufferTexture* source1 = GetFrameBufferTexture(passIter->m_source1);
-		
-		if (source0 != NULL) {
-			glActiveTexture(e_TextureChannelRenderPassSource0);
-			glBindTexture(GL_TEXTURE_2D, source0->GetBufferTextureID());
-		}	
-
-		if (source1 != NULL) {
-			glActiveTexture(e_TextureChannelRenderPassSource1);
-			glBindTexture(GL_TEXTURE_2D, source1->GetBufferTextureID());
-		}
-
 		// Process RenderPass flags
 		unsigned int clearFlags = 0;
+		bool blend = false;
 		std::vector<std::string> shaderStateFlags;
 		for (std::vector<std::string>::iterator flagIter = passIter->m_flags.begin(); flagIter != passIter->m_flags.end(); ++flagIter) {
 			if (*flagIter == "clearColor") {
@@ -279,6 +280,9 @@ void GraphicsManager::SwapBuffers () {
 			}
 			else if (*flagIter == "clearDepth") {
 				clearFlags |= GL_DEPTH_BUFFER_BIT;
+			}
+			else if (*flagIter == "blend") {
+				blend = true;
 			}
 			// Let shader state try to handle the flag
 			else {
@@ -290,96 +294,103 @@ void GraphicsManager::SwapBuffers () {
 		if (clearFlags != 0) 
 			glClear(clearFlags);
 			
-		// Render the geometry
+		// Setup blending mode
+		if (blend) 
+			glEnable(GL_BLEND);
+		else 
+			glDisable(GL_BLEND);
+		
+		UberShader* shader;
+		ShaderState* state;
+
+		// Select the shader
 		switch (passIter->m_shaderType) {
 			case e_ShaderTypeForward:
-				m_forwardShader->Apply();
-
-				for (std::vector<RenderBatch>::iterator batchesIter = m_renderBatches.begin(); batchesIter != m_renderBatches.end(); ++batchesIter) {
-					ForwardShaderState forwardShaderState = CalculateForwardShaderState(batchesIter->m_effectParameters);
-					m_forwardShader->SetShaderState(forwardShaderState);
-
-					if (forwardShaderState.b_useDiffuseTexture)
-						m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_effectParameters.m_diffuseTexture);
-						
-					if (forwardShaderState.b_useEnvironmentMap)
-						m_textureManager->SetTexture(e_TextureChannelEnvMap, m_renderParameters.m_environmentMap);
-			
-					if (forwardShaderState.b_useNormalMap)
-						m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_effectParameters.m_normalMap);
-
-					forwardShaderState.HandleShaderFlags(shaderStateFlags);
-					m_geometryManager->RenderGeometry(batchesIter->m_geometryID);
-				}
+				shader = m_forwardShader;
+				state = new ForwardShaderState();
 			break;
 	
 			case e_ShaderTypePostProcess:
-				m_postProcessShader->Apply();
-
-				PostProcessShaderState postProcessShaderState = CalculatePostProcessShaderState();
-				postProcessShaderState.HandleShaderFlags(shaderStateFlags);
-
-				m_postProcessShader->SetShaderState(postProcessShaderState);
-
-				m_geometryManager->RenderGeometry("screenQuad");
+				shader = m_postProcessShader;
+				state = new PostProcessShaderState();
 			break;		
 		};
+
+		if (shader == NULL)
+			continue;
+
+		shader->Apply();
+		state->HandleShaderFlags(shaderStateFlags);
+
+		// Setup source textures
+		const FrameBufferTexture* source0 = GetFrameBufferTexture(passIter->m_source0);
+		const FrameBufferTexture* source1 = GetFrameBufferTexture(passIter->m_source1);
+		
+		state->b_source0 = source0 != NULL;
+		state->b_source1 = source1 != NULL;
+
+		if (state->b_source0) {
+			glActiveTexture(e_TextureChannelRenderPassSource0);
+			glBindTexture(GL_TEXTURE_2D, source0->GetBufferTextureID());
+		}	
+
+		if (state->b_source1) {
+			glActiveTexture(e_TextureChannelRenderPassSource1);
+			glBindTexture(GL_TEXTURE_2D, source1->GetBufferTextureID());
+		}
+
+		// Render the geometry
+		switch (passIter->m_geometryType) {
+			case e_GeometryTypeOpaqueRenderBatches:
+				for (std::vector<RenderBatch>::iterator batchesIter = m_renderBatches.begin(); batchesIter != m_renderBatches.end(); ++batchesIter) {
+					if (batchesIter->m_effectParameters.m_materialOpacity < 1.0f)
+						continue;
+
+					state->CalculateShaderState(m_renderParameters, batchesIter->m_effectParameters);
+
+					state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_effectParameters.m_diffuseTexture);
+					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, m_renderParameters.m_environmentMap);
+					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_effectParameters.m_normalMap);
+
+					shader->SetShaderState(state);
+
+					m_geometryManager->RenderGeometry(batchesIter->m_geometryID);
+				}
+			break;
+
+			case e_GeometryTypeTransparentRenderBatches:
+				for (std::vector<RenderBatch>::iterator batchesIter = m_renderBatches.begin(); batchesIter != m_renderBatches.end(); ++batchesIter) {
+					if (batchesIter->m_effectParameters.m_materialOpacity == 1.0f)
+						continue;
+
+					state->CalculateShaderState(m_renderParameters, batchesIter->m_effectParameters);
+					
+					state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_effectParameters.m_diffuseTexture);
+					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, m_renderParameters.m_environmentMap);
+					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_effectParameters.m_normalMap);
+
+					shader->SetShaderState(state);
+
+					m_geometryManager->RenderGeometry(batchesIter->m_geometryID);
+				}
+			break;
+
+			case e_GeometryTypeScreenQuad:
+				RenderBatch screenQuad;
+				screenQuad.m_geometryID = "screenQuad";
+
+				state->CalculateShaderState(m_renderParameters, screenQuad.m_effectParameters);			
+				
+				shader->SetShaderState(state);
+
+				m_geometryManager->RenderGeometry(screenQuad.m_geometryID);
+			break;
+		};
+	
+		delete state;
 	}
 	
 	glutSwapBuffers();
-}
-
-ForwardShaderState GraphicsManager::CalculateForwardShaderState (const EffectParameters& effectParameters) {
-	ForwardShaderState state;
-
-	state.m_projectionMatrix = m_renderParameters.m_projectionMatrix;
-	state.m_modelviewMatrix = effectParameters.m_modelviewMatrix;
-
-	state.b_useDiffuseTexture = m_textureManager->HasTexture(effectParameters.m_diffuseTexture);
-	state.b_useEnvironmentMap = m_textureManager->HasTexture(m_renderParameters.m_environmentMap);
-	state.b_useNormalMap = m_textureManager->HasTexture(effectParameters.m_normalMap);
-
-	state.m_eyePosition = m_renderParameters.m_eyePosition;
-
-	state.m_lightDirection = m_renderParameters.m_lightDirection;
-	state.m_lightCombinedAmbient = m_renderParameters.m_lightAmbient * effectParameters.m_materialAmbient;
-	state.m_lightCombinedDiffuse = m_renderParameters.m_lightDiffuse * effectParameters.m_materialDiffuse;
-	state.m_lightCombinedSpecular = m_renderParameters.m_lightSpecular * effectParameters.m_materialSpecular;
-	state.m_materialSpecularExponent = effectParameters.m_materialSpecularExponent;
-	state.m_materialGloss = effectParameters.m_materialGloss;
-
-	for (int i = 0; i < c_num_point_lights; ++i) {
-		state.m_pointLightCombinedAmbient[i] = m_renderParameters.m_pointLightAmbient[i] * effectParameters.m_materialAmbient;
-		state.m_pointLightCombinedDiffuse[i] = m_renderParameters.m_pointLightDiffuse[i] * effectParameters.m_materialDiffuse;
-		state.m_pointLightCombinedSpecular[i] = m_renderParameters.m_pointLightSpecular[i] * effectParameters.m_materialSpecular;
-
-		state.b_usePointLight[i] = state.m_pointLightCombinedAmbient[i] != vec3() ||
-								   state.m_pointLightCombinedDiffuse[i] != vec3() ||
-								   state.m_pointLightCombinedSpecular[i] != vec3();
-
-		if (state.b_usePointLight[i] == false)
-			continue;
-
-		state.m_pointLightPosition[i] = m_renderParameters.m_pointLightPosition[i];
-		state.m_pointLightRange[i] = m_renderParameters.m_pointLightRange[i];
-
-		float falloffRange = m_renderParameters.m_pointLightRange[i] - m_renderParameters.m_pointLightFalloff[i];
-		if (falloffRange < c_num_falloff_range)
-			falloffRange = c_num_falloff_range;
-
-		state.m_pointLightAttenuationMultiplier[i] = 1.0f / falloffRange;
-	}
-
-	return state;
-}
-
-PostProcessShaderState GraphicsManager::CalculatePostProcessShaderState () {
-	PostProcessShaderState postProcessShaderState;
-
-	postProcessShaderState.m_colorCorrection = m_renderParameters.m_colorCorrection;
-	postProcessShaderState.m_randSeed = rand();
-
-	return postProcessShaderState;
 }
 
 const FrameBufferTexture* GraphicsManager::GetFrameBufferTexture (const std::string& frameBufferTextureName) {

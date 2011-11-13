@@ -6,6 +6,8 @@ const unsigned int c_window_height = 600;
 
 const unsigned int c_num_point_lights = 3;		// must be same value in shaders
 
+const float c_num_falloff_range = 0.0001f;		// must be greater than 0
+
 enum TextureType { e_TextureType2d = GL_TEXTURE_2D, e_TextureTypeCube = GL_TEXTURE_CUBE_MAP };
 
 enum TextureChannel { 

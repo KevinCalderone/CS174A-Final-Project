@@ -72,9 +72,6 @@ private:
 	void ClearAssets ();
 	void LoadEffectFile (const std::string& effectFile);
 
-	ForwardShaderState CalculateForwardShaderState (const EffectParameters& effectParameters);
-	PostProcessShaderState CalculatePostProcessShaderState ();
-
 	const FrameBufferTexture* GetFrameBufferTexture (const std::string& frameBufferTextureName);
 
 	const std::string m_assetLibrary;

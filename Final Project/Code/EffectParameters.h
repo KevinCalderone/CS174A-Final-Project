@@ -7,6 +7,10 @@
 
 struct EffectParameters
 {
+	EffectParameters ()
+		: m_materialOpacity(1.0f)
+	{}
+
 	// Geometry Parameters
 	mat4 m_modelviewMatrix;
 
@@ -20,6 +24,7 @@ struct EffectParameters
 	vec3 m_materialSpecular;
 	float m_materialSpecularExponent;
 	float m_materialGloss;
+	float m_materialOpacity;
 };
 
 #endif

@@ -23,6 +23,7 @@ uniform vec3 lightCombinedDiffuse;
 uniform vec3 lightCombinedSpecular;
 uniform float materialSpecularExponent;
 uniform float materialGloss;
+uniform float materialOpacity;
 
 uniform bool b_usePointLight[3];
 uniform vec3 pointLightPosition[3];
@@ -33,7 +34,7 @@ uniform float pointLightRange[3];
 uniform float pointLightAttenuationMultiplier[3];
 
 void main() { 
-	fColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	vec3 color;
 
 	vec3 pointLightVec[3];
 	float pointLightAttenuation[3];
@@ -60,25 +61,20 @@ void main() {
 	vec3 reflectedVec = normalize(reflect(eyeVec, normalVec));
 
 	// ambient and diffuse lighting
-	fColor +=	vec4(
-				lightCombinedAmbient +
-				max(dot(normalVec, lightVec), 0.0f) * lightCombinedDiffuse
-				, 0.0f);	
+	color += lightCombinedAmbient + max(dot(normalVec, lightVec), 0.0f) * lightCombinedDiffuse;
 
 	// add point light contributions
 	for (int i = 0; i < 3; ++i) {
 		if (!b_usePointLight[i]) 
 			continue;
 
-		fColor +=	vec4(
-					pointLightCombinedAmbient[i] +
-					max(dot(normalVec, pointLightVec[i]), 0.0f) * pointLightCombinedDiffuse[i]
-					, 0.0f) * pointLightAttenuation[i];	
+		color +=  pointLightAttenuation[i] * (pointLightCombinedAmbient[i] +
+											  max(dot(normalVec, pointLightVec[i]), 0.0f) * pointLightCombinedDiffuse[i]);	
 	}
 
 	// diffuse texture
 	if (b_useDiffuseTexture) {
-		fColor *= texture2D(diffuseTexture, texCoord);
+		color *= texture2D(diffuseTexture, texCoord).rgb;
 	}
 
 	// specular highlight
@@ -94,9 +90,9 @@ void main() {
 
 	// environment highlight
 	if (b_useEnvironmentMap) {
-		shine += texture(environmentMap, reflectedVec).xyz * materialGloss;
+		shine += texture(environmentMap, reflectedVec).rgb * materialGloss;
 	}
 
 	// add shine component to color
-	fColor += vec4(shine, 0.0f);
+	fColor = vec4(color + shine, materialOpacity);
 }

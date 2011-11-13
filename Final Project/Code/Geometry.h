@@ -3,14 +3,14 @@
 
 #include "Angel.h"
 
-enum GeometryType { 
-	e_GeometryTypeTriangles = GL_TRIANGLES,
-	e_GeometryTypeTriangleStrip = GL_TRIANGLE_STRIP
+enum GeometryMode { 
+	e_GeometryModeTriangles = GL_TRIANGLES,
+	e_GeometryModeTriangleStrip = GL_TRIANGLE_STRIP
 };
 
 struct Geometry
 {
-	GeometryType m_geometryType;
+	GeometryMode m_geometryMode;
 
 	GLuint m_vertexStart;
 	GLuint m_numVertex;

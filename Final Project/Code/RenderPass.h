@@ -5,9 +5,12 @@
 
 enum ShaderType { e_ShaderTypeForward, e_ShaderTypePostProcess };
 
+enum GeometryType { e_GeometryTypeOpaqueRenderBatches, e_GeometryTypeTransparentRenderBatches, e_GeometryTypeScreenQuad };
+
 struct RenderPass
 {
 	ShaderType m_shaderType;
+	GeometryType m_geometryType;
 
 	std::string m_colorAttach0;
 	std::string m_depthAttach;

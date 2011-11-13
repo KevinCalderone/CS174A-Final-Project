@@ -10,9 +10,9 @@ FrameBufferTexture::FrameBufferTexture (const std::string& format, unsigned int 
 		textureFormat = GL_DEPTH_COMPONENT;
 		pixelFormat = GL_DEPTH_COMPONENT;
 	}
-	else if (format == "RGBA16F") {
-		textureFormat = GL_RGBA16F;
-		pixelFormat = GL_RGBA;
+	else if (format == "RGB16F") {
+		textureFormat = GL_RGB16F;
+		pixelFormat = GL_RGB;
 	}
 	else {
 		printf("FrameBufferTexture::FrameBufferTexture: Invalid texture format %s.\n", format.c_str());

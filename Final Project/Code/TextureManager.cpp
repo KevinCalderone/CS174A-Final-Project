@@ -52,18 +52,16 @@ TextureManager::~TextureManager () {
 		delete iter->second;
 }
 
-void TextureManager::SetTexture (TextureChannel channel, const std::string& textureName) {
-	std::map<std::string, BMPTexture*>::iterator iter = m_textures.find(textureName);
+bool TextureManager::SetTexture (TextureChannel channel, const std::string& textureName) const {
+	std::map<std::string, BMPTexture*>::const_iterator iter = m_textures.find(textureName);
 
 	if (iter == m_textures.end()) 
-		return;
+		return false;
 
 	iter->second->Apply(channel);
+	return true;
 }
 
-bool TextureManager::HasTexture (const std::string& textureName) {
-	return m_textures.find(textureName) != m_textures.end();
-}
 
 void TextureManager::LoadTextureFile (const std::string& textureName, TextureType type, TextureMode mode, const std::vector<const std::string>& textureFiles) {
 	std::map<std::string, BMPTexture*>::iterator iter = m_textures.find(textureName);

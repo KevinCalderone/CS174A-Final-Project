@@ -10,13 +10,10 @@
 struct ForwardShaderState : public ShaderState
 {
 	void HandleShaderFlags (std::vector<std::string> shaderFlags);
-
+	void CalculateShaderState (const RenderParameters& renderParameters, const EffectParameters& effectParameters);
+	
 	mat4 m_projectionMatrix;
 	mat4 m_modelviewMatrix;
-
-	static_branch b_useDiffuseTexture;
-	static_branch b_useEnvironmentMap;
-	static_branch b_useNormalMap;
 
 	vec3 m_eyePosition;
 
@@ -26,6 +23,7 @@ struct ForwardShaderState : public ShaderState
 	vec3 m_lightCombinedSpecular;
 	float m_materialSpecularExponent;
 	float m_materialGloss;
+	float m_materialOpacity;
 
 	static_branch b_usePointLight[c_num_point_lights];
 	vec3 m_pointLightPosition[c_num_point_lights];

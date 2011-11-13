@@ -62,7 +62,7 @@ void GeometryManager::RenderGeometry (const std::string& geometryID) {
 		return;
 	
 	Geometry* geometry = iter->second;
-	glDrawArrays(geometry->m_geometryType, geometry->m_vertexStart, geometry->m_numVertex);
+	glDrawArrays(geometry->m_geometryMode, geometry->m_vertexStart, geometry->m_numVertex);
 }
 
 static void TokenizeString (const std::string& input, const std::string& delims, std::vector<std::string>& tokens) {
@@ -175,7 +175,7 @@ void GeometryManager::LoadOBJFile (const std::string& geometryID, const std::str
 	glBufferSubData(GL_ARRAY_BUFFER, m_vertexDataUsed, dataSize, &geometryData[0]);
 
 	Geometry* geometry = new Geometry();
-	geometry->m_geometryType = e_GeometryTypeTriangles;
+	geometry->m_geometryMode = e_GeometryModeTriangles;
 	geometry->m_numVertex = dataSize / sizeof(Vertex);
 	geometry->m_vertexStart = m_vertexDataUsed / sizeof(Vertex);;
 

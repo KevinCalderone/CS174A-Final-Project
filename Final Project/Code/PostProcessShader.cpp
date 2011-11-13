@@ -29,13 +29,15 @@ PostProcessShader::~PostProcessShader () {
 
 }
 
-void PostProcessShader::SetShaderState (const PostProcessShaderState& shaderState) {
-	glUniform1i(b_blurX, shaderState.b_blurX);
-	glUniform1i(b_blurY, shaderState.b_blurY);
-	glUniform1i(b_depthOfField, shaderState.b_depthOfField);
+void PostProcessShader::SetShaderState (const ShaderState* shaderState) {
+	const PostProcessShaderState* postProcessShaderState = (PostProcessShaderState*)shaderState;
 
-	glUniformMatrix4fv(m_colorCorrection, 1, GL_TRUE, (GLfloat*)&shaderState.m_colorCorrection);
-	glUniform1i(m_randSeed, shaderState.m_randSeed);
+	glUniform1i(b_blurX, postProcessShaderState->b_blurX);
+	glUniform1i(b_blurY, postProcessShaderState->b_blurY);
+	glUniform1i(b_depthOfField, postProcessShaderState->b_depthOfField);
 
-	m_currentState = shaderState;
+	glUniformMatrix4fv(m_colorCorrection, 1, GL_TRUE, (GLfloat*)&postProcessShaderState->m_colorCorrection);
+	glUniform1i(m_randSeed, postProcessShaderState->m_randSeed);
+
+	m_currentState = *postProcessShaderState;
 }

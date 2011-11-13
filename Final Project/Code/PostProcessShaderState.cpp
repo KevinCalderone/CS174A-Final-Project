@@ -16,3 +16,8 @@ void PostProcessShaderState::HandleShaderFlags (std::vector<std::string> shaderF
 		}
 	}
 }
+
+void PostProcessShaderState::CalculateShaderState (const RenderParameters& renderParameters, const EffectParameters& effectParameters) {
+	m_colorCorrection = renderParameters.m_colorCorrection;
+	m_randSeed = rand();
+}

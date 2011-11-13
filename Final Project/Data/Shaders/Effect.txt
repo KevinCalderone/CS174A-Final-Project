@@ -10,43 +10,56 @@ shaders	2
 
 buffers	5
 
-	color 		    RGBA16F		    1.0 	1.0
+	color 		    RGB16F		    1.0 	1.0
 	depth 		    DEPTHCOMPONENT 	1.0 	1.0
-	colorHalf	    RGBA16F		    0.5		0.5
-	colorHalfBlurX	RGBA16F		    0.5		0.5
-	colorHalfBlurXY RGBA16F		    0.5		0.5
+	colorHalf	    RGB16F		    0.5		0.5
+	colorHalfBlurX	RGB16F		    0.5		0.5
+	colorHalfBlurXY RGB16F		    0.5		0.5
 
-passes 5
+passes 6
 
-	forwardPass 4
+	forwardPass 5
 		shader		    forward
+		geometry		opaqueRenderBatches
 		colorAttach0	color
 		depthAttach	    depth
 		flags 2
             clearColor
             clearDepth
 
-	downSample 3
+	forwardPass 5
+		shader		    forward
+		geometry		transparentRenderBatches
+		colorAttach0	color
+		depthAttach	    depth
+		flags 1
+			blend
+
+	downSample 4
 		shader		    postProcess
+		geometry		screenQuad
 		colorAttach0	colorHalf
 		source0		    color
 
-	blurHorizontle 4
+	blurHorizontle 5
 		shader		    postProcess
+		geometry		screenQuad
 		colorAttach0	colorHalfBlurX
 		source0		    colorHalf
 		flags 1
 			blurX
 
-	blurVerticle 4
+	blurVerticle 5
 		shader		    postProcess
+		geometry		screenQuad
 		colorAttach0	colorHalfBlurXY
 		source0		    colorHalfBlurX
 		flags 1
 			blurY
 	
-	displayResult 5
+	displayResult 6
 		shader		    postProcess
+		geometry		screenQuad
 		colorAttach0	screen
 		source0		    color
 		source1		    colorHalfBlurXY

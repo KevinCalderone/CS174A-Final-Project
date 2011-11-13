@@ -16,7 +16,7 @@ const int FPS = 60;
 
 void initGlut (int& argc, char** argv) { 
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowPosition(100, 50);
 	glutInitWindowSize(c_window_width, c_window_height);
 	glutCreateWindow("CS17A Final Project");

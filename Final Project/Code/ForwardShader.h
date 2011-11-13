@@ -12,7 +12,7 @@ public:
 	ForwardShader (const std::string& vertShader, const std::string& fragShader);
 	~ForwardShader ();
 
-	void SetShaderState (const ForwardShaderState& shaderState);
+	void SetShaderState (const ShaderState* shaderState);
 
 private:	
 	GLuint m_vPosition;
@@ -34,6 +34,7 @@ private:
 	GLuint m_lightCombinedSpecular;
 	GLuint m_materialSpecularExponent;
 	GLuint m_materialGloss;
+	GLuint m_materialOpacity;
 
 	GLuint b_usePointLight;
 	GLuint m_pointLightPosition;

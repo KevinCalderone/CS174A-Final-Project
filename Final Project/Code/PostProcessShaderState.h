@@ -13,6 +13,7 @@ struct PostProcessShaderState : public ShaderState
 	{}
 
 	void HandleShaderFlags (std::vector<std::string> shaderFlags);
+	void CalculateShaderState (const RenderParameters& renderParameters, const EffectParameters& effectParameters);
 
 	static_branch b_blurX;
 	static_branch b_blurY;
