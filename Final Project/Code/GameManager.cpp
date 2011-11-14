@@ -1,5 +1,6 @@
 #include "GameManager.h"
 #include <ctime>
+#include <vector>
 
 
 
@@ -143,30 +144,48 @@ void GameManager::CollisionDetection()
 		std::cout << "COLLISION BITCH!" << std::endl;
 	else
 		std::cout << "You're good!" << std::endl;*/
-	
+	std::vector<int> hitmon;
+	std::vector<int> hitbul;
+	std::vector<vec3> poslist;
+	std::vector<float> sizelist;
 	for(int j=0; j<m_bullets.size();j++){
 	for(int i=0; i<m_monsters.size();i++)
 	{
 		if(m_bullets.size()!=0 && m_monsters.size()!=0
 			&& collision(*m_bullets.at(j)->getBoundingBox(), *m_monsters.at(i)->getBoundingBox()))
 		{
-			Delete(BULLET,j);
+			hitmon.push_back(i);
+			hitbul.push_back(j);
+			//Delete(BULLET,j);
 			vec3 monsp = *m_monsters.at(i)->getPosition();
 			float monss = m_monsters.at(i)->getSize();
 			vec3 smons1p = monsp + (monss * normalize(normal(monsp-*m_player->getPosition())));
 			vec3 smons2p = monsp + (-monss * normalize(normal(monsp-*m_player->getPosition())));
-			Delete(MONSTER,i);
+			//Delete(MONSTER,i);
 			if(monss > 0.5)
 			{
-				Spawn(MONSTER,smons1p,monss/1.5);
-				Spawn(MONSTER,smons2p,monss/1.5);
-				i+=2;
+				//Spawn(MONSTER,smons1p,monss/1.5);
+				//Spawn(MONSTER,smons2p,monss/1.5);
+				//i+=2;
+				poslist.push_back(smons1p);
+				poslist.push_back(smons2p);
+				sizelist.push_back(monss/1.5);
+				sizelist.push_back(monss/1.5);
 			}
-			i--;
-			j--;
+			//i--;
+			//j--;
 		}
 	}
 	}
+
+	for(int i=0;i<hitbul.size();i++)
+		Delete(BULLET,hitbul.at(i));
+	
+	for(int i=0;i<hitmon.size();i++)
+		Delete(MONSTER,hitmon.at(i));
+
+	for(int i=0;i<poslist.size();i++)
+		Spawn(MONSTER,poslist.at(i),sizelist.at(i));
 
 	for(int k=0; k<m_monsters.size();k++)
 	{
