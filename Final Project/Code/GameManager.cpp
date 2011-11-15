@@ -73,6 +73,29 @@ void GameManager::keyboardUpdate()
 	if(m_player->getPosition()->z >= 300)
 		ws = -m_w;
 
+	for(int i=0;i<m_enviro.size();i++)
+	{
+		if(length(*m_enviro.at(i)->getPosition()-*m_player->getPosition()) < 10 && 
+			collision(*m_enviro.at(i)->getBoundingBox(),*m_player->getBoundingBox()))
+		{
+			vec3* op = m_enviro.at(i)->getPosition();
+			vec3* pp = m_player->getPosition();
+			if(op->x <= pp->x)
+				if((op->z <= (pp->z + (pp->x - op->x))) && (op->z >= (pp->z - (pp->x - op->x))))
+					ad = m_d;
+			if(op->x > pp->x)
+				if((op->z <= (pp->z + (op->x - pp->x))) && (op->z >= (pp->z - (op->x - pp->x))))
+					ad = -m_a;
+			if(op->z <= pp->z)
+				if((op->x <= (pp->x + (pp->z - op->z))) && (op->x >= (pp->x - (pp->z - op->z))))
+					ws = m_s;
+			if(op->z > pp->z)
+				if((op->x <= (pp->x + (op->z - pp->z))) && (op->x >= (pp->x - (op->z - pp->z))))
+					ws = -m_w;
+		}
+	}
+
+
 	m_player->setVelocity(vec3(ad,0.0f,ws));
 	if(m_j) angle += 0.05;
 	if(m_l) angle -= 0.05;
@@ -99,14 +122,14 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 	{
 		x = 200 - rand()%400;
 		z = 150 - rand()%300;
-		Spawn(TREE,Angel::vec3(x,0.0f,z),2);
+		Spawn(TREE,Angel::vec3(x,1.0f,z),2);
 	} while(m_enviro.size() < 600);
 
 	do
 	{
 		x = 200 - rand()%400;
 		z = 150 - rand()%300;
-		Spawn(ROCK,Angel::vec3(x,0.0f,z),1);
+		Spawn(ROCK,Angel::vec3(x,1.0f,z),0.5);
 	} while(m_enviro.size() < 1200);
 	//m_enviro.push_back(new EnviroObj(/* type, position */)); // OK do we want to have some sort of file specify		\
 																all the parameters for where every tree/rock/etc	\
@@ -211,6 +234,19 @@ void GameManager::CollisionDetection()
 		}
 	}
 	}
+
+	for(int j=0; j<m_bullets.size();j++){
+	for(int i=0; i<m_enviro.size();i++)
+	{
+		if(m_bullets.size()!=0 && collision(*m_bullets.at(j)->getBoundingBox(), *m_enviro.at(i)->getBoundingBox()))
+		{
+			Delete(BULLET,j);
+			i = m_enviro.size();
+			j--;
+		}
+	}
+	}
+
 	if(m_godmode)
 		m_god--;
 	if(m_god==0)
@@ -229,7 +265,6 @@ void GameManager::CollisionDetection()
 			}
 		}
 	}
-	
 }
 
 void GameManager::Update()
