@@ -6,8 +6,9 @@
 
 GameManager::GameManager()
 {
-	m_w=m_a=m_s=m_d=m_j=m_l=m_auto = false;
+	m_w=m_a=m_s=m_d=m_j=m_l=m_auto=m_godmode = false;
 	angle = 0.0f;
+	m_score = m_god = 0;
 }
 
 GameManager::~GameManager()
@@ -60,7 +61,19 @@ void GameManager::callbackKeyUp(unsigned char key, int x, int y)
 
 void GameManager::keyboardUpdate()
 {
-	m_player->setVelocity(vec3(m_d-m_a,0.0f,m_s-m_w));
+	float ad = m_d-m_a;
+	float ws = m_s-m_w;
+
+	if(m_player->getPosition()->x <= -400)
+		ad = m_d;
+	if(m_player->getPosition()->x >= 400)
+		ad = -m_a;
+	if(m_player->getPosition()->z <= -300)
+		ws = m_s;
+	if(m_player->getPosition()->z >= 300)
+		ws = -m_w;
+
+	m_player->setVelocity(vec3(ad,0.0f,ws));
 	if(m_j) angle += 0.05;
 	if(m_l) angle -= 0.05;
 	if(angle>360 || angle<-360) angle = 0.0;
@@ -144,53 +157,47 @@ void GameManager::CollisionDetection()
 		std::cout << "COLLISION BITCH!" << std::endl;
 	else
 		std::cout << "You're good!" << std::endl;*/
-	std::vector<int> hitmon;
-	std::vector<int> hitbul;
-	std::vector<vec3> poslist;
-	std::vector<float> sizelist;
+
 	for(int j=0; j<m_bullets.size();j++){
 	for(int i=0; i<m_monsters.size();i++)
 	{
 		if(m_bullets.size()!=0 && m_monsters.size()!=0
 			&& collision(*m_bullets.at(j)->getBoundingBox(), *m_monsters.at(i)->getBoundingBox()))
 		{
-			hitmon.push_back(i);
-			hitbul.push_back(j);
-			//Delete(BULLET,j);
+			Delete(BULLET,j);
 			vec3 monsp = *m_monsters.at(i)->getPosition();
 			float monss = m_monsters.at(i)->getSize();
 			vec3 smons1p = monsp + (monss * normalize(normal(monsp-*m_player->getPosition())));
 			vec3 smons2p = monsp + (-monss * normalize(normal(monsp-*m_player->getPosition())));
-			//Delete(MONSTER,i);
+			Delete(MONSTER,i);
 			if(monss > 0.5)
 			{
-				//Spawn(MONSTER,smons1p,monss/1.5);
-				//Spawn(MONSTER,smons2p,monss/1.5);
-				//i+=2;
-				poslist.push_back(smons1p);
-				poslist.push_back(smons2p);
-				sizelist.push_back(monss/1.5);
-				sizelist.push_back(monss/1.5);
+				Spawn(MONSTER,smons1p,monss/1.5);
+				Spawn(MONSTER,smons2p,monss/1.5);
 			}
-			//i--;
-			//j--;
+			i = m_monsters.size();
+			j--;
+			m_score++;
 		}
 	}
 	}
-
-	for(int i=0;i<hitbul.size();i++)
-		Delete(BULLET,hitbul.at(i));
-	
-	for(int i=0;i<hitmon.size();i++)
-		Delete(MONSTER,hitmon.at(i));
-
-	for(int i=0;i<poslist.size();i++)
-		Spawn(MONSTER,poslist.at(i),sizelist.at(i));
-
+	if(m_godmode)
+		m_god--;
+	if(m_god==0)
+		m_godmode = false;
 	for(int k=0; k<m_monsters.size();k++)
 	{
-		if(collision(*m_monsters.at(k)->getBoundingBox(),*m_player->getBoundingBox()))
-			std::cout << "YOU GOT KILLED BY: " << k << std::endl;
+		if(collision(*m_monsters.at(k)->getBoundingBox(),*m_player->getBoundingBox())){
+			if(!m_godmode){
+				m_godmode = true;
+				m_god = 100;
+				std::cout << "YOU GOT HIT BY: " << k << std::endl;
+				if(m_player->kill()){
+					std::cout << "YOU'RE DEAD!" << std::endl;
+					system("PAUSE");
+				}
+			}
+		}
 	}
 	
 }
@@ -212,10 +219,11 @@ void GameManager::Update()
 		if(m_bullets.size() != 0){
 			m_bullets.at(i)->Update(1.0f);
 			if(length(*m_bullets.at(i)->getPosition()-*m_player->getPosition()) > 100){
-				Delete(BULLET,i); i--;std::cout << i << std::endl;}
+				Delete(BULLET,i); i--;}
 		}
 	}
 	m_player->Update(1.0f);
+	std::cout << *m_player->getPosition() << std::endl;
 }
 	
 
