@@ -11,8 +11,6 @@
 #include "Ground.h"
 #include <vector>
 
-const enum objectType {PLAYER, MONSTER, BULLET, BUSH};
-
 class GameManager
 {
 public:
@@ -35,7 +33,7 @@ private:
 	int m_god;
 	bool m_godmode;
 	static const int MONSTERCAP = 20;
-	void Spawn(objectType type, vec3 position, double size=10.0);
+	void Spawn(objectType type, vec3 position, float size=10.0);
 	Monster* spawnMonster();
 	Player* spawnPlayer();
 	Bullet* spawnBullet(vec3 position);

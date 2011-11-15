@@ -12,8 +12,9 @@ Object::Object (vec3 position)
 }
 
 Object::Object (vec3 position, vec3 velocity, float size, float speed)
-	: m_position(position), m_velocity(velocity), m_size(size), m_speed(speed)
+	: m_position(position), /*m_velocity(velocity),*/ m_size(size), m_speed(speed)
 {
+	setVelocity(velocity);
 }
 
 Object::~Object () {

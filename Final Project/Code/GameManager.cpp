@@ -90,6 +90,24 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 {
 	m_ground = new Ground();
 
+	//Spawn(TREE,vec3(10,0,0),2.f);
+	//Spawn(ROCK,vec3(5,0,0),1.f);
+
+	float x, z;
+	srand((unsigned)time(0));
+	do
+	{
+		x = 200 - rand()%400;
+		z = 150 - rand()%300;
+		Spawn(TREE,Angel::vec3(x,0.0f,z),2);
+	} while(m_enviro.size() < 600);
+
+	do
+	{
+		x = 200 - rand()%400;
+		z = 150 - rand()%300;
+		Spawn(ROCK,Angel::vec3(x,0.0f,z),1);
+	} while(m_enviro.size() < 1200);
 	//m_enviro.push_back(new EnviroObj(/* type, position */)); // OK do we want to have some sort of file specify		\
 																all the parameters for where every tree/rock/etc	\
 																is located at? Or do we want initEnviro to just		\
@@ -117,14 +135,21 @@ void GameManager::initMonsters()
 	} while(m_monsters.size() < MONSTERCAP);
 }
 
-void GameManager::Spawn(objectType type, vec3 position, double size){
+void GameManager::Spawn(objectType type, vec3 position, float size){
 	switch(type){
 	case PLAYER:
 		break;
 	case MONSTER:
 		{
 			Monster* monster = new Monster(position, normalize(*m_player->getPosition() - position), size, 0.01);
-			m_monsters.push_back(monster);
+			bool allowed = true;
+			for(int i=0;i<m_enviro.size();i++)
+				if(collision(*monster->getBoundingBox(), *m_enviro.at(i)->getBoundingBox()))
+					allowed = false;
+			if(allowed)
+				m_monsters.push_back(monster);
+			else
+				Spawn(MONSTER,vec3(position.x+3,0.f,position.z+3),size);
 		}
 		break;
 	case BULLET:
@@ -133,7 +158,12 @@ void GameManager::Spawn(objectType type, vec3 position, double size){
 			m_bullets.push_back(bullet);
 		}
 		break;
-	case BUSH:
+	case TREE:
+	case ROCK:
+		{
+			EnviroObj* obj = new EnviroObj(type, position, vec3(0,0,1), size);
+			m_enviro.push_back(obj);
+		}
 		break;
 	}
 }
@@ -218,12 +248,13 @@ void GameManager::Update()
 	{
 		if(m_bullets.size() != 0){
 			m_bullets.at(i)->Update(1.0f);
-			if(length(*m_bullets.at(i)->getPosition()-*m_player->getPosition()) > 100){
+			if(length(*m_bullets.at(i)->getPosition()-*m_player->getPosition()) > 50){
 				Delete(BULLET,i); i--;}
 		}
 	}
+	for(int i=0;i<m_enviro.size();i++)
+		m_enviro.at(i)->Update(1.0f);
 	m_player->Update(1.0f);
-	std::cout << *m_player->getPosition() << std::endl;
 }
 	
 
@@ -235,6 +266,9 @@ void GameManager::Render()
 		m_graphicsManager->Render(*m_monsters.at(i)->getRenderBatch());
 	for(int i=0;i<m_bullets.size();i++)
 		m_graphicsManager->Render(*m_bullets.at(i)->getRenderBatch());
+	for(int i=0;i<m_enviro.size();i++)
+		if(length(*m_enviro.at(i)->getPosition()-*m_player->getPosition()) <= 50)
+			m_graphicsManager->Render(*m_enviro.at(i)->getRenderBatch());
 	m_graphicsManager->Render(*m_player->getRenderBatch());
 	m_graphicsManager->Render(*m_ground->getRenderBatch());
 }

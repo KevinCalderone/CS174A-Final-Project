@@ -7,7 +7,7 @@ class EnviroObj : public Object
 {
 
 public:
-	EnviroObj();
+	EnviroObj(objectType type, vec3 position, vec3 direction, float size);
 	~EnviroObj();
 };
 
