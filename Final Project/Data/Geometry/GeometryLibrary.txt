@@ -17,3 +17,33 @@ plane
 
 cone 
 	../Data/Geometry/cone.obj
+
+one
+	../Data/Geometry/one.obj
+
+two
+	../Data/Geometry/two.obj
+
+three
+	../Data/Geometry/three.obj
+
+four
+	../Data/Geometry/four.obj
+
+five
+	../Data/Geometry/five.obj
+
+six
+	../Data/Geometry/six.obj
+
+seven
+	../Data/Geometry/seven.obj
+
+eight
+	../Data/Geometry/eight.obj
+
+nine
+	../Data/Geometry/nine.obj
+
+zero
+	../Data/Geometry/zero.obj

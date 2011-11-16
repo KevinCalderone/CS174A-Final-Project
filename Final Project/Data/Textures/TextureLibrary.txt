@@ -23,3 +23,6 @@ cube envMap
 
 2d noise
 	../Data/Textures/noise.bmp
+
+2d numbers
+	../Data/Textures/numbers.bmp
