@@ -34,7 +34,7 @@ private:
 	int m_score;
 	int m_god;
 	bool m_godmode;
-	static const int MONSTERCAP = 1;
+	static const int MONSTERCAP = 50;
 	void Spawn(objectType type, vec3 position, float size=10.0);
 	Monster* spawnMonster();
 	Player* spawnPlayer();
@@ -51,6 +51,7 @@ private:
 	void SetCameraOrthogonal();
 	void SetupCamera(vec4 playerPos);
 	void updateCamera();
+	vec3 monsColDirection(Monster* m, EnviroObj* e);
 };
 
 directionType relativePosition(Object& a, Object& b);

@@ -111,13 +111,13 @@ int main (int argc, char** argv) {
 	renderParameters.m_pointLightSpecular[1] = vec3(0.0f, 0.0f, 0.0f);
 	renderParameters.m_pointLightRange[1] = 10.0f;
 	renderParameters.m_pointLightFalloff[1] = 2.0f;
-	/*
-	renderParameters.m_pointLightPosition[2] = vec3(0.0f, 1.0f, 5.0f);
-	renderParameters.m_pointLightDiffuse[2] = vec3(0.0f, 1.0f, 0.0f);
-	renderParameters.m_pointLightSpecular[2] = vec3(0.0f, 1.0f, 0.0f);
-	renderParameters.m_pointLightRange[2] = 8.0f;
-	renderParameters.m_pointLightFalloff[2] = 2.0f;
-	*/
+	
+	//renderParameters.m_pointLightPosition[2] = vec3(0.0f, 1.0f, 5.0f);
+	//renderParameters.m_pointLightDiffuse[2] = vec3(0.0f, 1.0f, 0.0f);
+	//renderParameters.m_pointLightSpecular[2] = vec3(0.0f, 1.0f, 0.0f);
+	//renderParameters.m_pointLightRange[2] = 8.0f;
+	//renderParameters.m_pointLightFalloff[2] = 2.0f;
+	
 	// No color correction
 	renderParameters.m_colorCorrection = mat4(
 		1.0f, 0.0f, 0.0f, 0.0f,
@@ -126,25 +126,41 @@ int main (int argc, char** argv) {
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
 	
-	/*
-	// Under water looking
-	renderParameters.m_colorCorrection = mat4(
-		0.5f, 0.0f, 0.5f, 0.0f,
-		0.0f, 0.5f, 0.5f, 0.0f, 
-		0.0f, 0.0f, 1.0f, 0.0f, 
-		0.0f, 0.0f, 0.0f, 1.0f
-	);
-	*/
-	/*
-	// Black and White
-	renderParameters.m_colorCorrection = mat4(
-		0.33f, 0.33f, 0.33f, 0.0f,
-		0.33f, 0.33f, 0.33f, 0.0f, 
-		0.33f, 0.33f, 0.33f, 0.0f, 
-		0.0f, 0.0f, 0.0f, 1.0f
-	);
-	*/
+	
+	//// Under water looking
+	//renderParameters.m_colorCorrection = mat4(
+	//	0.5f, 0.0f, 0.5f, 0.0f,
+	//	0.0f, 0.5f, 0.5f, 0.0f, 
+	//	0.0f, 0.0f, 1.0f, 0.0f, 
+	//	0.0f, 0.0f, 0.0f, 1.0f
+	//);
+	//
+	//
+	//// Black and White
+	//renderParameters.m_colorCorrection = mat4(
+	//	0.33f, 0.33f, 0.33f, 0.0f,
+	//	0.33f, 0.33f, 0.33f, 0.0f, 
+	//	0.33f, 0.33f, 0.33f, 0.0f, 
+	//	0.0f, 0.0f, 0.0f, 1.0f
+	//);
+	
 
 	glutMainLoop();
 	return 0;
+
+	//vec3 M(-1,0,5);
+	//vec3 P(-1,0,-5);
+	//vec3 T(4,0,6);
+
+	//double r = (M.z-T.z)*(M.z-P.z)-(M.x-T.x)*(P.x-M.x);
+	//r = r / (length(M-P)*length(M-P));
+	//vec3 X = vec3(M.x+r*(P.x-M.x),0, M.z+r*(P.z-M.z));
+	//vec3 V = normalize(normal(X-T));
+	//vec3 nT = normalize(normal(M-T));
+
+	//if(normalize(P-M) == V)
+	//	std::cout << nT << std::endl;
+	//else
+	//	std::cout << -nT << std::endl;
+	//system("pause");
 }

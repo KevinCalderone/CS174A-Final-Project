@@ -189,6 +189,8 @@ struct vec3 {
     //
     //  --- (non-modifying) Arithematic Operators ---
     //
+	bool operator == (const vec3& v) const
+	{ return x==v.x && y==v.y && z==v.z; }
 
     vec3 operator - () const  // unary minus operator
 	{ return vec3( -x, -y, -z ); }

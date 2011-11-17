@@ -119,7 +119,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 			x = 200 - rand()%400;
 			z = 150 - rand()%300;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
-		Spawn(TREE,Angel::vec3(x,1.0f,z),2);
+		Spawn(TREE,Angel::vec3(x,0.0f,z),2);
 	} while(m_enviro.size() < 600);
 
 	do
@@ -129,7 +129,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 			x = 200 - rand()%400;
 			z = 150 - rand()%300;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
-		Spawn(ROCK,Angel::vec3(x,1.0f,z),0.5);
+		Spawn(ROCK,Angel::vec3(x,0.0f,z),0.5);
 	} while(m_enviro.size() < 1200);
 	//m_enviro.push_back(new EnviroObj(/* type, position */)); // OK do we want to have some sort of file specify		\
 																all the parameters for where every tree/rock/etc	\
@@ -287,24 +287,11 @@ void GameManager::Update()
 		//m_monsters.at(i)->setVelocity(*m_player->getDirection());
 		m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
 	for(int j=0;j<m_enviro.size();j++){
-		if(length(*m_enviro.at(j)->getPosition()-*m_monsters.at(i)->getPosition()) < 10 && 
-			collision(*m_enviro.at(j)->getBoundingBox(),*m_monsters.at(i)->getBoundingBox()))
+		if((length(*m_enviro.at(j)->getPosition()-*m_monsters.at(i)->getPosition()) < 2) && // this 2 will have to depend on sizes
+			acos(dot(normalize(*m_monsters.at(i)->getPosition()-*m_enviro.at(j)->getPosition()),
+				normalize(*m_monsters.at(i)->getPosition()-*m_player->getPosition())))/DegreesToRadians < 90)
 		{
-			directionType rp = relativePosition(*m_monsters.at(i),*m_enviro.at(j));
-
-			if(rp == LEFT || rp == RIGHT)
-				if(m_monsters.at(i)->getPosition()->z >= m_enviro.at(j)->getPosition()->z)
-					m_monsters.at(i)->setVelocity(vec3(0.0,0.0,1.0));
-				else
-					m_monsters.at(i)->setVelocity(vec3(0.0,0.0,-1.0));
-			//Check 1: (m_monsters.at(i)->getPosition()->x >= m_enviro.at(j)->getPosition()->x)
-			//Check 2: (m_monsters.at(i)->getVelocity()->x >= 0)
-			else if(rp == UP || rp == DOWN)
-				if(m_monsters.at(i)->getPosition()->x >= m_enviro.at(j)->getPosition()->x)
-					m_monsters.at(i)->setVelocity(vec3(1.0,0.0,0.0));
-				else
-					m_monsters.at(i)->setVelocity(vec3(-1.0,0.0,0.0));
-			std::cout << "MOVED: " << *m_monsters.at(i)->getVelocity() << std::endl;/////////////////remove later
+			m_monsters.at(i)->setVelocity(monsColDirection(m_monsters.at(i),m_enviro.at(j)));
 		}
 	}
 		m_monsters.at(i)->Update(1.0f);
@@ -410,7 +397,27 @@ void GameManager::updateCamera()
 	// This is just for testing until you get this incorportated into GameManager
 }
 
+vec3 GameManager::monsColDirection(Monster* m, EnviroObj* e)
+{
+	//return normalize(normal(*m->getPosition()-*e->getPosition()));
+	vec3* M = m->getPosition();
+	vec3* T = e->getPosition();
+	vec3* P = m_player->getPosition();
 
+	double r = (M->z-T->z)*(M->z-P->z)-(M->x-T->x)*(P->x-M->x);
+	r = r / (length(*M-*P)*length(*M-*P));
+	vec3 X = vec3(M->x+r*(P->x-M->x),0, M->z+r*(P->z-M->z));
+	vec3 V = normalize(normal(X-*T));
+	vec3 nT = normalize(normal(*M-*T));
+	vec3 PM = normalize(*P-*M);
+	V = vec3((int)(V.x*1000), 0.0, (int)(V.z*1000));
+	PM = vec3((int)(PM.x*1000), 0.0, (int)(PM.z*1000));
+
+	if(PM == V)
+		return nT;
+	else
+		return -nT;
+}
 
 directionType relativePosition(Object& a, Object& b)
 {
