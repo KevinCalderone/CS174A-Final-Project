@@ -46,6 +46,9 @@ private:
 	void initPlayer();
 	void initMonsters();
 	void initEnviro();
+	void SetCameraOrthogonal();
+	void SetupCamera(vec4 playerPos);
+	void updateCamera();
 };
 
 #endif

@@ -120,15 +120,21 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 	srand((unsigned)time(0));
 	do
 	{
-		x = 200 - rand()%400;
-		z = 150 - rand()%300;
+		do
+		{
+			x = 200 - rand()%400;
+			z = 150 - rand()%300;
+		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(TREE,Angel::vec3(x,1.0f,z),2);
 	} while(m_enviro.size() < 600);
 
 	do
 	{
-		x = 200 - rand()%400;
-		z = 150 - rand()%300;
+		do
+		{
+			x = 200 - rand()%400;
+			z = 150 - rand()%300;
+		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(ROCK,Angel::vec3(x,1.0f,z),0.5);
 	} while(m_enviro.size() < 1200);
 	//m_enviro.push_back(new EnviroObj(/* type, position */)); // OK do we want to have some sort of file specify		\
@@ -182,10 +188,20 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 		}
 		break;
 	case TREE:
+	case BUSH:
 	case ROCK:
 		{
 			EnviroObj* obj = new EnviroObj(type, position, vec3(0,0,1), size);
-			m_enviro.push_back(obj);
+			//BoundingBox* objbb = new BoundingBox(vec2(position.x,position.z),4.f,4.f);
+			bool allowed = true;
+			for(int i=0;i<m_enviro.size();i++)
+				if(length(position-*m_enviro.at(i)->getPosition()) < 8)
+					allowed = false;
+			if(allowed)
+				m_enviro.push_back(obj);
+			else
+				delete obj;
+			//delete objbb;
 		}
 		break;
 	}
@@ -296,6 +312,7 @@ void GameManager::Update()
 void GameManager::Render()
 {
 	keyboardUpdate();
+	updateCamera();
 	Update();
 	for(int i=0;i<m_monsters.size();i++)
 		m_graphicsManager->Render(*m_monsters.at(i)->getRenderBatch());
@@ -306,6 +323,7 @@ void GameManager::Render()
 			m_graphicsManager->Render(*m_enviro.at(i)->getRenderBatch());
 	m_graphicsManager->Render(*m_player->getRenderBatch());
 	m_graphicsManager->Render(*m_ground->getRenderBatch());
+	m_graphicsManager->SwapBuffers();
 }
 
 void GameManager::initGame()
@@ -319,4 +337,55 @@ void GameManager::initGame()
 Player* GameManager::getPlayer()
 {
 	return m_player;
+}
+
+void GameManager::SetCameraOrthogonal()
+{
+	RenderParameters& renderParameters = m_graphicsManager->GetRenderParameters();
+	renderParameters.m_projectionMatrix = mat4();
+}
+
+void GameManager::SetupCamera(vec4 playerPos)
+{
+	vec4 playerPosition = playerPos;
+	vec4 eyePosition = playerPosition + vec4(0.0f, 15.0f, 15.0f, 0.0f);
+	RenderParameters& renderParameters = m_graphicsManager->GetRenderParameters();
+
+	renderParameters.m_eyePosition = vec3(eyePosition.x, eyePosition.y, eyePosition.z);
+	renderParameters.m_projectionMatrix = 
+		Angel::Perspective(45.0f, 4.0f/3.0f, 0.5f, 50.0f) * 
+		Angel::LookAt(eyePosition, playerPosition, vec4(0.0f, 1.0f, 0.0f, 0.0f));
+}
+
+void GameManager::updateCamera()
+{
+	m_graphicsManager->ClearScreen();
+	
+	{
+		static float theta = 0.0f;
+		theta += 1.0f;
+
+		SetupCamera(*m_player->getPosition());
+
+		RenderParameters& renderParameters = m_graphicsManager->GetRenderParameters();
+
+		// Position lights at player postion
+		renderParameters.m_pointLightPosition[0] = *m_player->getPosition() + vec3(0.0f, 1.5f, -1.5f);
+		renderParameters.m_pointLightPosition[1] = *m_player->getPosition() + vec3(0.0f, 0.5f, -2.5f);
+		
+		// Muzzle flash
+		float flashIntensity = cos((3.14159 / 2.0f) * (fmod(theta, 20.0f) < 13.0f ? fmod(theta, 20.0f) / 13.0f : 1.0f))*1.5;
+		renderParameters.m_pointLightDiffuse[1] = vec3(3.0f, 3.0f, 0.0f) * flashIntensity;
+		renderParameters.m_pointLightSpecular[1] = vec3(2.0f, 2.0f, 0.0f) * flashIntensity;
+		renderParameters.m_pointLightRange[1] = 8.0f * flashIntensity;
+		renderParameters.m_pointLightFalloff[1] = 2.0f * flashIntensity;
+
+		// Flickering Torch
+		renderParameters.m_pointLightRange[0] = 11.0f + 2.0f * (sin(theta * 0.12f) + sin(theta * 0.14f) + sin(theta * 0.09f))/3.0f ;
+		renderParameters.m_pointLightFalloff[0] = 2.0f + 1.0f * (sin(theta * 0.12f) + sin(theta * 0.14f) + sin(theta * 0.09f))/3.0f;
+
+		//Render();
+	}
+
+	// This is just for testing until you get this incorportated into GameManager
 }

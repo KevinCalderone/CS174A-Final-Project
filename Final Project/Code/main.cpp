@@ -22,55 +22,14 @@ void initGlut (int& argc, char** argv) {
 	glutCreateWindow("CS17A Final Project");
 }
 
-static void SetCameraOrthogonal () {
-	RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
-	renderParameters.m_projectionMatrix = mat4();
-}
 
-static void SetupCamera (vec4 playerPos) {
-	vec4 playerPosition = playerPos;
-	vec4 eyePosition = playerPosition + vec4(0.0f, 15.0f, 15.0f, 0.0f);
-	RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
 
-	renderParameters.m_eyePosition = vec3(eyePosition.x, eyePosition.y, eyePosition.z);
-	renderParameters.m_projectionMatrix = 
-		Angel::Perspective(45.0f, 4.0f/3.0f, 0.5f, 50.0f) * 
-		Angel::LookAt(eyePosition, playerPosition, vec4(0.0f, 1.0f, 0.0f, 0.0f));
-}
+
 
 // Called when the window needs to be redrawn.
 void callbackDisplay () {
 	// This is just for testing until you get this incorportated into GameManager
-	graphicsManager->ClearScreen();
-	
-	{
-		static float theta = 0.0f;
-		theta += 1.0f;
-
-		SetupCamera(*gameManager->getPlayer()->getPosition());
-
-		RenderParameters& renderParameters = graphicsManager->GetRenderParameters();
-
-		// Position lights at player postion
-		renderParameters.m_pointLightPosition[0] = *gameManager->getPlayer()->getPosition() + vec3(0.0f, 1.5f, -1.5f);
-		renderParameters.m_pointLightPosition[1] = *gameManager->getPlayer()->getPosition() + vec3(0.0f, 0.5f, -2.5f);
-		
-		// Muzzle flash
-		float flashIntensity = cos((3.14159 / 2.0f) * (fmod(theta, 20.0f) < 13.0f ? fmod(theta, 20.0f) / 13.0f : 1.0f));
-		renderParameters.m_pointLightDiffuse[1] = vec3(3.0f, 3.0f, 0.0f) * flashIntensity;
-		renderParameters.m_pointLightSpecular[1] = vec3(2.0f, 2.0f, 0.0f) * flashIntensity;
-		renderParameters.m_pointLightRange[1] = 8.0f * flashIntensity;
-		renderParameters.m_pointLightFalloff[1] = 2.0f * flashIntensity;
-
-		// Flickering Torch
-		renderParameters.m_pointLightRange[0] = 11.0f + 2.0f * (sin(theta * 0.12f) + sin(theta * 0.14f) + sin(theta * 0.09f))/3.0f ;
-		renderParameters.m_pointLightFalloff[0] = 2.0f + 1.0f * (sin(theta * 0.12f) + sin(theta * 0.14f) + sin(theta * 0.09f))/3.0f;
-
-		gameManager->Render();
-	}
-
-	// This is just for testing until you get this incorportated into GameManager
-	graphicsManager->SwapBuffers();
+	gameManager->Render();
 }
 
 // Called when the window is resized.
