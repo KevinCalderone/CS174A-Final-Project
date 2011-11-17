@@ -107,9 +107,6 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 {
 	m_ground = new Ground();
 
-	//Spawn(TREE,vec3(10,0,0),2.f);
-	//Spawn(ROCK,vec3(5,0,0),1.f);
-
 	float x, z;
 	srand((unsigned)time(0));
 	do
@@ -131,12 +128,6 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(ROCK,Angel::vec3(x,0.0f,z),0.5);
 	} while(m_enviro.size() < 1200);
-	//m_enviro.push_back(new EnviroObj(/* type, position */)); // OK do we want to have some sort of file specify		\
-																all the parameters for where every tree/rock/etc	\
-																is located at? Or do we want initEnviro to just		\
-																manually push_back one EnviroObj at a time? Also	\
-																in either case EnviroObj must have a constructor	\
-																which can let it know if it's a rock, tree, etc.
 }
 
 void GameManager::initPlayer()
@@ -186,7 +177,6 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 	case ROCK:
 		{
 			EnviroObj* obj = new EnviroObj(type, position, vec3(0,0,1), size);
-			//BoundingBox* objbb = new BoundingBox(vec2(position.x,position.z),4.f,4.f);
 			bool allowed = true;
 			for(int i=0;i<m_enviro.size();i++)
 				if(length(position-*m_enviro.at(i)->getPosition()) < 8)
@@ -195,7 +185,6 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 				m_enviro.push_back(obj);
 			else
 				delete obj;
-			//delete objbb;
 		}
 		break;
 	}
@@ -399,7 +388,6 @@ void GameManager::updateCamera()
 
 vec3 GameManager::monsColDirection(Monster* m, EnviroObj* e)
 {
-	//return normalize(normal(*m->getPosition()-*e->getPosition()));
 	vec3* M = m->getPosition();
 	vec3* T = e->getPosition();
 	vec3* P = m_player->getPosition();
