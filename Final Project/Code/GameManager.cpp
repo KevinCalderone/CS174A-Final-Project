@@ -78,20 +78,14 @@ void GameManager::keyboardUpdate()
 		if(length(*m_enviro.at(i)->getPosition()-*m_player->getPosition()) < 10 && 
 			collision(*m_enviro.at(i)->getBoundingBox(),*m_player->getBoundingBox()))
 		{
-			vec3* op = m_enviro.at(i)->getPosition();
-			vec3* pp = m_player->getPosition();
-			if(op->x <= pp->x)
-				if((op->z <= (pp->z + (pp->x - op->x))) && (op->z >= (pp->z - (pp->x - op->x))))
-					ad = m_d;
-			if(op->x > pp->x)
-				if((op->z <= (pp->z + (op->x - pp->x))) && (op->z >= (pp->z - (op->x - pp->x))))
-					ad = -m_a;
-			if(op->z <= pp->z)
-				if((op->x <= (pp->x + (pp->z - op->z))) && (op->x >= (pp->x - (pp->z - op->z))))
-					ws = m_s;
-			if(op->z > pp->z)
-				if((op->x <= (pp->x + (op->z - pp->z))) && (op->x >= (pp->x - (op->z - pp->z))))
-					ws = -m_w;
+			if(relativePosition(*m_player,*m_enviro.at(i)) == LEFT)
+				ad = m_d;
+			if(relativePosition(*m_player,*m_enviro.at(i)) == RIGHT)
+				ad = -m_a;
+			if(relativePosition(*m_player,*m_enviro.at(i)) == UP)
+				ws = m_s;
+			if(relativePosition(*m_player,*m_enviro.at(i)) == DOWN)
+				ws = -m_w;
 		}
 	}
 
@@ -228,8 +222,7 @@ void GameManager::CollisionDetection()
 		std::cout << "You're good!" << std::endl;*/
 
 	for(int j=0; j<m_bullets.size();j++){
-	for(int i=0; i<m_monsters.size();i++)
-	{
+	for(int i=0; i<m_monsters.size();i++){
 		if(m_bullets.size()!=0 && m_monsters.size()!=0
 			&& collision(*m_bullets.at(j)->getBoundingBox(), *m_monsters.at(i)->getBoundingBox()))
 		{
@@ -252,8 +245,7 @@ void GameManager::CollisionDetection()
 	}
 
 	for(int j=0; j<m_bullets.size();j++){
-	for(int i=0; i<m_enviro.size();i++)
-	{
+	for(int i=0; i<m_enviro.size();i++){
 		if(m_bullets.size()!=0 && collision(*m_bullets.at(j)->getBoundingBox(), *m_enviro.at(i)->getBoundingBox()))
 		{
 			Delete(BULLET,j);
@@ -267,8 +259,8 @@ void GameManager::CollisionDetection()
 		m_god--;
 	if(m_god==0)
 		m_godmode = false;
-	for(int k=0; k<m_monsters.size();k++)
-	{
+
+	for(int k=0; k<m_monsters.size();k++){
 		if(collision(*m_monsters.at(k)->getBoundingBox(),*m_player->getBoundingBox())){
 			if(!m_godmode){
 				m_godmode = true;
@@ -290,11 +282,34 @@ void GameManager::Update()
 
 	CollisionDetection();
 
+
 	for(int i=0;i<m_monsters.size();i++){
 		//m_monsters.at(i)->setVelocity(*m_player->getDirection());
 		m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
+	for(int j=0;j<m_enviro.size();j++){
+		if(length(*m_enviro.at(j)->getPosition()-*m_monsters.at(i)->getPosition()) < 10 && 
+			collision(*m_enviro.at(j)->getBoundingBox(),*m_monsters.at(i)->getBoundingBox()))
+		{
+			directionType rp = relativePosition(*m_monsters.at(i),*m_enviro.at(j));
+
+			if(rp == LEFT || rp == RIGHT)
+				if(m_monsters.at(i)->getPosition()->z >= m_enviro.at(j)->getPosition()->z)
+					m_monsters.at(i)->setVelocity(vec3(0.0,0.0,1.0));
+				else
+					m_monsters.at(i)->setVelocity(vec3(0.0,0.0,-1.0));
+			//Check 1: (m_monsters.at(i)->getPosition()->x >= m_enviro.at(j)->getPosition()->x)
+			//Check 2: (m_monsters.at(i)->getVelocity()->x >= 0)
+			else if(rp == UP || rp == DOWN)
+				if(m_monsters.at(i)->getPosition()->x >= m_enviro.at(j)->getPosition()->x)
+					m_monsters.at(i)->setVelocity(vec3(1.0,0.0,0.0));
+				else
+					m_monsters.at(i)->setVelocity(vec3(-1.0,0.0,0.0));
+			std::cout << "MOVED: " << *m_monsters.at(i)->getVelocity() << std::endl;/////////////////remove later
+		}
+	}
 		m_monsters.at(i)->Update(1.0f);
 	}
+
 	for(int i=0;i<m_bullets.size();i++)
 	{
 		if(m_bullets.size() != 0){
@@ -379,7 +394,7 @@ void GameManager::updateCamera()
 		renderParameters.m_pointLightPosition[1] = *m_player->getPosition() + vec3(0.0f, 0.5f, -2.5f);
 		
 		// Muzzle flash
-		float flashIntensity = cos((3.14159 / 2.0f) * (fmod(theta, 20.0f) < 13.0f ? fmod(theta, 20.0f) / 13.0f : 1.0f))*1.5;
+		float flashIntensity = 1;//cos((3.14159 / 2.0f) * (fmod(theta, 20.0f) < 13.0f ? fmod(theta, 20.0f) / 13.0f : 1.0f))*1.5;
 		renderParameters.m_pointLightDiffuse[1] = vec3(3.0f, 3.0f, 0.0f) * flashIntensity;
 		renderParameters.m_pointLightSpecular[1] = vec3(2.0f, 2.0f, 0.0f) * flashIntensity;
 		renderParameters.m_pointLightRange[1] = 8.0f * flashIntensity;
@@ -393,4 +408,24 @@ void GameManager::updateCamera()
 	}
 
 	// This is just for testing until you get this incorportated into GameManager
+}
+
+
+
+directionType relativePosition(Object& a, Object& b)
+{
+	vec3* op = b.getPosition();
+	vec3* pp = a.getPosition();
+	if(op->x <= pp->x)
+		if((op->z <= (pp->z + (pp->x - op->x))) && (op->z >= (pp->z - (pp->x - op->x))))
+			return LEFT;
+	if(op->x > pp->x)
+		if((op->z <= (pp->z + (op->x - pp->x))) && (op->z >= (pp->z - (op->x - pp->x))))
+			return RIGHT;
+	if(op->z <= pp->z)
+		if((op->x <= (pp->x + (pp->z - op->z))) && (op->x >= (pp->x - (pp->z - op->z))))
+			return UP;
+	if(op->z > pp->z)
+		if((op->x <= (pp->x + (op->z - pp->z))) && (op->x >= (pp->x - (op->z - pp->z))))
+			return DOWN;
 }

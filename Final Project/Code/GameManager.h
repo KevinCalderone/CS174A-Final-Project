@@ -11,6 +11,8 @@
 #include "Ground.h"
 #include <vector>
 
+const enum directionType {UP,DOWN,LEFT,RIGHT};
+
 class GameManager
 {
 public:
@@ -32,7 +34,7 @@ private:
 	int m_score;
 	int m_god;
 	bool m_godmode;
-	static const int MONSTERCAP = 20;
+	static const int MONSTERCAP = 1;
 	void Spawn(objectType type, vec3 position, float size=10.0);
 	Monster* spawnMonster();
 	Player* spawnPlayer();
@@ -50,5 +52,7 @@ private:
 	void SetupCamera(vec4 playerPos);
 	void updateCamera();
 };
+
+directionType relativePosition(Object& a, Object& b);
 
 #endif
