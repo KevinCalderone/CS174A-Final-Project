@@ -328,10 +328,15 @@ void GameManager::Render()
 
 void GameManager::initGame()
 {
+	std::cout << "INITIALIZING GAME";
 	m_graphicsManager = new GraphicsManager("../Data/AssetLibrary.txt");
+	std::cout << ".";
 	initEnviro();
+	std::cout << ".";
 	initPlayer();
+	std::cout << "." << std::endl;
 	initMonsters();
+	std::cout << "...GAME INITIALIZED!" << std::endl << std::endl;
 }
 
 Player* GameManager::getPlayer()
