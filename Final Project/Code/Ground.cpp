@@ -6,13 +6,13 @@ Ground::Ground()
 	RenderBatch* batch = new RenderBatch();
 	batch->m_geometryID = "plane";	
 	batch->m_effectParameters.m_modelviewMatrix =  mat4();
-	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
-	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.5f;
-	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f) * 0.3f;
+	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 2.0f;
+	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 1.0f;
+	batch->m_effectParameters.m_materialSpecular = vec3(0.0f, 0.0f, 1.0f) * 0.2f;
 	batch->m_effectParameters.m_materialSpecularExponent = 6.0f;
 	batch->m_effectParameters.m_materialGloss = 0.0f;
-	batch->m_effectParameters.m_diffuseTexture = "stone";	
-	batch->m_effectParameters.m_normalMap = "stoneNormal";
+	batch->m_effectParameters.m_diffuseTexture = "grass";	
+	batch->m_effectParameters.m_normalMap = "grassNormal";
 	this->setRenderBatch(batch);
 }
 

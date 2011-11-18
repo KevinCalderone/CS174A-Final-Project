@@ -6,24 +6,37 @@ EnviroObj::EnviroObj(objectType type, vec3 position, vec3 direction, float size)
 	RenderBatch* batch = new RenderBatch();
 	if(type==TREE)
 	{
-		batch->m_geometryID = "cone";
-		batch->m_effectParameters.m_materialAmbient = vec3(0.0f, 1.0f, 0.0f) * 5.0f;
-		batch->m_effectParameters.m_materialDiffuse = vec3(0.0f, 1.0f, 0.0f) * 5.0f;
-		batch->m_effectParameters.m_materialSpecular = vec3(0.5f, 1.0f, 0.0f) * 0.0f;
+		batch->m_geometryID = "tree";
+		batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 0.5f;
+		batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.3f;
+		batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f) * 0.0f;
 		batch->m_effectParameters.m_materialSpecularExponent = 1.0f;
-		batch->m_effectParameters.m_materialGloss = 0.1f;
-		batch->m_effectParameters.m_diffuseTexture = "none";	
+		batch->m_effectParameters.m_materialGloss = 0.0f;
+		batch->m_effectParameters.m_diffuseTexture = "tree";	
 		batch->m_effectParameters.m_normalMap = "none";
+		
+	}
+	if(type==LEAVES) 
+	{
+		batch->m_geometryID = "leaves";
+		batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 0.5f;
+		batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.3f;
+		batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f) * 0.0f;
+		batch->m_effectParameters.m_materialSpecularExponent = 1.0f;
+		batch->m_effectParameters.m_materialGloss = 0.0f;
+		batch->m_effectParameters.m_diffuseTexture = "leaves";	
+		batch->m_effectParameters.m_normalMap = "none";
+		batch->m_effectParameters.m_materialOpacity = 0.2f;
 	}
 	if(type==ROCK)
 	{
-		batch->m_geometryID = "cube";
-		batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 0.0f) * 5.0f;
-		batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 0.0f) * 5.0f;
+		batch->m_geometryID = "bush";
+		batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 0.0f) * 0.5f;
+		batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 0.0f) * 0.3f;
 		batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.0f) * 0.0f;
 		batch->m_effectParameters.m_materialSpecularExponent = 1.0f;
 		batch->m_effectParameters.m_materialGloss = 0.1f;
-		batch->m_effectParameters.m_diffuseTexture = "none";	
+		batch->m_effectParameters.m_diffuseTexture = "bush";	
 		batch->m_effectParameters.m_normalMap = "none";
 	}
 	this->setRenderBatch(batch);

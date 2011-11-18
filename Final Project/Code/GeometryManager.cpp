@@ -60,8 +60,10 @@ void GeometryManager::InitBuffer (unsigned int size) {
 void GeometryManager::RenderGeometry (const std::string& geometryID) {
 	std::map<std::string, Geometry*>::iterator iter = m_geometry.find(geometryID);
 
-	if (iter == m_geometry.end())
+	if (iter == m_geometry.end()) {
+		printf("GeometryManager::RenderGeometry: Unknown geometryID %s.\n", geometryID.c_str());
 		return;
+	}
 	
 	Geometry* geometry = iter->second;
 	glDrawArrays(geometry->m_geometryMode, geometry->m_vertexStart, geometry->m_numVertex);

@@ -18,6 +18,15 @@ plane
 cone 
 	../Data/Geometry/cone.obj
 
+tree 
+	../Data/Geometry/tree.obj
+
+leaves
+	../Data/Geometry/leaves.obj
+
+bush
+	../Data/Geometry/bush.obj
+
 one
 	../Data/Geometry/one.obj
 

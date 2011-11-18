@@ -117,7 +117,8 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 			z = 150 - rand()%300;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(TREE,Angel::vec3(x,0.0f,z),2);
-	} while(m_enviro.size() < 600);
+		Spawn(LEAVES,Angel::vec3(x,0.0f,z),2);
+	} while(m_enviro.size() < 1000);
 
 	do
 	{
@@ -126,7 +127,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 			x = 200 - rand()%400;
 			z = 150 - rand()%300;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
-		Spawn(ROCK,Angel::vec3(x,0.0f,z),0.5);
+		Spawn(ROCK,Angel::vec3(x,0.0f,z),1.5);
 	} while(m_enviro.size() < 1200);
 }
 
@@ -172,6 +173,11 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 			m_bullets.push_back(bullet);
 		}
 		break;
+	case LEAVES:
+		{
+			EnviroObj* obj = new EnviroObj(type, position, vec3(0,0,1), size);
+			m_enviro.push_back(obj);
+		}
 	case TREE:
 	case BUSH:
 	case ROCK:
@@ -371,14 +377,14 @@ void GameManager::updateCamera()
 		
 		// Muzzle flash
 		float flashIntensity = 1;//cos((3.14159 / 2.0f) * (fmod(theta, 20.0f) < 13.0f ? fmod(theta, 20.0f) / 13.0f : 1.0f))*1.5;
-		renderParameters.m_pointLightDiffuse[1] = vec3(3.0f, 3.0f, 0.0f) * flashIntensity;
-		renderParameters.m_pointLightSpecular[1] = vec3(2.0f, 2.0f, 0.0f) * flashIntensity;
+		renderParameters.m_pointLightDiffuse[1] = vec3(3.0f, 3.0f, 0.3f) * flashIntensity;
+		renderParameters.m_pointLightSpecular[1] = vec3(2.0f, 2.0f, 0.3f) * flashIntensity;
 		renderParameters.m_pointLightRange[1] = 8.0f * flashIntensity;
 		renderParameters.m_pointLightFalloff[1] = 2.0f * flashIntensity;
 
 		// Flickering Torch
 		renderParameters.m_pointLightRange[0] = 11.0f + 2.0f * (sin(theta * 0.12f) + sin(theta * 0.14f) + sin(theta * 0.09f))/3.0f ;
-		renderParameters.m_pointLightFalloff[0] = 2.0f + 1.0f * (sin(theta * 0.12f) + sin(theta * 0.14f) + sin(theta * 0.09f))/3.0f;
+		renderParameters.m_pointLightFalloff[0] = 0.0f + 1.0f * (sin(theta * 0.12f) + sin(theta * 0.14f) + sin(theta * 0.09f))/3.0f;
 
 		//Render();
 	}

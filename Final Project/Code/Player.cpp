@@ -18,7 +18,7 @@ Player::Player (vec3 position, vec3 direction, float size, float speed, int live
 	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.8f) * 0.1f;
 	batch->m_effectParameters.m_materialSpecularExponent = 14.0f;
 	batch->m_effectParameters.m_materialGloss = 0.1f;
-	batch->m_effectParameters.m_materialOpacity = 0.3f;
+	batch->m_effectParameters.m_materialOpacity = 1.0f;
 	batch->m_effectParameters.m_diffuseTexture = "monster";	
 	batch->m_effectParameters.m_normalMap = "monsterNormal";
 	this->setRenderBatch(batch);

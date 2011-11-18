@@ -41,7 +41,7 @@ char* BMPTexture::ReadTextureFile (const std::string& fileName) {
 	is.open (fileName.c_str(), std::ios::binary);
 
 	if( !is.is_open() ) {
-		printf("BMPTexture::ReadTextureFile: Error loading Texture %s", fileName);
+		printf("BMPTexture::ReadTextureFile: Error loading Texture %s", fileName.c_str());
 		return NULL;
 	}
 
@@ -65,6 +65,9 @@ void BMPTexture::Load2dTexture (const std::vector<const std::string>& fileNames)
 		return;
 
 	char* data = ReadTextureFile(fileNames[0]);
+
+	if (data == NULL)
+		return;
 	
 	unsigned int dataBegin = *((unsigned int*)(data+10)); 
 

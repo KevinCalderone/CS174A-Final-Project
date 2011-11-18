@@ -26,3 +26,18 @@ cube envMap
 
 2d numbers
 	../Data/Textures/numbers.bmp
+
+2d tree
+	../Data/Textures/tree.bmp
+
+2d leaves
+	../Data/Textures/leaves.bmp
+
+2d bush
+	../Data/Textures/bush.bmp
+
+2d grass
+	../Data/Textures/seamless_ground2048.bmp
+
+2d grassNormal
+	../Data/Textures/seamless_ground2048_normal.bmp
