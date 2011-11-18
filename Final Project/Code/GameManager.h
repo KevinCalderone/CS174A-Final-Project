@@ -10,8 +10,11 @@
 #include "EnviroObj.h"
 #include "Ground.h"
 #include <vector>
+#include "FMOD\fmod.hpp"
+#include "FMOD\fmod_errors.h"
 
 const enum directionType {UP,DOWN,LEFT,RIGHT};
+const enum soundType {MACHINEGUN, SHOTGUN, MONSDEATH, BGMUSIC};
 
 class GameManager
 {
@@ -45,6 +48,7 @@ private:
 	void Update();
 	void keyboardUpdate();
 	void CollisionDetection();
+	void initSounds();
 	void initPlayer();
 	void initMonsters();
 	void initEnviro();
@@ -52,6 +56,12 @@ private:
 	void SetupCamera(vec4 playerPos);
 	void updateCamera();
 	vec3 monsColDirection(Monster* m, EnviroObj* e);
+	void playSound(soundType sound);
+	FMOD::System *m_system;
+    FMOD::Sound *m_sounds[4];
+    FMOD::Channel *m_bulletchannel;
+	FMOD::Channel *m_monschannel;
+	FMOD::Channel *m_bgchannel;
 };
 
 directionType relativePosition(Object& a, Object& b);

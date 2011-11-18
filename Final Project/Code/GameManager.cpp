@@ -9,6 +9,7 @@ GameManager::GameManager()
 	m_w=m_a=m_s=m_d=m_j=m_l=m_auto=m_godmode = false;
 	angle = 0.0f;
 	m_score = m_god = 0;
+	m_bulletchannel = m_monschannel = m_bgchannel = 0;
 }
 
 GameManager::~GameManager()
@@ -133,7 +134,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 
 void GameManager::initPlayer()
 {
-	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 1.0f, 0.2f, 3, 20);
+	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 1.0f, 0.2f, 3, 5);
 
 }
 
@@ -164,7 +165,11 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 			if(allowed)
 				m_monsters.push_back(monster);
 			else
-				Spawn(MONSTER,vec3(position.x+3,0.f,position.z+3),size);
+			{
+				int dx = 1 - 2*(m_player->getPosition()->x > position.x);
+				int dz = 1 - 2*(m_player->getPosition()->z > position.z);
+				Spawn(MONSTER,vec3(position.x+dx,0.f,position.z+dz),size);
+			}
 		}
 		break;
 	case BULLET:
@@ -219,8 +224,10 @@ void GameManager::CollisionDetection()
 	for(int j=0; j<m_bullets.size();j++){
 	for(int i=0; i<m_monsters.size();i++){
 		if(m_bullets.size()!=0 && m_monsters.size()!=0
+			&& length(*m_bullets.at(j)->getPosition() - *m_monsters.at(i)->getPosition()) < 3
 			&& collision(*m_bullets.at(j)->getBoundingBox(), *m_monsters.at(i)->getBoundingBox()))
 		{
+			playSound(MONSDEATH);
 			Delete(BULLET,j);
 			vec3 monsp = *m_monsters.at(i)->getPosition();
 			float monss = m_monsters.at(i)->getSize();
@@ -241,7 +248,9 @@ void GameManager::CollisionDetection()
 
 	for(int j=0; j<m_bullets.size();j++){
 	for(int i=0; i<m_enviro.size();i++){
-		if(m_bullets.size()!=0 && collision(*m_bullets.at(j)->getBoundingBox(), *m_enviro.at(i)->getBoundingBox()))
+		if(m_bullets.size()!=0 
+			&& length(*m_bullets.at(j)->getPosition() - *m_enviro.at(i)->getPosition()) < 3
+			&& collision(*m_bullets.at(j)->getBoundingBox(), *m_enviro.at(i)->getBoundingBox()))
 		{
 			Delete(BULLET,j);
 			i = m_enviro.size();
@@ -272,8 +281,9 @@ void GameManager::CollisionDetection()
 
 void GameManager::Update()
 {
-	if(m_auto && m_player->shoot())
-		Spawn(BULLET,*m_player->getPosition());
+	if(m_auto && m_player->shoot()){
+		playSound(MACHINEGUN);
+		Spawn(BULLET,*m_player->getPosition());}
 
 	CollisionDetection();
 
@@ -296,7 +306,7 @@ void GameManager::Update()
 	{
 		if(m_bullets.size() != 0){
 			m_bullets.at(i)->Update(1.0f);
-			if(length(*m_bullets.at(i)->getPosition()-*m_player->getPosition()) > 50){
+			if(length(*m_bullets.at(i)->getPosition()-*m_player->getPosition()) > 25){
 				Delete(BULLET,i); i--;}
 		}
 	}
@@ -323,6 +333,27 @@ void GameManager::Render()
 	m_graphicsManager->SwapBuffers();
 }
 
+void GameManager::initSounds()
+{
+	FMOD::System_Create(&m_system);
+	m_system->init(3, FMOD_INIT_NORMAL, 0);
+	m_system->createStream("../Data/Sounds/MachinegunFire.wav", FMOD_HARDWARE | FMOD_2D, 0, &m_sounds[MACHINEGUN]);
+	m_system->createStream("../Data/Sounds/BGMusic.mp3", FMOD_HARDWARE | FMOD_LOOP_NORMAL | FMOD_2D, 0, &m_sounds[BGMUSIC]);
+	m_system->createStream("../Data/Sounds/MonsHit.wav", FMOD_HARDWARE | FMOD_2D, 0, &m_sounds[MONSDEATH]);
+	playSound(BGMUSIC);
+}
+
+void GameManager::playSound(soundType sound)
+{
+	FMOD::Channel *temp;
+	switch(sound){
+	case MACHINEGUN:
+	case SHOTGUN:	temp = m_bulletchannel; break;
+	case MONSDEATH: temp = m_monschannel; break;
+	case BGMUSIC:	temp = m_bgchannel; break;}
+	m_system->playSound(FMOD_CHANNEL_FREE, m_sounds[sound], false, &temp);
+}
+
 void GameManager::initGame()
 {
 	std::cout << "INITIALIZING GAME";
@@ -330,6 +361,7 @@ void GameManager::initGame()
 	std::cout << ".";
 	initEnviro();
 	std::cout << ".";
+	initSounds();
 	initPlayer();
 	std::cout << "." << std::endl;
 	initMonsters();
