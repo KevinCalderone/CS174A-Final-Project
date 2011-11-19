@@ -4,7 +4,7 @@ glutharness.sdf
 glutharness.vcxproj.user
 glutharness.vcxproj.filters
 Debug/glutharness.pdb
-Debug/glutharness.eze
+Debug/glutharness.exe
 Release/glutharness.pdb
-Release/glutharness.eze
+Release/glutharness.exe
 glutharness.suo
