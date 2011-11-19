@@ -35,6 +35,7 @@ uniform float pointLightAttenuationMultiplier[3];
 
 void main() { 
 	vec3 color;
+	float opacity = materialOpacity;
 
 	vec3 pointLightVec[3];
 	float pointLightAttenuation[3];
@@ -74,7 +75,9 @@ void main() {
 
 	// diffuse texture
 	if (b_useDiffuseTexture) {
-		color *= texture2D(diffuseTexture, texCoord).rgb;
+		vec4 diffuseColor = texture2D(diffuseTexture, texCoord);
+		color *= diffuseColor.rgb;
+		opacity = diffuseColor.a;
 	}
 
 	// specular highlight
@@ -94,5 +97,5 @@ void main() {
 	}
 
 	// add shine component to color
-	fColor = vec4(color + shine, materialOpacity);
+	fColor = vec4(color + shine, opacity);
 }

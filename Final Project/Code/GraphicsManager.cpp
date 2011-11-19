@@ -23,6 +23,7 @@ GraphicsManager::GraphicsManager (const std::string& assetLibrary)
 	ReloadAssets();
 
 	glEnable(GL_CULL_FACE);
+	glAlphaFunc(GL_GREATER,0.1f);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
@@ -281,6 +282,8 @@ void GraphicsManager::SwapBuffers () {
 		// Process RenderPass flags
 		unsigned int clearFlags = 0;
 		bool blend = false;
+		bool alphaTest = false;
+
 		std::vector<std::string> shaderStateFlags;
 		for (std::vector<std::string>::iterator flagIter = passIter->m_flags.begin(); flagIter != passIter->m_flags.end(); ++flagIter) {
 			if (*flagIter == "clearColor") {
@@ -291,6 +294,9 @@ void GraphicsManager::SwapBuffers () {
 			}
 			else if (*flagIter == "blend") {
 				blend = true;
+			}
+			else if (*flagIter == "alphaTest") {
+				alphaTest = true;
 			}
 			// Let shader state try to handle the flag
 			else {
@@ -303,10 +309,19 @@ void GraphicsManager::SwapBuffers () {
 			glClear(clearFlags);
 			
 		// Setup blending mode
-		if (blend) 
+		if (blend)  {
 			glEnable(GL_BLEND);
-		else 
+			glDepthMask(false);
+		}
+		else { 
 			glDisable(GL_BLEND);
+			glDepthMask(true);
+		}
+
+		if (alphaTest)
+			glEnable(GL_ALPHA_TEST);
+		else
+			glDisable(GL_ALPHA_TEST);
 		
 		UberShader* shader;
 		ShaderState* state;

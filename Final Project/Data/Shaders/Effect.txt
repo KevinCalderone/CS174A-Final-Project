@@ -32,8 +32,9 @@ passes 6
 		geometry		transparentRenderBatches
 		colorAttach0	color
 		depthAttach	    depth
-		flags 1
+		flags 2
 			blend
+			alphaTest
 
 	downSample 4
 		shader		    postProcess

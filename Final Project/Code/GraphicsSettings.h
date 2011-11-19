@@ -25,4 +25,6 @@ enum TextureChannel {
 
 enum TextureMode { e_TextureModeNearest, e_TextureModeBiLinear, e_TextureModeTriLinear };
 
+enum TextureFormat { e_TextureFormatRGB = GL_BGR, e_TextureFormatRGBA = GL_BGRA };
+
 #endif

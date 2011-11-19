@@ -1,7 +1,7 @@
 #include "BMPTexture.h"
 
-BMPTexture::BMPTexture (TextureType type, TextureMode mode, const std::vector<const std::string>& fileNames)
-  : m_type(type), m_textureID(0) 
+BMPTexture::BMPTexture (TextureType type, TextureMode mode, TextureFormat format, const std::vector<const std::string>& fileNames)
+  : m_type(type), m_format(format), m_textureID(0) 
 {
 
 	switch (type) {
@@ -77,7 +77,9 @@ void BMPTexture::Load2dTexture (const std::vector<const std::string>& fileNames)
 	glGenTextures(1, &m_textureID); 
 
 	glBindTexture(m_type, m_textureID);
-	glTexImage2D(m_type, 0, 4, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, &data[dataBegin]);
+	glTexImage2D(m_type, 0, 4, width, height, 0, m_format, GL_UNSIGNED_BYTE, &data[dataBegin]);
+
+	delete[] data;
 }
 
 void BMPTexture::LoadCubeTexture (const std::vector<const std::string>& fileNames) {
@@ -119,7 +121,7 @@ void BMPTexture::LoadCubeTexture (const std::vector<const std::string>& fileName
 		unsigned int width = *((unsigned int*)(data[i]+18));
 		unsigned int height = *((unsigned int*)(data[i]+22));
 
-		glTexImage2D(textureFaces[i], 0, 4, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, &data[i][dataBegin]);
+		glTexImage2D(textureFaces[i], 0, 4, width, height, 0, m_format, GL_UNSIGNED_BYTE, &data[i][dataBegin]);
 		delete[] data[i];
 	}
 }
