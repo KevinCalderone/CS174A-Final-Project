@@ -501,20 +501,20 @@ void GameManager::RenderHUD()
 
 	RenderBatch* batch = new RenderBatch();
 	batch->m_geometryID = "one";
-	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
-	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f);
-	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f);
+	batch->m_effectParameters.m_materialAmbient = vec3(5.0f, 5.0f, 5.0f);
+	batch->m_effectParameters.m_materialDiffuse = vec3(0.0f, 0.0f, 0.0f);
+	batch->m_effectParameters.m_materialSpecular = vec3(0.0f, 0.0f, 0.0f);
 	batch->m_effectParameters.m_materialSpecularExponent = 1.0f;
-	batch->m_effectParameters.m_materialGloss = 0.1f;
+	batch->m_effectParameters.m_materialGloss = 0.0f;
 	batch->m_effectParameters.m_materialOpacity = 1.0f;
 	batch->m_effectParameters.m_diffuseTexture = "numbers";	
-	batch->m_effectParameters.m_normalMap = "monsterNormal";
+	batch->m_effectParameters.m_normalMap = "none";
 	batch->m_effectParameters.m_materialOpacity = 1.0f;
 	batch->m_effectParameters.m_modelviewMatrix = mat4();
 
 	m_graphicsManager->Render(*batch);
 
-	updateCamera();
+	SetupCamera(*m_player->getPosition());
 }
 
 directionType relativePosition(Object& a, Object& b)

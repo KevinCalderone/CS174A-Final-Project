@@ -8,6 +8,7 @@
 #include "RenderParameters.h"
 
 struct RenderBatch;
+struct CachedRenderBatch;
 struct EffectParameters;
 
 class ForwardShader;
@@ -27,6 +28,7 @@ Kevin TODO
 ON DECK
 - Handle depth test as a parameter
 - Add cubemap shadowmapping for point light shadows
+- Need to turn off back face culling when rendering 2-faced models
 - Add skeletal animation	
 	- Change model file format to one that supports blend weights
 	- Try to find models/figure out how to make animations in blender
@@ -79,7 +81,7 @@ private:
 	GeometryManager* m_geometryManager;
 	TextureManager* m_textureManager;
 
-	std::vector<RenderBatch> m_renderBatches;
+	std::vector<CachedRenderBatch> m_cachedRenderBatches;
 
 	std::map<std::string, FrameBufferTexture*> m_frameBufferTextures;
 	std::vector<RenderPass> m_renderPasses;

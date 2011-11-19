@@ -20,6 +20,9 @@ struct ShaderState
 	static_branch b_useNormalMap;
 	static_branch b_source0;
 	static_branch b_source1;
+
+	// Buffer flags
+	static_branch b_animatedGeometry;
 };
 
 #endif

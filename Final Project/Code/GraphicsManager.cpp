@@ -14,6 +14,7 @@
 #include "RenderPass.h"
 
 #include "RenderBatch.h"
+#include "CachedRenderBatch.h"
 #include "ForwardShaderState.h"
 #include "Geometry.h"
 
@@ -225,11 +226,11 @@ void GraphicsManager::LoadEffectFile (const std::string& effectFile) {
 }
 
 void GraphicsManager::ClearScreen () {
-	m_renderBatches.clear();
+	m_cachedRenderBatches.clear();
 }
 
 void GraphicsManager::Render (const RenderBatch& batch) {
-	m_renderBatches.push_back(batch);
+	m_cachedRenderBatches.push_back(CachedRenderBatch(batch, m_renderParameters));
 }
 
 void GraphicsManager::SwapBuffers () {
@@ -365,36 +366,36 @@ void GraphicsManager::SwapBuffers () {
 		// Render the geometry
 		switch (passIter->m_geometryType) {
 			case e_GeometryTypeOpaqueRenderBatches:
-				for (std::vector<RenderBatch>::iterator batchesIter = m_renderBatches.begin(); batchesIter != m_renderBatches.end(); ++batchesIter) {
-					if (batchesIter->m_effectParameters.m_materialOpacity < 1.0f)
+				for (std::vector<CachedRenderBatch>::iterator batchesIter = m_cachedRenderBatches.begin(); batchesIter != m_cachedRenderBatches.end(); ++batchesIter) {
+					if (batchesIter->m_renderBatch.m_effectParameters.m_materialOpacity < 1.0f)
 						continue;
 
-					state->CalculateShaderState(m_renderParameters, batchesIter->m_effectParameters);
+					state->CalculateShaderState(batchesIter->m_renderParameters, batchesIter->m_renderBatch.m_effectParameters);
 
-					state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_effectParameters.m_diffuseTexture);
-					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, m_renderParameters.m_environmentMap);
-					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_effectParameters.m_normalMap);
+					state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_renderBatch.m_effectParameters.m_diffuseTexture);
+					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, batchesIter->m_renderParameters.m_environmentMap);
+					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_renderBatch.m_effectParameters.m_normalMap);
 
 					shader->SetShaderState(state);
 
-					m_geometryManager->RenderGeometry(batchesIter->m_geometryID);
+					m_geometryManager->RenderGeometry(batchesIter->m_renderBatch.m_geometryID);
 				}
 			break;
 
 			case e_GeometryTypeTransparentRenderBatches:
-				for (std::vector<RenderBatch>::iterator batchesIter = m_renderBatches.begin(); batchesIter != m_renderBatches.end(); ++batchesIter) {
-					if (batchesIter->m_effectParameters.m_materialOpacity == 1.0f)
+				for (std::vector<CachedRenderBatch>::iterator batchesIter = m_cachedRenderBatches.begin(); batchesIter != m_cachedRenderBatches.end(); ++batchesIter) {
+					if (batchesIter->m_renderBatch.m_effectParameters.m_materialOpacity == 1.0f)
 						continue;
 
-					state->CalculateShaderState(m_renderParameters, batchesIter->m_effectParameters);
+					state->CalculateShaderState(batchesIter->m_renderParameters, batchesIter->m_renderBatch.m_effectParameters);
 					
-					state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_effectParameters.m_diffuseTexture);
-					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, m_renderParameters.m_environmentMap);
-					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_effectParameters.m_normalMap);
+					state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_renderBatch.m_effectParameters.m_diffuseTexture);
+					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, batchesIter->m_renderParameters.m_environmentMap);
+					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_renderBatch.m_effectParameters.m_normalMap);
 
 					shader->SetShaderState(state);
 
-					m_geometryManager->RenderGeometry(batchesIter->m_geometryID);
+					m_geometryManager->RenderGeometry(batchesIter->m_renderBatch.m_geometryID);
 				}
 			break;
 
