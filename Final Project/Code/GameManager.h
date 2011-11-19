@@ -63,6 +63,8 @@ private:
     FMOD::Channel *m_bulletchannel;
 	FMOD::Channel *m_monschannel;
 	FMOD::Channel *m_bgchannel;
+
+	void RenderHUD();
 };
 
 directionType relativePosition(Object& a, Object& b);

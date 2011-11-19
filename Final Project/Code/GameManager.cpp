@@ -375,6 +375,10 @@ void GameManager::Render()
 	m_graphicsManager->Render(*m_player->getRenderBatch());
 	if(BBDEBUG) m_graphicsManager->Render(*m_player->getBoundingBox()->getRenderBatch());
 	m_graphicsManager->Render(*m_ground->getRenderBatch());
+
+	// render the hud too
+	RenderHUD();
+
 	m_graphicsManager->SwapBuffers();
 }
 
@@ -421,7 +425,7 @@ Player* GameManager::getPlayer()
 void GameManager::SetCameraOrthogonal()
 {
 	RenderParameters& renderParameters = m_graphicsManager->GetRenderParameters();
-	renderParameters.m_projectionMatrix = mat4();
+	renderParameters.m_projectionMatrix = Ortho(-10.0, 10.0, -10.0, 10.0, 0.0, 1.0);
 }
 
 void GameManager::SetupCamera(vec4 playerPos)
@@ -488,6 +492,29 @@ vec3 GameManager::monsColDirection(Monster* m, EnviroObj* e)
 		return nT;
 	else
 		return -nT;
+}
+
+void GameManager::RenderHUD()
+{
+	SetCameraOrthogonal();
+
+
+	RenderBatch* batch = new RenderBatch();
+	batch->m_geometryID = "one";
+	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f);
+	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f);
+	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f);
+	batch->m_effectParameters.m_materialSpecularExponent = 1.0f;
+	batch->m_effectParameters.m_materialGloss = 0.1f;
+	batch->m_effectParameters.m_materialOpacity = 1.0f;
+	batch->m_effectParameters.m_diffuseTexture = "numbers";	
+	batch->m_effectParameters.m_normalMap = "monsterNormal";
+	batch->m_effectParameters.m_materialOpacity = 1.0f;
+	batch->m_effectParameters.m_modelviewMatrix = mat4();
+
+	m_graphicsManager->Render(*batch);
+
+	updateCamera();
 }
 
 directionType relativePosition(Object& a, Object& b)
