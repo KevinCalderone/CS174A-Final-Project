@@ -127,8 +127,8 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 			x = 200 - rand()%400;
 			z = 150 - rand()%300;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
-		Spawn(TREE,Angel::vec3(x,0.0f,z),2);
 		Spawn(LEAVES,Angel::vec3(x,0.0f,z),2);
+		Spawn(TREE,Angel::vec3(x,0.0f,z),2);
 	} while(m_enviro.size() < 500);
 
 	do
@@ -191,7 +191,14 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 	case LEAVES:
 		{
 			EnviroObj* obj = new EnviroObj(type, position, vec3(0,0,1), size);
-			m_bgenviro.push_back(obj);
+			bool allowed = true;
+			for(int i=0;i<m_enviro.size();i++)
+				if(length(position-*m_enviro.at(i)->getPosition()) < 8)
+					allowed = false;
+			if(allowed)
+				m_bgenviro.push_back(obj);
+			else
+				delete obj;
 		}
 		break;
 	case TREE:
