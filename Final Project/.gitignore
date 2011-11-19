@@ -3,6 +3,8 @@ ipch
 glutharness.sdf
 glutharness.vcxproj.user
 glutharness.vcxproj.filters
-Debug/
-Release/
+Debug/glutharness.pdb
+Debug/glutharness.eze
+Release/glutharness.pdb
+Release/glutharness.eze
 glutharness.suo
