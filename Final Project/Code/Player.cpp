@@ -21,6 +21,7 @@ Player::Player (vec3 position, vec3 direction, float size, float speed, int live
 	batch->m_effectParameters.m_materialOpacity = 1.0f;
 	batch->m_effectParameters.m_diffuseTexture = "monster";	
 	batch->m_effectParameters.m_normalMap = "monsterNormal";
+	batch->m_effectParameters.m_materialOpacity = 1.0f;
 	this->setRenderBatch(batch);
 
 	m_bb = new BoundingBox(vec2(position.x,position.z),1,1);
@@ -80,6 +81,7 @@ void Player::Update(float delta)
 {
 	m_position += m_velocity;
 	m_bb->setCenter(vec2(m_position.x,m_position.z));
+	m_bb->update(m_direction.x,m_direction.z, m_size);
 	if(m_render!=NULL)
 		m_render->m_effectParameters.m_modelviewMatrix = Angel::Translate(m_position) * Angel::Scale(vec3(m_size))
 														* Angel::RotateY((GLfloat)90+atan2(m_direction.x,m_direction.z)/DegreesToRadians);

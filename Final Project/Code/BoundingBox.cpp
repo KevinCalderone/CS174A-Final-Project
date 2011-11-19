@@ -13,6 +13,34 @@ BoundingBox::BoundingBox(vec2& center, float hw, float hl)
 	m_c2 = center+m_v2;
 	m_c3 = center+m_v3;
 	m_c4 = center+m_v4;
+
+	RenderBatch* batch = new RenderBatch();
+	batch->m_geometryID = "boundingbox";	
+	batch->m_effectParameters.m_modelviewMatrix =  mat4();
+	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 0.0f, 0.0f) * 2.0f;
+	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 0.0f, 0.0f) * 1.0f;
+	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 0.0f, 0.0f) * 0.2f;
+	batch->m_effectParameters.m_materialSpecularExponent = 6.0f;
+	batch->m_effectParameters.m_materialGloss = 0.0f;
+	batch->m_effectParameters.m_diffuseTexture = "none";	
+	batch->m_effectParameters.m_normalMap = "none";
+	this->setRenderBatch(batch);
+}
+
+void BoundingBox::setRenderBatch(RenderBatch* rb) {
+	m_render = rb;
+}
+
+RenderBatch* BoundingBox::getRenderBatch () {
+	return m_render;
+}
+
+void BoundingBox::update(GLfloat x, GLfloat z, float size)
+{
+	if(m_render!=NULL)
+		m_render->m_effectParameters.m_modelviewMatrix = Angel::Translate(vec3(m_center.x,0,m_center.y))
+														* Angel::Scale(vec3(size))
+														* Angel::RotateY((GLfloat)90+atan2(x,z)/DegreesToRadians);
 }
 
 BoundingBox::~BoundingBox(){}

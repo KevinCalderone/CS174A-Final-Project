@@ -15,6 +15,9 @@ monster
 plane 
 	../Data/Geometry/plane.obj
 
+boundingbox 
+	../Data/Geometry/boundingbox.obj
+
 cone 
 	../Data/Geometry/cone.obj
 

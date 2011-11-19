@@ -2,7 +2,7 @@
 #include <ctime>
 #include <vector>
 
-
+const bool BBDEBUG = true;
 
 GameManager::GameManager()
 {
@@ -145,7 +145,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 void GameManager::initPlayer()
 {
 	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 1.0f, 0.2f, 3, 5);
-
+	if(BBDEBUG) m_player->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
 }
 
 void GameManager::initMonsters()
@@ -351,17 +351,22 @@ void GameManager::Render()
 	keyboardUpdate();
 	updateCamera();
 	Update();
-	for(int i=0;i<m_monsters.size();i++)
+	for(int i=0;i<m_monsters.size();i++){
 		m_graphicsManager->Render(*m_monsters.at(i)->getRenderBatch());
+		if(BBDEBUG) m_graphicsManager->Render(*m_monsters.at(i)->getBoundingBox()->getRenderBatch());}
 	for(int i=0;i<m_bullets.size();i++)
 		m_graphicsManager->Render(*m_bullets.at(i)->getRenderBatch());
 	for(int i=0;i<m_enviro.size();i++)
-		if(length(*m_enviro.at(i)->getPosition()-*m_player->getPosition()) <= 50)
+		if(length(*m_enviro.at(i)->getPosition()-*m_player->getPosition()) <= 50){
 			m_graphicsManager->Render(*m_enviro.at(i)->getRenderBatch());
-	for(int i=0;i<m_bgenviro.size();i++)
+			if(BBDEBUG) m_graphicsManager->Render(*m_enviro.at(i)->getBoundingBox()->getRenderBatch());}
+	if(!(BBDEBUG)){
+		for(int i=0;i<m_bgenviro.size();i++)
 		if(length(*m_bgenviro.at(i)->getPosition()-*m_player->getPosition()) <= 50)
 			m_graphicsManager->Render(*m_bgenviro.at(i)->getRenderBatch());
+	}
 	m_graphicsManager->Render(*m_player->getRenderBatch());
+	if(BBDEBUG) m_graphicsManager->Render(*m_player->getBoundingBox()->getRenderBatch());
 	m_graphicsManager->Render(*m_ground->getRenderBatch());
 	m_graphicsManager->SwapBuffers();
 }
