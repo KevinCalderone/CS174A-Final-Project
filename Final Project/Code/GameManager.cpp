@@ -119,7 +119,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(TREE,Angel::vec3(x,0.0f,z),2);
 		Spawn(LEAVES,Angel::vec3(x,0.0f,z),2);
-	} while(m_enviro.size() < 1000);
+	} while(m_enviro.size() < 500);
 
 	do
 	{
@@ -129,7 +129,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 			z = 150 - rand()%300;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(ROCK,Angel::vec3(x,0.0f,z),1.5);
-	} while(m_enviro.size() < 1200);
+	} while(m_enviro.size() < 700);
 }
 
 void GameManager::initPlayer()
@@ -181,7 +181,7 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 	case LEAVES:
 		{
 			EnviroObj* obj = new EnviroObj(type, position, vec3(0,0,1), size);
-			m_enviro.push_back(obj);
+			m_bgenviro.push_back(obj);
 		}
 	case TREE:
 	case BUSH:
@@ -312,6 +312,8 @@ void GameManager::Update()
 	}
 	for(int i=0;i<m_enviro.size();i++)
 		m_enviro.at(i)->Update(1.0f);
+	for(int i=0;i<m_bgenviro.size();i++)
+		m_bgenviro.at(i)->Update(1.0f);
 	m_player->Update(1.0f);
 }
 	
@@ -328,6 +330,9 @@ void GameManager::Render()
 	for(int i=0;i<m_enviro.size();i++)
 		if(length(*m_enviro.at(i)->getPosition()-*m_player->getPosition()) <= 50)
 			m_graphicsManager->Render(*m_enviro.at(i)->getRenderBatch());
+	for(int i=0;i<m_bgenviro.size();i++)
+		if(length(*m_bgenviro.at(i)->getPosition()-*m_player->getPosition()) <= 50)
+			m_graphicsManager->Render(*m_bgenviro.at(i)->getRenderBatch());
 	m_graphicsManager->Render(*m_player->getRenderBatch());
 	m_graphicsManager->Render(*m_ground->getRenderBatch());
 	m_graphicsManager->SwapBuffers();

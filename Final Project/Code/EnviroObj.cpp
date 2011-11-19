@@ -26,7 +26,7 @@ EnviroObj::EnviroObj(objectType type, vec3 position, vec3 direction, float size)
 		batch->m_effectParameters.m_materialGloss = 0.0f;
 		batch->m_effectParameters.m_diffuseTexture = "leaves";	
 		batch->m_effectParameters.m_normalMap = "none";
-		batch->m_effectParameters.m_materialOpacity = 0.2f;
+		batch->m_effectParameters.m_materialOpacity = 0.3f;
 	}
 	if(type==ROCK)
 	{

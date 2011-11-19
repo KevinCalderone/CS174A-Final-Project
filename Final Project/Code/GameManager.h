@@ -32,6 +32,7 @@ private:
 	std::vector<Monster*> m_monsters;
 	std::vector<Bullet*> m_bullets;
 	std::vector<EnviroObj*> m_enviro;
+	std::vector<EnviroObj*> m_bgenviro;
 	Ground* m_ground;
 	GraphicsManager* m_graphicsManager;
 	int m_score;
