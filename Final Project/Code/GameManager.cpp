@@ -65,18 +65,18 @@ void GameManager::keyboardUpdate()
 	float ad = m_d-m_a;
 	float ws = m_s-m_w;
 
-	if(m_player->getPosition()->x <= -400)
+	if(m_pp.x <= -400)
 		ad = m_d;
-	if(m_player->getPosition()->x >= 400)
+	if(m_pp.x >= 400)
 		ad = -m_a;
-	if(m_player->getPosition()->z <= -300)
+	if(m_pp.z <= -300)
 		ws = m_s;
-	if(m_player->getPosition()->z >= 300)
+	if(m_pp.z >= 300)
 		ws = -m_w;
 
 	for(int i=0;i<m_enviro.size();i++)
 	{
-		if(length(*m_enviro.at(i)->getPosition()-*m_player->getPosition()) < 10 && 
+		if(length(*m_enviro.at(i)->getPosition()-m_pp) < 10 && 
 			collision(*m_enviro.at(i)->getBoundingBox(),*m_player->getBoundingBox()))
 		{
 			if(relativePosition(*m_player,*m_enviro.at(i)) == LEFT)
@@ -113,15 +113,18 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 
 	float x, z;
 	srand((unsigned)time(0));
-	do
+	for(int i=1;i<=16;i++)
 	{
 		do
 		{
-			x = 400 - rand()%800;
-			z = 300 - rand()%600;
-		} while((x < 4 && x > -4) && (z < 4 && z > -4));
-		Spawn(BUSH,Angel::vec3(x,0.0f,z),2.5);
-	} while(m_bgenviro.size() < 10000);
+			do
+			{
+				x = -400+ 50*i - rand()%50;
+				z = 300 - rand()%600;
+			} while((x < 4 && x > -4) && (z < 4 && z > -4));
+			Spawn(BUSH,Angel::vec3(x,0.0f,z),2.5);
+		} while(m_bgenviro.size() < 500*i);
+	}
 
 	do
 	{
@@ -132,7 +135,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(LEAVES,Angel::vec3(x,0.0f,z),2);
 		Spawn(TREE,Angel::vec3(x,0.0f,z),2);
-	} while(m_enviro.size() < 40);
+	} while(m_enviro.size() < 300);
 
 	do
 	{
@@ -142,7 +145,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 			z = 300 - rand()%600;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(ROCK,Angel::vec3(x,0.0f,z),1.5);
-	} while(m_enviro.size() < 100);
+	} while(m_enviro.size() < 600);
 
 	for(int i=0;i<m_bgenviro.size();i++)
 		m_bgenviro.at(i)->Update(1.0f);
@@ -153,6 +156,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 void GameManager::initPlayer()
 {
 	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 1.0f, 0.2f, 3, 5);
+	m_pp = *m_player->getPosition();
 	if(BBDEBUG) m_player->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
 }
 
@@ -175,7 +179,7 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 		break;
 	case MONSTER:
 		{
-			Monster* monster = new Monster(position, normalize(*m_player->getPosition() - position), size, 0.1);
+			Monster* monster = new Monster(position, normalize(m_pp - position), size, 0.1);
 			bool allowed = true;
 			for(int i=0;i<m_enviro.size();i++)
 				if(collision(*monster->getBoundingBox(), *m_enviro.at(i)->getBoundingBox()))
@@ -184,15 +188,15 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 				m_monsters.push_back(monster);
 			else
 			{
-				int dx = 1 - 2*(m_player->getPosition()->x > position.x);
-				int dz = 1 - 2*(m_player->getPosition()->z > position.z);
+				int dx = 1 - 2*(m_pp.x > position.x);
+				int dz = 1 - 2*(m_pp.z > position.z);
 				Spawn(MONSTER,vec3(position.x+dx,0.f,position.z+dz),size);
 			}
 		}
 		break;
 	case BULLET:
 		{
-			Bullet* bullet = new Bullet(*m_player->getPosition(), normalize(*m_player->getDirection()), 0.1, 0.6 +
+			Bullet* bullet = new Bullet(m_pp, normalize(*m_player->getDirection()), 0.1, 0.6 +
 				length(*m_player->getVelocity()));
 			m_bullets.push_back(bullet);
 		}
@@ -275,10 +279,10 @@ void GameManager::CollisionDetection()
 			Delete(BULLET,j);
 			vec3 monsp = *m_monsters.at(i)->getPosition();
 			float monss = m_monsters.at(i)->getSize();
-			vec3 smons1p = monsp + (monss * normalize(normal(monsp-*m_player->getPosition())));
-			vec3 smons2p = monsp + (-monss * normalize(normal(monsp-*m_player->getPosition())));
+			vec3 smons1p = monsp + (monss * normalize(normal(monsp-m_pp)));
+			vec3 smons2p = monsp + (-monss * normalize(normal(monsp-m_pp)));
 			Delete(MONSTER,i);
-			if(monss > 0.5)
+			if(monss > 0.3)
 			{
 				Spawn(MONSTER,smons1p,monss/1.5);
 				Spawn(MONSTER,smons2p,monss/1.5);
@@ -327,16 +331,16 @@ void GameManager::Update()
 {
 	if(m_auto && m_player->shoot()){
 		playSound(MACHINEGUN);
-		Spawn(BULLET,*m_player->getPosition());}
+		Spawn(BULLET,m_pp);}
 
 	CollisionDetection();
 
 	//m_pgp = *m_player->getPosition()+(*m_player->getVelocity()*10);
 	m_pgp = vec3(0);
 	for(int i=0;i<m_monsters.size();i++)
-		m_pgp += normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition());
-	m_pgp = *m_player->getPosition()+15*normalize(m_pgp);
-	std::cout << m_pgp << " " << *m_player->getPosition() << std::endl;
+		m_pgp += normalize(m_pp-*m_monsters.at(i)->getPosition());
+	m_pgp = m_pp+15*normalize(m_pgp);
+	//std::cout << m_pgp << " " << *m_player->getPosition() << std::endl;
 	for(int i=0;i<m_monsters.size();i++){
 		//m_monsters.at(i)->setVelocity(*m_player->getDirection());
 		//if(length(*m_monsters.at(i)->getPosition()-*m_player->getPosition()) < 5)
@@ -348,7 +352,7 @@ void GameManager::Update()
 	for(int j=0;j<m_enviro.size();j++){
 		if((length(*m_enviro.at(j)->getPosition()-*m_monsters.at(i)->getPosition()) < 2) && // this 2 will have to depend on sizes
 			acos(dot(normalize(*m_monsters.at(i)->getPosition()-*m_enviro.at(j)->getPosition()),
-				normalize(*m_monsters.at(i)->getPosition()-*m_player->getPosition())))/DegreesToRadians < 90)
+				normalize(*m_monsters.at(i)->getPosition()-m_pp)))/DegreesToRadians < 90)
 		{
 			m_monsters.at(i)->setVelocity(monsColDirection(m_monsters.at(i),m_enviro.at(j)));
 		}
@@ -360,11 +364,12 @@ void GameManager::Update()
 	{
 		if(m_bullets.size() != 0){
 			m_bullets.at(i)->Update(1.0f);
-			if(length(*m_bullets.at(i)->getPosition()-*m_player->getPosition()) > 25){
+			if(length(*m_bullets.at(i)->getPosition()-m_pp) > 25){
 				Delete(BULLET,i); i--;}
 		}
 	}
 	m_player->Update(1.0f);
+	m_pp = *m_player->getPosition();
 }
 	
 
@@ -379,14 +384,16 @@ void GameManager::Render()
 	for(int i=0;i<m_bullets.size();i++)
 		m_graphicsManager->Render(*m_bullets.at(i)->getRenderBatch());
 	for(int i=0;i<m_enviro.size();i++)
-		if(length(*m_enviro.at(i)->getPosition()-*m_player->getPosition()) <= 50){
+		if(length(*m_enviro.at(i)->getPosition()-m_pp) <= 50){
 			m_graphicsManager->Render(*m_enviro.at(i)->getRenderBatch());
 			if(BBDEBUG) m_graphicsManager->Render(*m_enviro.at(i)->getBoundingBox()->getRenderBatch());}
-	if(!(BBDEBUG)){
+	/*if(!(BBDEBUG)){
 		for(int i=0;i<m_bgenviro.size();i++)
 		if(length(*m_bgenviro.at(i)->getPosition()-*m_player->getPosition()) <= 50)
 			m_graphicsManager->Render(*m_bgenviro.at(i)->getRenderBatch());
-	}
+	}*/
+	if(!(BBDEBUG))
+		renderBG();
 	m_graphicsManager->Render(*m_player->getRenderBatch());
 	if(BBDEBUG) m_graphicsManager->Render(*m_player->getBoundingBox()->getRenderBatch());
 	m_graphicsManager->Render(*m_ground->getRenderBatch());
@@ -463,13 +470,13 @@ void GameManager::updateCamera()
 		static float theta = 0.0f;
 		theta += 1.0f;
 
-		SetupCamera(*m_player->getPosition());
+		SetupCamera(m_pp);
 
 		RenderParameters& renderParameters = m_graphicsManager->GetRenderParameters();
 
 		// Position lights at player postion
-		renderParameters.m_pointLightPosition[0] = *m_player->getPosition() + vec3(0.0f, 1.5f, -1.5f);
-		renderParameters.m_pointLightPosition[1] = *m_player->getPosition() + vec3(0.0f, 0.5f, -2.5f);
+		renderParameters.m_pointLightPosition[0] = m_pp + vec3(0.0f, 1.5f, -1.5f);
+		renderParameters.m_pointLightPosition[1] = m_pp + vec3(0.0f, 0.5f, -2.5f);
 		
 		// Muzzle flash
 		float flashIntensity = 1;//cos((3.14159 / 2.0f) * (fmod(theta, 20.0f) < 13.0f ? fmod(theta, 20.0f) / 13.0f : 1.0f))*1.5;
@@ -565,7 +572,7 @@ void GameManager::RenderHUD()
 
 
 
-	SetupCamera(*m_player->getPosition());
+	SetupCamera(m_pp);
 }
 
 std::string GameManager::intID(int x)
@@ -601,4 +608,39 @@ directionType relativePosition(Object& a, Object& b)
 	if(op->z > pp->z)
 		if((op->x <= (pp->x + (op->z - pp->z))) && (op->x >= (pp->x - (op->z - pp->z))))
 			return DOWN;
+}
+
+
+void GameManager::renderBG()
+{
+	int s = 0;
+	int e = 15;
+	GLfloat p = m_pp.x;
+
+	if(p >= -375)	s = 0;		if(p < 375)		e = 15;
+	if(p >= -325)	s = 1;		if(p < 325)		e = 14;
+	if(p >= -275)	s = 2;		if(p < 275)		e = 13;
+	if(p >= -225)	s = 3;		if(p < 225)		e = 12;
+	if(p >= -175)	s = 4;		if(p < 175)		e = 11;
+	if(p >= -125)	s = 5;		if(p < 125)		e = 10;
+	if(p >= -75)	s = 6;		if(p < 75)		e = 9;
+	if(p >= -25)	s = 7;		if(p < 25)		e = 8;
+	if(p >= 25)		s = 8;		if(p < -25)		e = 7;
+	if(p >= 75)		s = 9;		if(p < -75)		e = 6;
+	if(p >= 125)	s = 10;		if(p < -125)	e = 5;
+	if(p >= 175)	s = 11;		if(p < -175)	e = 4;
+	if(p >= 225)	s = 12;		if(p < -225)	e = 3;
+	if(p >= 275)	s = 13;		if(p < -275)	e = 2;
+	if(p >= 325)	s = 14;		if(p < -325)	e = 1;
+	if(p >= 375)	s = 15;		if(p < -375)	e = 0;
+
+	s *= 500;	e = (1 + e) * 500;
+
+	for(int i = s; i < e; i++)
+		if(length(*m_bgenviro.at(i)->getPosition()-m_pp) <= 50)
+			m_graphicsManager->Render(*m_bgenviro.at(i)->getRenderBatch());
+
+	for(int i = 8000; i < m_bgenviro.size(); i++)
+		if(length(*m_bgenviro.at(i)->getPosition()-m_pp) <= 50)
+			m_graphicsManager->Render(*m_bgenviro.at(i)->getRenderBatch());
 }

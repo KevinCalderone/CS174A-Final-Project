@@ -29,6 +29,7 @@ public:
 	Player* getPlayer();
 private:
 	Player* m_player;
+	vec3 m_pp;
 	vec3 m_pgp;
 	std::vector<Monster*> m_monsters;
 	std::vector<Bullet*> m_bullets;
@@ -39,7 +40,7 @@ private:
 	int m_score;
 	int m_god;
 	bool m_godmode;
-	static const int MONSTERCAP = 20;
+	static const int MONSTERCAP = 30;
 	void Spawn(objectType type, vec3 position, float size=10.0);
 	Monster* spawnMonster();
 	Player* spawnPlayer();
@@ -54,6 +55,7 @@ private:
 	void initPlayer();
 	void initMonsters();
 	void initEnviro();
+	void renderBG();
 	void SetCameraOrthogonal();
 	void SetupCamera(vec4 playerPos);
 	void updateCamera();
