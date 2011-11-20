@@ -502,7 +502,7 @@ void GameManager::RenderHUD()
 	float score_position = 9.4;
 	int temp = m_score;
 
-
+	// Render each score number in upper right corner
 	do {
 		RenderBatch* batch = new RenderBatch();
 
@@ -527,7 +527,28 @@ void GameManager::RenderHUD()
 
 	} while(temp != 0);
 
-	
+	// Render lives in upper right corner (now only supports single digits)
+	temp = m_player->getLives();
+
+	RenderBatch* rb = new RenderBatch();
+	rb->m_geometryID = intID(temp);
+	rb->m_effectParameters.m_materialAmbient = vec3(5.0f, 5.0f, 5.0f);
+	rb->m_effectParameters.m_materialDiffuse = vec3(0.0f, 0.0f, 0.0f);
+	rb->m_effectParameters.m_materialSpecular = vec3(0.0f, 0.0f, 0.0f);
+	rb->m_effectParameters.m_materialSpecularExponent = 1.0f;
+	rb->m_effectParameters.m_materialGloss = 0.0f;
+	rb->m_effectParameters.m_materialOpacity = 1.0f;
+	rb->m_effectParameters.m_diffuseTexture = "numbers";	
+	rb->m_effectParameters.m_normalMap = "none";
+	rb->m_effectParameters.m_materialOpacity = 1.0f;
+	rb->m_effectParameters.m_modelviewMatrix = Translate(-10.0, 9.0, 0.0);
+
+	m_graphicsManager->Render(*rb);
+
+	delete rb;
+
+
+
 	SetupCamera(*m_player->getPosition());
 }
 
