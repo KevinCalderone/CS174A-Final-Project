@@ -24,7 +24,7 @@ cube rgb envMap
 2d rgb noise
 	../Data/Textures/noise.bmp
 
-2d rgb numbers
+2d rgba numbers
 	../Data/Textures/numbers.bmp
 
 2d rgb tree

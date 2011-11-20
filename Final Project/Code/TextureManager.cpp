@@ -72,6 +72,14 @@ bool TextureManager::SetTexture (TextureChannel channel, const std::string& text
 	return true;
 }
 
+bool TextureManager::IsTransparent (const std::string& textureName) const {
+	std::map<std::string, BMPTexture*>::const_iterator iter = m_textures.find(textureName);
+
+	if (iter == m_textures.end()) 
+		return false;
+
+	return iter->second->GetFormat() == e_TextureFormatRGBA;
+}
 
 void TextureManager::LoadTextureFile (const std::string& textureName, TextureFormat textureFormat, TextureType type, TextureMode mode, const std::vector<const std::string>& textureFiles) {
 	std::map<std::string, BMPTexture*>::iterator iter = m_textures.find(textureName);

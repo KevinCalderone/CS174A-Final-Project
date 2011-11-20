@@ -81,7 +81,7 @@ private:
 	GeometryManager* m_geometryManager;
 	TextureManager* m_textureManager;
 
-	std::vector<CachedRenderBatch> m_cachedRenderBatches;
+	std::vector<CachedRenderBatch> m_cachedRenderBatches[e_GeometryTypeCount];
 
 	std::map<std::string, FrameBufferTexture*> m_frameBufferTextures;
 	std::vector<RenderPass> m_renderPasses;

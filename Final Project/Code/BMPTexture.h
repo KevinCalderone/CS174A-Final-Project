@@ -16,7 +16,8 @@ public:
 	~BMPTexture (); 
 
 	void Apply (TextureChannel channel);
-	
+	TextureFormat GetFormat () { return m_format; }
+
 private:
      
     char* ReadTextureFile (const std::string& fileName);

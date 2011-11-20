@@ -8,8 +8,12 @@
 struct EffectParameters
 {
 	EffectParameters ()
-		: m_materialOpacity(1.0f)
+		: m_materialOpacity(1.0f), m_twoSided(0), m_HUDRender(0)
 	{}
+
+	// Render Parameters
+	bool m_twoSided;
+	bool m_HUDRender;
 
 	// Geometry Parameters
 	mat4 m_modelviewMatrix;

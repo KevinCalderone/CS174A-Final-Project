@@ -5,8 +5,6 @@
 
 enum ShaderType { e_ShaderTypeForward, e_ShaderTypePostProcess };
 
-enum GeometryType { e_GeometryTypeOpaqueRenderBatches, e_GeometryTypeTransparentRenderBatches, e_GeometryTypeScreenQuad };
-
 struct RenderPass
 {
 	ShaderType m_shaderType;

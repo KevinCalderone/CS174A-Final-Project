@@ -23,9 +23,12 @@ GraphicsManager::GraphicsManager (const std::string& assetLibrary)
 {
 	ReloadAssets();
 
-	glEnable(GL_CULL_FACE);
 	glAlphaFunc(GL_GREATER,0.1f);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	RenderBatch screenQuad;
+	screenQuad.m_geometryID = "screenQuad";
+	m_cachedRenderBatches[e_GeometryTypeScreenQuad].push_back(CachedRenderBatch(screenQuad, m_renderParameters));
 }
 
 GraphicsManager::~GraphicsManager () {
@@ -183,10 +186,13 @@ void GraphicsManager::LoadEffectFile (const std::string& effectFile) {
 						is >> geometryType;
 
 						if (geometryType == "opaqueRenderBatches") {
-							renderPass.m_geometryType = e_GeometryTypeOpaqueRenderBatches;
+							renderPass.m_geometryType = e_GeometryTypeOpaque;
 						}
 						else if (geometryType == "transparentRenderBatches") {
-							renderPass.m_geometryType = e_GeometryTypeTransparentRenderBatches;
+							renderPass.m_geometryType = e_GeometryTypeTransparent;
+						}
+						else if (geometryType == "HUDRenderBatches") {
+							renderPass.m_geometryType = e_GeometryTypeHUD;
 						}
 						else if (geometryType == "screenQuad") {
 							renderPass.m_geometryType = e_GeometryTypeScreenQuad;
@@ -226,11 +232,18 @@ void GraphicsManager::LoadEffectFile (const std::string& effectFile) {
 }
 
 void GraphicsManager::ClearScreen () {
-	m_cachedRenderBatches.clear();
+	m_cachedRenderBatches[e_GeometryTypeOpaque].clear();
+	m_cachedRenderBatches[e_GeometryTypeTransparent].clear();
+	m_cachedRenderBatches[e_GeometryTypeHUD].clear();
 }
 
 void GraphicsManager::Render (const RenderBatch& batch) {
-	m_cachedRenderBatches.push_back(CachedRenderBatch(batch, m_renderParameters));
+	if (batch.m_effectParameters.m_HUDRender)
+		m_cachedRenderBatches[e_GeometryTypeHUD].push_back(CachedRenderBatch(batch, m_renderParameters));
+	else if (batch.m_effectParameters.m_materialOpacity < 1.0f || m_textureManager->IsTransparent(batch.m_effectParameters.m_diffuseTexture))
+		m_cachedRenderBatches[e_GeometryTypeTransparent].push_back(CachedRenderBatch(batch, m_renderParameters));
+	else
+		m_cachedRenderBatches[e_GeometryTypeOpaque].push_back(CachedRenderBatch(batch, m_renderParameters));
 }
 
 void GraphicsManager::SwapBuffers () {
@@ -305,10 +318,6 @@ void GraphicsManager::SwapBuffers () {
 			}
 		}
 
-		// Clear buffers specified in flags
-		if (clearFlags != 0) 
-			glClear(clearFlags);
-			
 		// Setup blending mode
 		if (blend)  {
 			glEnable(GL_BLEND);
@@ -324,6 +333,10 @@ void GraphicsManager::SwapBuffers () {
 		else
 			glDisable(GL_ALPHA_TEST);
 		
+		// Clear buffers specified in flags
+		if (clearFlags != 0) 
+			glClear(clearFlags);
+
 		UberShader* shader;
 		ShaderState* state;
 
@@ -363,59 +376,24 @@ void GraphicsManager::SwapBuffers () {
 			glBindTexture(GL_TEXTURE_2D, source1->GetBufferTextureID());
 		}
 
-		// Render the geometry
-		switch (passIter->m_geometryType) {
-			case e_GeometryTypeOpaqueRenderBatches:
-				for (std::vector<CachedRenderBatch>::iterator batchesIter = m_cachedRenderBatches.begin(); batchesIter != m_cachedRenderBatches.end(); ++batchesIter) {
-					if (batchesIter->m_renderBatch.m_effectParameters.m_materialOpacity < 1.0f)
-						continue;
+		for (std::vector<CachedRenderBatch>::iterator batchesIter = m_cachedRenderBatches[passIter->m_geometryType].begin(); batchesIter != m_cachedRenderBatches[passIter->m_geometryType].end(); ++batchesIter) {
+			state->CalculateShaderState(batchesIter->m_renderParameters, batchesIter->m_renderBatch.m_effectParameters);
 
-					state->CalculateShaderState(batchesIter->m_renderParameters, batchesIter->m_renderBatch.m_effectParameters);
+			if (batchesIter->m_renderBatch.m_effectParameters.m_twoSided)
+				glDisable(GL_CULL_FACE);
+			else
+				glEnable(GL_CULL_FACE);
 
-					state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_renderBatch.m_effectParameters.m_diffuseTexture);
-					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, batchesIter->m_renderParameters.m_environmentMap);
-					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_renderBatch.m_effectParameters.m_normalMap);
+			state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_renderBatch.m_effectParameters.m_diffuseTexture);
+			state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, batchesIter->m_renderParameters.m_environmentMap);
+			state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_renderBatch.m_effectParameters.m_normalMap);
 
-					state->SetAttributeLocation(m_geometryManager->GetAttributeLocation(batchesIter->m_renderBatch.m_geometryID, batchesIter->m_renderBatch.m_effectParameters.m_animationTime));
-					shader->SetShaderState(state);
+			state->SetAttributeLocation(m_geometryManager->GetAttributeLocation(batchesIter->m_renderBatch.m_geometryID, batchesIter->m_renderBatch.m_effectParameters.m_animationTime));
+			shader->SetShaderState(state);
 
-					m_geometryManager->RenderGeometry(batchesIter->m_renderBatch.m_geometryID);
-				}
-			break;
+			m_geometryManager->RenderGeometry(batchesIter->m_renderBatch.m_geometryID);
+		}
 
-			case e_GeometryTypeTransparentRenderBatches:
-				for (std::vector<CachedRenderBatch>::iterator batchesIter = m_cachedRenderBatches.begin(); batchesIter != m_cachedRenderBatches.end(); ++batchesIter) {
-					if (batchesIter->m_renderBatch.m_effectParameters.m_materialOpacity == 1.0f)
-						continue;
-
-					state->CalculateShaderState(batchesIter->m_renderParameters, batchesIter->m_renderBatch.m_effectParameters);
-					
-					state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_renderBatch.m_effectParameters.m_diffuseTexture);
-					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, batchesIter->m_renderParameters.m_environmentMap);
-					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_renderBatch.m_effectParameters.m_normalMap);
-
-					state->SetAttributeLocation(m_geometryManager->GetAttributeLocation(batchesIter->m_renderBatch.m_geometryID, batchesIter->m_renderBatch.m_effectParameters.m_animationTime));
-
-					shader->SetShaderState(state);
-
-					m_geometryManager->RenderGeometry(batchesIter->m_renderBatch.m_geometryID);
-				}
-			break;
-
-			case e_GeometryTypeScreenQuad:
-				RenderBatch screenQuad;
-				screenQuad.m_geometryID = "screenQuad";
-
-				state->CalculateShaderState(m_renderParameters, screenQuad.m_effectParameters);			
-		
-				state->SetAttributeLocation(m_geometryManager->GetAttributeLocation(screenQuad.m_geometryID, 0.0f));
-				
-				shader->SetShaderState(state);
-
-				m_geometryManager->RenderGeometry(screenQuad.m_geometryID);
-			break;
-		};
-	
 		delete state;
 	}
 	
