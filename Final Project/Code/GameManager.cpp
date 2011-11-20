@@ -502,27 +502,20 @@ void GameManager::RenderHUD()
 	float score_position = 9.4;
 	int temp = m_score;
 
-	RenderBatch* batch = new RenderBatch();
-	batch->m_effectParameters.m_materialAmbient = vec3(5.0f, 5.0f, 5.0f);
-	batch->m_effectParameters.m_materialDiffuse = vec3(0.0f, 0.0f, 0.0f);
-	batch->m_effectParameters.m_materialSpecular = vec3(0.0f, 0.0f, 0.0f);
-	batch->m_effectParameters.m_materialSpecularExponent = 1.0f;
-	batch->m_effectParameters.m_materialGloss = 0.0f;
-	batch->m_effectParameters.m_materialOpacity = 1.0f;
-	batch->m_effectParameters.m_diffuseTexture = "numbers";	
-	batch->m_effectParameters.m_normalMap = "none";
-	batch->m_effectParameters.m_materialOpacity = 1.0f;
 
-	if(temp == 0) {
-		batch->m_geometryID = "zero";
-		batch->m_effectParameters.m_modelviewMatrix = Translate(score_position, 9.0, 0.0);
+	do {
+		RenderBatch* batch = new RenderBatch();
 
-		m_graphicsManager->Render(*batch);
-	}
-
-	while(temp != 0)
-	{
 		batch->m_geometryID = intID(temp%10);
+		batch->m_effectParameters.m_materialAmbient = vec3(5.0f, 5.0f, 5.0f);
+		batch->m_effectParameters.m_materialDiffuse = vec3(0.0f, 0.0f, 0.0f);
+		batch->m_effectParameters.m_materialSpecular = vec3(0.0f, 0.0f, 0.0f);
+		batch->m_effectParameters.m_materialSpecularExponent = 1.0f;
+		batch->m_effectParameters.m_materialGloss = 0.0f;
+		batch->m_effectParameters.m_materialOpacity = 1.0f;
+		batch->m_effectParameters.m_diffuseTexture = "numbers";	
+		batch->m_effectParameters.m_normalMap = "none";
+		batch->m_effectParameters.m_materialOpacity = 1.0f;
 		batch->m_effectParameters.m_modelviewMatrix = Translate(score_position, 9.0, 0.0);
 
 		m_graphicsManager->Render(*batch);
@@ -530,7 +523,9 @@ void GameManager::RenderHUD()
 		temp /= 10;
 		score_position -= 0.6;
 
-	}
+		delete batch;
+
+	} while(temp != 0);
 
 	
 	SetupCamera(*m_player->getPosition());
