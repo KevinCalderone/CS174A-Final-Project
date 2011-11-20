@@ -29,6 +29,7 @@ public:
 	Player* getPlayer();
 private:
 	Player* m_player;
+	vec3 m_pgp;
 	std::vector<Monster*> m_monsters;
 	std::vector<Bullet*> m_bullets;
 	std::vector<EnviroObj*> m_enviro;
@@ -38,7 +39,7 @@ private:
 	int m_score;
 	int m_god;
 	bool m_godmode;
-	static const int MONSTERCAP = 10;
+	static const int MONSTERCAP = 20;
 	void Spawn(objectType type, vec3 position, float size=10.0);
 	Monster* spawnMonster();
 	Player* spawnPlayer();

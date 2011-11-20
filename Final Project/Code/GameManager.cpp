@@ -90,8 +90,11 @@ void GameManager::keyboardUpdate()
 		}
 	}
 
+	if(ad!=0.0 && ws!=0.0)
+		m_player->setVelocity(normalize(vec3(ad,0.0f,ws)));
+	else
+		m_player->setVelocity((vec3(ad,0.0f,ws)));
 
-	m_player->setVelocity(vec3(ad,0.0f,ws));
 	if(m_j) angle += 0.05;
 	if(m_l) angle -= 0.05;
 	if(angle>360 || angle<-360) angle = 0.0;
@@ -124,22 +127,22 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 	{
 		do
 		{
-			x = 200 - rand()%400;
-			z = 150 - rand()%300;
+			x = 400 - rand()%800;
+			z = 300 - rand()%600;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(LEAVES,Angel::vec3(x,0.0f,z),2);
 		Spawn(TREE,Angel::vec3(x,0.0f,z),2);
-	} while(m_enviro.size() < 20);
+	} while(m_enviro.size() < 40);
 
 	do
 	{
 		do
 		{
-			x = 200 - rand()%400;
-			z = 150 - rand()%300;
+			x = 400 - rand()%800;
+			z = 300 - rand()%600;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(ROCK,Angel::vec3(x,0.0f,z),1.5);
-	} while(m_enviro.size() < 100);
+	} while(m_enviro.size() < 600);
 }
 
 void GameManager::initPlayer()
@@ -323,10 +326,20 @@ void GameManager::Update()
 
 	CollisionDetection();
 
-
+	//m_pgp = *m_player->getPosition()+(*m_player->getVelocity()*10);
+	m_pgp = vec3(0);
+	for(int i=0;i<m_monsters.size();i++)
+		m_pgp += normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition());
+	m_pgp = *m_player->getPosition()+15*normalize(m_pgp);
+	std::cout << m_pgp << " " << *m_player->getPosition() << std::endl;
 	for(int i=0;i<m_monsters.size();i++){
 		//m_monsters.at(i)->setVelocity(*m_player->getDirection());
-		m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
+		//if(length(*m_monsters.at(i)->getPosition()-*m_player->getPosition()) < 5)
+		//	m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
+		//else
+		//	m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
+		m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
+
 	for(int j=0;j<m_enviro.size();j++){
 		if((length(*m_enviro.at(j)->getPosition()-*m_monsters.at(i)->getPosition()) < 2) && // this 2 will have to depend on sizes
 			acos(dot(normalize(*m_monsters.at(i)->getPosition()-*m_enviro.at(j)->getPosition()),
