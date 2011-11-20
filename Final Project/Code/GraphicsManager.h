@@ -26,27 +26,17 @@ struct PostProcessShaderState;
 Kevin TODO
 
 ON DECK
-- Handle depth test as a parameter
 - Add cubemap shadowmapping for point light shadows
-- Need to turn off back face culling when rendering 2-faced models
-- Add skeletal animation	
-	- Change model file format to one that supports blend weights
-	- Try to find models/figure out how to make animations in blender
 - Assign constants from GraphicsSettings into shaders
-- Remove dependency to "ScreenQuad" geometry name
-- Double check I am turning depth testing on/off correctly
 - Pass blur widths into post process shader 
 - Make render passes and frame buffer textures const
-- Add options for depth testing and writing into RenderPass
 - Optimization: Reduce Gausian sampling taps depending on how much color bleed we end up wanting
 
 FUTURE FEATURES
 - Expose more options in RenderParameters such as DOF
 - Optimization: Only send diff of state to GPU
-- Optimization: Figure out if blitting or generateMipMaps if faster for downsampleing
 - Add dynamic geometry
 	- Add particles for a torch
-	- Add some kind of animation
 - Add gloss maps
 - Add SSAO
 - Optimization: Combine final pipeline into MRT passes to reduce total passes

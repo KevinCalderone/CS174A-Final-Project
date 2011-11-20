@@ -114,10 +114,10 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 	{
 		do
 		{
-			x = 200 - rand()%400;
-			z = 150 - rand()%300;
+			x = 20 - rand()%40;
+			z = 15 - rand()%30;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
-		Spawn(BUSH,Angel::vec3(x,0.0f,z),1.5);
+		Spawn(BUSH,Angel::vec3(x,0.0f,z),2.5);
 	} while(m_bgenviro.size() < 100);
 
 	do
@@ -129,7 +129,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(LEAVES,Angel::vec3(x,0.0f,z),2);
 		Spawn(TREE,Angel::vec3(x,0.0f,z),2);
-	} while(m_enviro.size() < 100);
+	} while(m_enviro.size() < 20);
 
 	do
 	{
