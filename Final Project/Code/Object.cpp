@@ -15,6 +15,7 @@ Object::Object (vec3 position, vec3 velocity, float size, float speed)
 	: m_position(position), /*m_velocity(velocity),*/ m_size(size), m_speed(speed)
 {
 	setVelocity(velocity);
+	m_bbfactor = 1.0;
 }
 
 Object::~Object () {
@@ -63,7 +64,8 @@ RenderBatch* Object::getRenderBatch () {
 void Object::Update(float delta) {
 	m_position += m_velocity;
 	m_bb->setCenter(vec2(m_position.x,m_position.z));
-	m_bb->update(m_velocity.x,m_velocity.z, m_size);
+
+	m_bb->update(m_velocity.x,m_velocity.z, m_bbfactor*m_size);
 	if(m_render!=NULL) {
 		m_render->m_effectParameters.m_modelviewMatrix = Angel::Translate(m_position) * Angel::Scale(vec3(m_size))
 														* Angel::RotateY((GLfloat)180+atan2(m_velocity.x,m_velocity.z)/DegreesToRadians);

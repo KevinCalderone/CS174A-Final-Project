@@ -184,7 +184,8 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 		break;
 	case BULLET:
 		{
-			Bullet* bullet = new Bullet(*m_player->getPosition(), normalize(*m_player->getDirection()), 0.1, 0.5);
+			Bullet* bullet = new Bullet(*m_player->getPosition(), normalize(*m_player->getDirection()), 0.1, 0.6 +
+				length(*m_player->getVelocity()));
 			m_bullets.push_back(bullet);
 		}
 		break;
@@ -498,23 +499,74 @@ void GameManager::RenderHUD()
 {
 	SetCameraOrthogonal();
 
+	float score_position = 9.4;
+	int temp = m_score;
 
-	RenderBatch* batch = new RenderBatch();
-	batch->m_geometryID = "one";
-	batch->m_effectParameters.m_materialAmbient = vec3(5.0f, 5.0f, 5.0f);
-	batch->m_effectParameters.m_materialDiffuse = vec3(0.0f, 0.0f, 0.0f);
-	batch->m_effectParameters.m_materialSpecular = vec3(0.0f, 0.0f, 0.0f);
-	batch->m_effectParameters.m_materialSpecularExponent = 1.0f;
-	batch->m_effectParameters.m_materialGloss = 0.0f;
-	batch->m_effectParameters.m_materialOpacity = 1.0f;
-	batch->m_effectParameters.m_diffuseTexture = "numbers";	
-	batch->m_effectParameters.m_normalMap = "none";
-	batch->m_effectParameters.m_materialOpacity = 1.0f;
-	batch->m_effectParameters.m_modelviewMatrix = mat4();
+	// Render each score number in upper right corner
+	do {
+		RenderBatch* batch = new RenderBatch();
 
-	m_graphicsManager->Render(*batch);
+		batch->m_geometryID = intID(temp%10);
+		batch->m_effectParameters.m_materialAmbient = vec3(5.0f, 5.0f, 5.0f);
+		batch->m_effectParameters.m_materialDiffuse = vec3(0.0f, 0.0f, 0.0f);
+		batch->m_effectParameters.m_materialSpecular = vec3(0.0f, 0.0f, 0.0f);
+		batch->m_effectParameters.m_materialSpecularExponent = 1.0f;
+		batch->m_effectParameters.m_materialGloss = 0.0f;
+		batch->m_effectParameters.m_materialOpacity = 1.0f;
+		batch->m_effectParameters.m_diffuseTexture = "numbers";	
+		batch->m_effectParameters.m_normalMap = "none";
+		batch->m_effectParameters.m_materialOpacity = 1.0f;
+		batch->m_effectParameters.m_modelviewMatrix = Translate(score_position, 9.0, 0.0);
+
+		m_graphicsManager->Render(*batch);
+
+		temp /= 10;
+		score_position -= 0.6;
+
+		delete batch;
+
+	} while(temp != 0);
+
+	// Render lives in upper right corner (now only supports single digits)
+	temp = m_player->getLives();
+
+	RenderBatch* rb = new RenderBatch();
+	rb->m_geometryID = intID(temp);
+	rb->m_effectParameters.m_materialAmbient = vec3(5.0f, 5.0f, 5.0f);
+	rb->m_effectParameters.m_materialDiffuse = vec3(0.0f, 0.0f, 0.0f);
+	rb->m_effectParameters.m_materialSpecular = vec3(0.0f, 0.0f, 0.0f);
+	rb->m_effectParameters.m_materialSpecularExponent = 1.0f;
+	rb->m_effectParameters.m_materialGloss = 0.0f;
+	rb->m_effectParameters.m_materialOpacity = 1.0f;
+	rb->m_effectParameters.m_diffuseTexture = "numbers";	
+	rb->m_effectParameters.m_normalMap = "none";
+	rb->m_effectParameters.m_materialOpacity = 1.0f;
+	rb->m_effectParameters.m_modelviewMatrix = Translate(-10.0, 9.0, 0.0);
+
+	m_graphicsManager->Render(*rb);
+
+	delete rb;
+
+
 
 	SetupCamera(*m_player->getPosition());
+}
+
+std::string GameManager::intID(int x)
+{
+	switch(x) {
+	case 1: return "one"; break;
+	case 2: return "two"; break;
+	case 3: return "three"; break;
+	case 4: return "four"; break;
+	case 5: return "five"; break;
+	case 6: return "six"; break;
+	case 7: return "seven"; break;
+	case 8: return "eight"; break;
+	case 9: return "nine"; break;
+	case 0: return "zero"; break;
+	default: return "none";
+	}
 }
 
 directionType relativePosition(Object& a, Object& b)

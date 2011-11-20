@@ -65,6 +65,7 @@ private:
 	FMOD::Channel *m_bgchannel;
 
 	void RenderHUD();
+	std::string intID(int x);
 };
 
 directionType relativePosition(Object& a, Object& b);

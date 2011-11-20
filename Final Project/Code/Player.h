@@ -21,6 +21,7 @@ public:
 	void addLife(int add);
 	void removeLife();
 	void Update(float delta);
+	int getLives();
 
 
 private:

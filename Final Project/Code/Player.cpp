@@ -86,3 +86,8 @@ void Player::Update(float delta)
 		m_render->m_effectParameters.m_modelviewMatrix = Angel::Translate(m_position) * Angel::Scale(vec3(m_size))
 														* Angel::RotateY((GLfloat)90+atan2(m_direction.x,m_direction.z)/DegreesToRadians);
 }
+
+int Player::getLives()
+{
+	return m_lives;
+}
