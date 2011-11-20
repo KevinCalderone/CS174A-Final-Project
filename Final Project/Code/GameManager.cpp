@@ -117,11 +117,11 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 	{
 		do
 		{
-			x = 20 - rand()%40;
-			z = 15 - rand()%30;
+			x = 400 - rand()%800;
+			z = 300 - rand()%600;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(BUSH,Angel::vec3(x,0.0f,z),2.5);
-	} while(m_bgenviro.size() < 100);
+	} while(m_bgenviro.size() < 10000);
 
 	do
 	{
@@ -142,7 +142,12 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 			z = 300 - rand()%600;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
 		Spawn(ROCK,Angel::vec3(x,0.0f,z),1.5);
-	} while(m_enviro.size() < 600);
+	} while(m_enviro.size() < 100);
+
+	for(int i=0;i<m_bgenviro.size();i++)
+		m_bgenviro.at(i)->Update(1.0f);
+	for(int i=0;i<m_enviro.size();i++)
+		m_enviro.at(i)->Update(1.0f);
 }
 
 void GameManager::initPlayer()
@@ -359,10 +364,6 @@ void GameManager::Update()
 				Delete(BULLET,i); i--;}
 		}
 	}
-	for(int i=0;i<m_enviro.size();i++)
-		m_enviro.at(i)->Update(1.0f);
-	for(int i=0;i<m_bgenviro.size();i++)
-		m_bgenviro.at(i)->Update(1.0f);
 	m_player->Update(1.0f);
 }
 	
