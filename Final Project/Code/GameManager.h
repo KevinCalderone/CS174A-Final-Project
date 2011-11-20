@@ -69,6 +69,9 @@ private:
 
 	void RenderHUD();
 	std::string intID(int x);
+
+	void ResetGame();
+	bool m_pause;
 };
 
 directionType relativePosition(Object& a, Object& b);

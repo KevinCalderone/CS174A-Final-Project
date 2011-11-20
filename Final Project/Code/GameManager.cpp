@@ -6,7 +6,7 @@ const bool BBDEBUG = false;
 
 GameManager::GameManager()
 {
-	m_w=m_a=m_s=m_d=m_j=m_l=m_auto=m_godmode = false;
+	m_w=m_a=m_s=m_d=m_j=m_l=m_auto=m_godmode=m_pause = false;
 	angle = 0.0f;
 	m_score = m_god = 0;
 	m_bulletchannel = m_monschannel = m_bgchannel = 0;
@@ -14,6 +14,24 @@ GameManager::GameManager()
 
 GameManager::~GameManager()
 {
+	// need to delete all monsters, bullets, enviro, bgenviro, m_ground, m_graphicsmanagers, m_system;
+
+	if(m_ground)
+		delete m_ground;
+
+	if(m_player)
+		delete m_player;
+
+	if(m_graphicsManager)
+		delete m_graphicsManager;
+
+	// vector::clear should delete all objects within
+	m_monsters.clear();
+	m_bullets.clear();
+	m_enviro.clear();
+	m_bgenviro.clear();
+
+	
 }
 
 void GameManager::callbackKeyboard(unsigned char key, int x, int y)
@@ -39,6 +57,10 @@ void GameManager::callbackKeyboard(unsigned char key, int x, int y)
 		m_j = true; break;
 	case 'l':
 		m_l = true; break;
+	case 'r':
+		if(!m_pause) break;
+		ResetGame();
+		break;
 	}
 }
 
@@ -105,6 +127,66 @@ void GameManager::keyboardUpdate()
 GraphicsManager* GameManager::getGraphicsManager()
 {
 	return m_graphicsManager;
+}
+
+void GameManager::ResetGame()
+{
+	m_w=m_a=m_s=m_d=m_j=m_l=m_auto=m_godmode=m_pause = false;
+	angle = 0.0f;
+	m_score = m_god = 0;
+	m_bulletchannel = m_monschannel = m_bgchannel = 0;
+
+	// need to delete all monsters, bullets, enviro, bgenviro, m_ground, m_graphicsmanagers, m_system;
+
+	if(m_ground)
+		delete m_ground;
+
+	if(m_player)
+		delete m_player;
+
+	if(m_graphicsManager)
+		delete m_graphicsManager;
+
+	// vector::clear should delete all objects within
+	m_monsters.clear();
+	m_bullets.clear();
+	m_enviro.clear();
+	m_bgenviro.clear();
+
+	initGame();
+
+	RenderParameters& renderParameters = m_graphicsManager->GetRenderParameters();
+	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, 2.0f);
+	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.6f;
+	renderParameters.m_lightDiffuse = vec3(1.0f, 1.0f, 0.6f) * 0.0f;
+	renderParameters.m_lightSpecular = vec3(1.0f, 1.0f, 0.7f) * 0.0f;
+	renderParameters.m_environmentMap = "envMap";
+	
+	renderParameters.m_pointLightAmbient[0] = vec3(0.1f, 0.0f, 0.0f);
+	renderParameters.m_pointLightDiffuse[0] = vec3(1.5f, 0.5f, 0.0f);
+	renderParameters.m_pointLightSpecular[0] = vec3(2.5f, 1.5f, 0.0f);
+	renderParameters.m_pointLightRange[0] = 12.0f;
+	renderParameters.m_pointLightFalloff[0] = 5.0f;
+	
+	renderParameters.m_pointLightPosition[1] = vec3(5.0f, 1.0f, 0.0f);
+	renderParameters.m_pointLightDiffuse[1] = vec3(0.0f, 0.0f, 0.0f);
+	renderParameters.m_pointLightSpecular[1] = vec3(0.0f, 0.0f, 0.0f);
+	renderParameters.m_pointLightRange[1] = 10.0f;
+	renderParameters.m_pointLightFalloff[1] = 2.0f;
+	
+	//renderParameters.m_pointLightPosition[2] = vec3(0.0f, 1.0f, 5.0f);
+	//renderParameters.m_pointLightDiffuse[2] = vec3(0.0f, 1.0f, 0.0f);
+	//renderParameters.m_pointLightSpecular[2] = vec3(0.0f, 1.0f, 0.0f);
+	//renderParameters.m_pointLightRange[2] = 8.0f;
+	//renderParameters.m_pointLightFalloff[2] = 2.0f;
+	
+	// No color correction
+	renderParameters.m_colorCorrection = mat4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f, 
+		0.0f, 0.0f, 1.0f, 0.0f, 
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
 }
 
 void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & Ground
@@ -320,15 +402,19 @@ void GameManager::CollisionDetection()
 				std::cout << "YOU GOT HIT BY: " << k << std::endl;
 				if(m_player->kill()){
 					std::cout << "YOU'RE DEAD!" << std::endl;
-					system("PAUSE");
+					m_pause = true;
 				}
 			}
+			return;
 		}
 	}
 }
 
 void GameManager::Update()
 {
+	if(m_pause)
+		return;
+
 	if(m_auto && m_player->shoot()){
 		playSound(MACHINEGUN);
 		Spawn(BULLET,m_pp);}
@@ -340,6 +426,8 @@ void GameManager::Update()
 	for(int i=0;i<m_monsters.size();i++)
 		m_pgp += normalize(m_pp-*m_monsters.at(i)->getPosition());
 	m_pgp = m_pp+15*normalize(m_pgp);
+
+
 	//std::cout << m_pgp << " " << *m_player->getPosition() << std::endl;
 	for(int i=0;i<m_monsters.size();i++){
 		//m_monsters.at(i)->setVelocity(*m_player->getDirection());
