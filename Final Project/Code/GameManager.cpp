@@ -499,9 +499,10 @@ void GameManager::RenderHUD()
 {
 	SetCameraOrthogonal();
 
+	float score_position = 9.4;
+	int temp = m_score;
 
 	RenderBatch* batch = new RenderBatch();
-	batch->m_geometryID = "one";
 	batch->m_effectParameters.m_materialAmbient = vec3(5.0f, 5.0f, 5.0f);
 	batch->m_effectParameters.m_materialDiffuse = vec3(0.0f, 0.0f, 0.0f);
 	batch->m_effectParameters.m_materialSpecular = vec3(0.0f, 0.0f, 0.0f);
@@ -511,10 +512,27 @@ void GameManager::RenderHUD()
 	batch->m_effectParameters.m_diffuseTexture = "numbers";	
 	batch->m_effectParameters.m_normalMap = "none";
 	batch->m_effectParameters.m_materialOpacity = 1.0f;
-	batch->m_effectParameters.m_modelviewMatrix = mat4();
 
-	m_graphicsManager->Render(*batch);
+	if(temp == 0) {
+		batch->m_geometryID = "zero";
+		batch->m_effectParameters.m_modelviewMatrix = Translate(score_position, 9.0, 0.0);
 
+		m_graphicsManager->Render(*batch);
+	}
+
+	while(temp != 0)
+	{
+		batch->m_geometryID = intID(temp%10);
+		batch->m_effectParameters.m_modelviewMatrix = Translate(score_position, 9.0, 0.0);
+
+		m_graphicsManager->Render(*batch);
+
+		temp /= 10;
+		score_position -= 0.6;
+
+	}
+
+	
 	SetupCamera(*m_player->getPosition());
 }
 
