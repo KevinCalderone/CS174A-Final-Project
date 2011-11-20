@@ -512,9 +512,10 @@ void GameManager::RenderHUD()
 		batch->m_effectParameters.m_materialSpecular = vec3(0.0f, 0.0f, 0.0f);
 		batch->m_effectParameters.m_materialSpecularExponent = 1.0f;
 		batch->m_effectParameters.m_materialGloss = 0.0f;
-		batch->m_effectParameters.m_materialOpacity = 1.0f;
+		batch->m_effectParameters.m_materialOpacity = 0.9999f;
 		batch->m_effectParameters.m_diffuseTexture = "numbers";	
 		batch->m_effectParameters.m_normalMap = "none";
+		batch->m_effectParameters.m_HUDRender = true;
 		batch->m_effectParameters.m_materialOpacity = 1.0f;
 		batch->m_effectParameters.m_modelviewMatrix = Translate(score_position, 9.0, 0.0);
 
@@ -537,9 +538,10 @@ void GameManager::RenderHUD()
 	rb->m_effectParameters.m_materialSpecular = vec3(0.0f, 0.0f, 0.0f);
 	rb->m_effectParameters.m_materialSpecularExponent = 1.0f;
 	rb->m_effectParameters.m_materialGloss = 0.0f;
-	rb->m_effectParameters.m_materialOpacity = 1.0f;
+	rb->m_effectParameters.m_materialOpacity = 0.9999f;
 	rb->m_effectParameters.m_diffuseTexture = "numbers";	
 	rb->m_effectParameters.m_normalMap = "none";
+	rb->m_effectParameters.m_HUDRender = true;
 	rb->m_effectParameters.m_materialOpacity = 1.0f;
 	rb->m_effectParameters.m_modelviewMatrix = Translate(-10.0, 9.0, 0.0);
 

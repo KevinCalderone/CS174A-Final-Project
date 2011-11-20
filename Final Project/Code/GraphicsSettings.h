@@ -27,4 +27,12 @@ enum TextureMode { e_TextureModeNearest, e_TextureModeBiLinear, e_TextureModeTri
 
 enum TextureFormat { e_TextureFormatRGB = GL_BGR, e_TextureFormatRGBA = GL_BGRA };
 
+enum GeometryType { e_GeometryTypeOpaque, 
+					e_GeometryTypeTransparent,
+					e_GeometryTypeHUD,
+					e_GeometryTypeScreenQuad,
+
+					e_GeometryTypeCount = 4
+			      };
+
 #endif
