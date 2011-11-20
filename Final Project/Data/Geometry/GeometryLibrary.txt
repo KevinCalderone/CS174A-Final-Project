@@ -68,3 +68,18 @@ static nine
 
 static zero
 	../Data/Geometry/zero.obj
+
+static smallBush
+	../Data/Geometry/smallBush.obj
+
+static fern
+	../Data/Geometry/fern.obj
+
+static fern2
+	../Data/Geometry/fern2.obj
+
+static fern3
+	../Data/Geometry/fern3.obj
+
+static fern4
+	../Data/Geometry/fern4.obj

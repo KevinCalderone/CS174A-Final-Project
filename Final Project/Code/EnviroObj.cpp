@@ -43,16 +43,27 @@ EnviroObj::EnviroObj(objectType type, vec3 position, vec3 direction, float size)
 	}
 	if(type==BUSH)
 	{
-		batch->m_geometryID = "bush";
+		const char* plantTypes[5] = 
+		{
+			"smallBush",
+			"fern",
+			"fern2",
+			"fern3",
+			"fern4"
+		};
+
+		int type = rand()%5;
+
+		batch->m_geometryID = plantTypes[type];
 		batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 0.0f) * 0.5f;
 		batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 0.0f) * 0.3f;
 		batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.0f) * 0.0f;
 		batch->m_effectParameters.m_materialSpecularExponent = 1.0f;
 		batch->m_effectParameters.m_materialGloss = 0.1f;
 		batch->m_effectParameters.m_twoSided = true;
-		batch->m_effectParameters.m_diffuseTexture = "bush";	
+		batch->m_effectParameters.m_diffuseTexture = plantTypes[type];	
 		batch->m_effectParameters.m_normalMap = "none";
-		batch->m_effectParameters.m_materialOpacity = 0.7f;
+		batch->m_effectParameters.m_materialOpacity = 1.0f;
 	}
 	this->setRenderBatch(batch);
 

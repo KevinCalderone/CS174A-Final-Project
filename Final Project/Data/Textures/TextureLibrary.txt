@@ -41,3 +41,18 @@ cube rgb envMap
 
 2d rgb grassNormal
 	../Data/Textures/seamless_ground2048_normal.bmp
+
+2d rgba smallBush
+	../Data/Textures/smallBush.bmp
+
+2d rgba fern
+	../Data/Textures/fern.bmp
+
+2d rgba fern2
+	../Data/Textures/fern2.bmp
+
+2d rgba fern3
+	../Data/Textures/fern3.bmp
+
+2d rgba fern4
+	../Data/Textures/fern4.bmp
