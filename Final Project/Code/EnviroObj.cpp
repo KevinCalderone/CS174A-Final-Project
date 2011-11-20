@@ -14,7 +14,8 @@ EnviroObj::EnviroObj(objectType type, vec3 position, vec3 direction, float size)
 		batch->m_effectParameters.m_materialGloss = 0.0f;
 		batch->m_effectParameters.m_diffuseTexture = "tree";	
 		batch->m_effectParameters.m_normalMap = "none";
-		
+
+		m_bbfactor = 0.6;
 	}
 	if(type==LEAVES) 
 	{
@@ -53,7 +54,7 @@ EnviroObj::EnviroObj(objectType type, vec3 position, vec3 direction, float size)
 	}
 	this->setRenderBatch(batch);
 
-	m_bb = new BoundingBox(vec2(position.x,position.z),1*size,1*size);
+	m_bb = new BoundingBox(vec2(position.x,position.z),m_bbfactor*size,m_bbfactor*size);
 }
 
 EnviroObj::~EnviroObj() {

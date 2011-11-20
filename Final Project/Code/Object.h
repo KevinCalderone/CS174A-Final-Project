@@ -36,6 +36,7 @@ protected:
 	vec3 m_velocity;
 	float m_size;
 	float m_speed;
+	float m_bbfactor;
 
 	
 };
