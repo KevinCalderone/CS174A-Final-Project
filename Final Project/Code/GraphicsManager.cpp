@@ -376,6 +376,7 @@ void GraphicsManager::SwapBuffers () {
 					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, batchesIter->m_renderParameters.m_environmentMap);
 					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_renderBatch.m_effectParameters.m_normalMap);
 
+					state->SetAttributeLocation(m_geometryManager->GetAttributeLocation(batchesIter->m_renderBatch.m_geometryID, batchesIter->m_renderBatch.m_effectParameters.m_animationTime));
 					shader->SetShaderState(state);
 
 					m_geometryManager->RenderGeometry(batchesIter->m_renderBatch.m_geometryID);
@@ -393,6 +394,8 @@ void GraphicsManager::SwapBuffers () {
 					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, batchesIter->m_renderParameters.m_environmentMap);
 					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_renderBatch.m_effectParameters.m_normalMap);
 
+					state->SetAttributeLocation(m_geometryManager->GetAttributeLocation(batchesIter->m_renderBatch.m_geometryID, batchesIter->m_renderBatch.m_effectParameters.m_animationTime));
+
 					shader->SetShaderState(state);
 
 					m_geometryManager->RenderGeometry(batchesIter->m_renderBatch.m_geometryID);
@@ -404,6 +407,8 @@ void GraphicsManager::SwapBuffers () {
 				screenQuad.m_geometryID = "screenQuad";
 
 				state->CalculateShaderState(m_renderParameters, screenQuad.m_effectParameters);			
+		
+				state->SetAttributeLocation(m_geometryManager->GetAttributeLocation(screenQuad.m_geometryID, 0.0f));
 				
 				shader->SetShaderState(state);
 

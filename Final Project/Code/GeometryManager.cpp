@@ -7,6 +7,7 @@
 
 #include "Vertex.h"
 #include "Geometry.h"
+#include "AttributeLocation.h"
 
 GeometryManager::GeometryManager (const std::string& assetFile) 
 	: m_vertexDataUsed(0)
@@ -23,13 +24,58 @@ GeometryManager::GeometryManager (const std::string& assetFile)
 
 		InitBuffer(bufferSize);
 
-		std::string geometryFile;
-		std::string geometryName;
-
 		while (is.good()) {
-			is >> geometryName;      
-			is >> geometryFile;
-			LoadOBJFile(geometryName, geometryFile);      
+			std::string geometryMode;
+
+			is >> geometryMode;   
+
+			if (geometryMode == "static") {
+				std::string geometryFile;
+				std::string geometryName;
+
+				is >> geometryName;
+				is >> geometryFile;
+
+				Geometry* geometry = LoadOBJFile(geometryFile);  
+
+				if (geometry != NULL)
+					m_geometry[geometryName] = geometry;
+			}
+			else if (geometryMode == "keyframe") {					
+				unsigned int fileCount;
+				std::string geometryName;
+
+				is >> fileCount;
+				is >> geometryName;
+
+				Geometry* keyframeGeometry = NULL;
+
+				while (fileCount--) {
+					std::string geometryFile;
+
+					is >> geometryFile;
+
+					Geometry* geometry = LoadOBJFile(geometryFile);  
+
+					if (geometry == NULL) {
+						continue;
+					}
+					else if (keyframeGeometry == NULL) {
+						keyframeGeometry = geometry;
+					}
+					else {
+						if (geometry->m_geometryMode != keyframeGeometry->m_geometryMode || geometry->m_numVertex != keyframeGeometry->m_numVertex) 
+							printf("GeometryManager::GeometryManager: Incompatible keyframe file %s.\n", geometryFile);
+						else 
+							keyframeGeometry->m_vertexDataStarts.push_back(geometry->m_vertexDataStarts.back());
+						
+						delete geometry;
+					}
+				}
+
+				if (keyframeGeometry != NULL)
+					m_geometry[geometryName] = keyframeGeometry;
+			}
 		}
 
 		is.close();
@@ -57,6 +103,44 @@ void GeometryManager::InitBuffer (unsigned int size) {
 	m_vertexDataUsed = 0;
 }
 
+AttributeLocation GeometryManager::GetAttributeLocation (const std::string& geometryID, float animationTime) {
+	AttributeLocation attributeLocation;
+
+	std::map<std::string, Geometry*>::iterator iter = m_geometry.find(geometryID);
+
+	if (iter == m_geometry.end()) {
+		printf("GeometryManager::GetAttributeLocation: Unknown geometryID %s.\n", geometryID.c_str());
+	}
+	else {
+		Geometry* geometry = iter->second;
+
+		unsigned int numAnimationModels = geometry->m_vertexDataStarts.size();
+
+		unsigned int firstModel = (unsigned int)fmod(animationTime, numAnimationModels);
+		unsigned int secondModel = (firstModel + 1) % numAnimationModels;
+
+		if (firstModel >= numAnimationModels || secondModel >= numAnimationModels) {
+			printf("GeometryManager::GetAttributeLocation: Invalid model indexes.\n");
+			return attributeLocation;
+		}
+
+		unsigned int firstModelVertexStart = geometry->m_vertexDataStarts[firstModel];
+		unsigned int secondModelVertexStart = geometry->m_vertexDataStarts[secondModel];
+
+		attributeLocation.m_position0 = firstModelVertexStart + c_positionDataOffset;
+		attributeLocation.m_normal0 = firstModelVertexStart + c_normalDataOffset;
+		attributeLocation.m_texCoord0 = firstModelVertexStart + c_texCoord0DataOffset;
+
+		attributeLocation.m_position1 = secondModelVertexStart + c_positionDataOffset;
+		attributeLocation.m_normal1 = secondModelVertexStart + c_normalDataOffset;
+		attributeLocation.m_texCoord1 = secondModelVertexStart + c_texCoord0DataOffset;
+
+		attributeLocation.m_animatedGeometry = firstModel != secondModel;
+	}
+
+	return attributeLocation;
+}
+
 void GeometryManager::RenderGeometry (const std::string& geometryID) {
 	std::map<std::string, Geometry*>::iterator iter = m_geometry.find(geometryID);
 
@@ -64,9 +148,9 @@ void GeometryManager::RenderGeometry (const std::string& geometryID) {
 		printf("GeometryManager::RenderGeometry: Unknown geometryID %s.\n", geometryID.c_str());
 		return;
 	}
-	
+
 	Geometry* geometry = iter->second;
-	glDrawArrays(geometry->m_geometryMode, geometry->m_vertexStart, geometry->m_numVertex);
+	glDrawArrays(geometry->m_geometryMode, 0, geometry->m_numVertex);
 }
 
 static void TokenizeString (const std::string& input, const std::string& delims, std::vector<std::string>& tokens) {
@@ -94,18 +178,13 @@ static T ConvertString (const std::string& string) {
 	return ss >> result ? result : 0;
 }
 
-void GeometryManager::LoadOBJFile (const std::string& geometryID, const std::string& geometryFile) {
-	std::map<std::string, Geometry*>::iterator iter = m_geometry.find(geometryID);
-
-	if (iter != m_geometry.end())
-		return;
-
+Geometry* GeometryManager::LoadOBJFile (const std::string& geometryFile) {
 	std::ifstream is;
 	is.open (geometryFile.c_str(), std::ios::binary);
 
 	if (!is.is_open()) {
 		printf("GeometryManager::LoadOBJFile: Error loading file %s.\n", geometryFile.c_str());
-		return;
+		return NULL;
 	}
 	
 	std::vector<std::string> tokens;
@@ -173,17 +252,19 @@ void GeometryManager::LoadOBJFile (const std::string& geometryID, const std::str
 	
 	int dataSize = geometryData.size() * sizeof(Vertex);
 
-	if (dataSize == 0)
-		return;
+	if (dataSize == 0) {
+		printf("GeometryManager::LoadOBJFile: Empty model file %s\n", geometryFile.c_str());
+		return NULL;
+	}
 
 	glBufferSubData(GL_ARRAY_BUFFER, m_vertexDataUsed, dataSize, &geometryData[0]);
 
 	Geometry* geometry = new Geometry();
 	geometry->m_geometryMode = e_GeometryModeTriangles;
 	geometry->m_numVertex = dataSize / sizeof(Vertex);
-	geometry->m_vertexStart = m_vertexDataUsed / sizeof(Vertex);;
-
-	m_geometry[geometryID] = geometry;
+	geometry->m_vertexDataStarts.push_back(m_vertexDataUsed);
 
 	m_vertexDataUsed += dataSize;
+
+	return geometry;
 }

@@ -6,6 +6,7 @@
 
 #include "RenderParameters.h"
 #include "EffectParameters.h"
+#include "AttributeLocation.h"
 
 typedef int static_branch;
 
@@ -13,6 +14,7 @@ struct ShaderState
 {
 	virtual void HandleShaderFlags (std::vector<std::string> shaderFlags) = 0;
 	virtual void CalculateShaderState (const RenderParameters& renderParameters, const EffectParameters& effectParameters) = 0;
+	virtual void SetAttributeLocation (const AttributeLocation& attributeLocation) { m_attributeLocation = attributeLocation; }
 
 	// Texture flags
 	static_branch b_useDiffuseTexture;
@@ -22,7 +24,7 @@ struct ShaderState
 	static_branch b_source1;
 
 	// Buffer flags
-	static_branch b_animatedGeometry;
+	AttributeLocation m_attributeLocation;
 };
 
 #endif

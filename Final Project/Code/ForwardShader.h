@@ -15,9 +15,16 @@ public:
 	void SetShaderState (const ShaderState* shaderState);
 
 private:	
-	GLuint m_vPosition;
-	GLuint m_vNormal;
-	GLuint m_vTexCoord;
+	GLuint b_animatedGeometry;
+	GLuint m_attributeLerp;
+
+	GLuint m_vPosition0;
+	GLuint m_vNormal0;
+	GLuint m_vTexCoord0;
+
+	GLuint m_vPosition1;
+	GLuint m_vNormal1;
+	GLuint m_vTexCoord1;
 
 	GLuint m_projectionMatrix;
 	GLuint m_modelviewMatrix;

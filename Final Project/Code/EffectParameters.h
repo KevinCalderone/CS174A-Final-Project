@@ -13,6 +13,7 @@ struct EffectParameters
 
 	// Geometry Parameters
 	mat4 m_modelviewMatrix;
+	float m_animationTime;
 
 	// Texture Channels
 	std::string m_diffuseTexture;

@@ -9,6 +9,8 @@ void ForwardShaderState::HandleShaderFlags (std::vector<std::string> shaderFlags
 }
 
 void ForwardShaderState::CalculateShaderState (const RenderParameters& renderParameters, const EffectParameters& effectParameters) {
+	m_attributeLerp = fmod(effectParameters.m_animationTime, 1.0f);
+	
 	m_projectionMatrix = renderParameters.m_projectionMatrix;
 	m_modelviewMatrix = effectParameters.m_modelviewMatrix;
 

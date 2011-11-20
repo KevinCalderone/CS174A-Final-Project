@@ -8,10 +8,16 @@
 ForwardShader::ForwardShader (const std::string& vertShader, const std::string& fragShader)
 	: UberShader(vertShader, fragShader)
 {
-	// Initialize location of shader variables
-	m_vPosition = glGetAttribLocation(m_program, "vPosition");
-	m_vNormal = glGetAttribLocation(m_program, "vNormal");
-	m_vTexCoord = glGetAttribLocation(m_program, "vTexCoord");
+	b_animatedGeometry = glGetUniformLocation(m_program, "b_animatedGeometry");
+	m_attributeLerp = glGetUniformLocation(m_program, "attributeLerp");
+
+	m_vPosition0 = glGetAttribLocation(m_program, "vPosition0");
+	m_vNormal0 = glGetAttribLocation(m_program, "vNormal0");
+	m_vTexCoord0 = glGetAttribLocation(m_program, "vTexCoord0");
+
+	m_vPosition1 = glGetAttribLocation(m_program, "vPosition1");
+	m_vNormal1 = glGetAttribLocation(m_program, "vNormal1");
+	m_vTexCoord1 = glGetAttribLocation(m_program, "vTexCoord1");
 
 	m_projectionMatrix = glGetUniformLocation(m_program, "projectionMatrix");
 	m_modelviewMatrix = glGetUniformLocation(m_program, "modelviewMatrix");
@@ -38,15 +44,6 @@ ForwardShader::ForwardShader (const std::string& vertShader, const std::string& 
 	m_pointLightRange = glGetUniformLocation(m_program, "pointLightRange");
 	m_pointLightAttenuationMultiplier = glGetUniformLocation(m_program, "pointLightAttenuationMultiplier");
 
-    glEnableVertexAttribArray(m_vPosition);
-    glVertexAttribPointer(m_vPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(c_positionDataOffset));
-
-    glEnableVertexAttribArray(m_vNormal);
-    glVertexAttribPointer(m_vNormal, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(c_normalDataOffset));
-
-	glEnableVertexAttribArray(m_vTexCoord);
-    glVertexAttribPointer(m_vTexCoord, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(c_texCoord0DataOffset));
-
 	// bind samplers to texture units
 	glUniform1i(glGetUniformLocation(m_program, "diffuseTexture"), e_TextureChannelDiffuse - e_TextureChannelFirst);
 	glUniform1i(glGetUniformLocation(m_program, "environmentMap"), e_TextureChannelEnvMap - e_TextureChannelFirst);
@@ -62,6 +59,8 @@ ForwardShader::~ForwardShader () {
 
 void ForwardShader::SetShaderState (const ShaderState* shaderState) {
 	const ForwardShaderState* forwardShaderState = (ForwardShaderState*)shaderState;
+
+	glUniform1i(b_animatedGeometry, forwardShaderState->m_attributeLocation.m_animatedGeometry ? 1 : 0);
 
 	glUniformMatrix4fv(m_projectionMatrix, 1, GL_TRUE, (GLfloat*)&forwardShaderState->m_projectionMatrix);
 	glUniformMatrix4fv(m_modelviewMatrix, 1, GL_TRUE, (GLfloat*)&forwardShaderState->m_modelviewMatrix);
@@ -87,6 +86,32 @@ void ForwardShader::SetShaderState (const ShaderState* shaderState) {
 	glUniform3fv(m_pointLightCombinedSpecular, c_num_point_lights, (GLfloat*)forwardShaderState->m_pointLightCombinedSpecular);
 	glUniform1fv(m_pointLightRange, c_num_point_lights, forwardShaderState->m_pointLightRange);
 	glUniform1fv(m_pointLightAttenuationMultiplier, c_num_point_lights, forwardShaderState->m_pointLightAttenuationMultiplier);
+
+    glEnableVertexAttribArray(m_vPosition0);
+	glVertexAttribPointer(m_vPosition0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(forwardShaderState->m_attributeLocation.m_position0));
+		
+	glEnableVertexAttribArray(m_vNormal0);
+	glVertexAttribPointer(m_vNormal0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(forwardShaderState->m_attributeLocation.m_normal0));
+		
+	glEnableVertexAttribArray(m_vTexCoord0);
+	glVertexAttribPointer(m_vTexCoord0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(forwardShaderState->m_attributeLocation.m_texCoord0));
+
+	if (forwardShaderState->m_attributeLocation.m_animatedGeometry) {
+		glEnableVertexAttribArray(m_vPosition1);
+		glVertexAttribPointer(m_vPosition1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(forwardShaderState->m_attributeLocation.m_position1));
+
+		glEnableVertexAttribArray(m_vNormal1);
+		glVertexAttribPointer(m_vNormal1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(forwardShaderState->m_attributeLocation.m_normal1));
+				
+		glEnableVertexAttribArray(m_vTexCoord1);
+		glVertexAttribPointer(m_vTexCoord1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(forwardShaderState->m_attributeLocation.m_texCoord1));
+
+		glUniform1f(m_attributeLerp, forwardShaderState->m_attributeLerp);
+	}
+	else {
+		glDisableVertexAttribArray(m_vPosition1);
+		glDisableVertexAttribArray(m_vNormal1);
+	}
 
 	m_currentState = *forwardShaderState;
 }

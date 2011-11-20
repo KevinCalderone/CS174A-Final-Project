@@ -16,6 +16,7 @@ Monster::Monster(vec3 position, vec3 velocity, float size, float speed)
 	batch->m_effectParameters.m_materialGloss = 0.1f;
 	batch->m_effectParameters.m_diffuseTexture = "monster";	
 	batch->m_effectParameters.m_normalMap = "monsterNormal";
+	batch->m_effectParameters.m_animationTime = (rand()%10000) / 100.0f;
 	this->setRenderBatch(batch);
 
 	m_bb = new BoundingBox(vec2(position.x,position.z),0.8*size,1.2*size);//1.2

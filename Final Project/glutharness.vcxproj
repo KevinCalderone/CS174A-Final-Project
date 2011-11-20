@@ -90,6 +90,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Code\Angel.h" />
+    <ClInclude Include="Code\AttributeLocation.h" />
     <ClInclude Include="Code\BMPTexture.h" />
     <ClInclude Include="Code\BoundingBox.h" />
     <ClInclude Include="Code\CachedRenderBatch.h" />

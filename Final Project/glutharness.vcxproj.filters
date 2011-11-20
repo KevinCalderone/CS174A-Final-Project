@@ -125,6 +125,9 @@
     <ClInclude Include="Code\CachedRenderBatch.h">
       <Filter>Graphics\Effect</Filter>
     </ClInclude>
+    <ClInclude Include="Code\AttributeLocation.h">
+      <Filter>Graphics\Geometry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">

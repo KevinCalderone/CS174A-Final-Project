@@ -1,61 +1,70 @@
-10000
+50000
 
-screenQuad 
+static screenQuad 
 	../Data/Geometry/screenQuad.obj
 
-cube 
+static cube 
 	../Data/Geometry/cube.obj
 
-sphere 
+static sphere 
 	../Data/Geometry/sphere.obj
 
-monster 
-	../Data/Geometry/monster.obj
+keyframe 10 monster 
+	../Data/Geometry/runMonster1.obj
+	../Data/Geometry/runMonster2.obj
+	../Data/Geometry/runMonster3.obj
+	../Data/Geometry/runMonster4.obj
+	../Data/Geometry/runMonster5.obj
+	../Data/Geometry/runMonster6.obj
+	../Data/Geometry/runMonster7.obj
+	../Data/Geometry/runMonster8.obj
+	../Data/Geometry/runMonster9.obj
+	../Data/Geometry/runMonster10.obj
 
-plane 
+static plane
 	../Data/Geometry/plane.obj
 
-boundingbox 
+static boundingbox 
 	../Data/Geometry/boundingbox.obj
 
-cone 
+static cone 
 	../Data/Geometry/cone.obj
 
-tree 
+static tree 
 	../Data/Geometry/tree.obj
 
-leaves
+static leaves
 	../Data/Geometry/leaves.obj
 
-bush
+static bush
 	../Data/Geometry/bush.obj
 
-one
+static one
 	../Data/Geometry/one.obj
 
-two
+static two
 	../Data/Geometry/two.obj
 
-three
+static three
 	../Data/Geometry/three.obj
 
-four
+static four
 	../Data/Geometry/four.obj
 
-five
+static five
 	../Data/Geometry/five.obj
 
-six
+static six
 	../Data/Geometry/six.obj
 
-seven
+static seven
 	../Data/Geometry/seven.obj
 
-eight
+static eight
 	../Data/Geometry/eight.obj
 
-nine
+static nine
 	../Data/Geometry/nine.obj
 
-zero
+static zero
 	../Data/Geometry/zero.obj

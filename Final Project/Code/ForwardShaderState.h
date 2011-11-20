@@ -11,7 +11,9 @@ struct ForwardShaderState : public ShaderState
 {
 	void HandleShaderFlags (std::vector<std::string> shaderFlags);
 	void CalculateShaderState (const RenderParameters& renderParameters, const EffectParameters& effectParameters);
-	
+
+	float m_attributeLerp;
+
 	mat4 m_projectionMatrix;
 	mat4 m_modelviewMatrix;
 

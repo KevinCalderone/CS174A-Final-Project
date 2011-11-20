@@ -12,7 +12,7 @@ struct Geometry
 {
 	GeometryMode m_geometryMode;
 
-	GLuint m_vertexStart;
+	std::vector<GLuint> m_vertexDataStarts;
 	GLuint m_numVertex;
 };
 
