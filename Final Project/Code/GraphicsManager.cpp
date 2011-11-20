@@ -14,6 +14,7 @@
 #include "RenderPass.h"
 
 #include "RenderBatch.h"
+#include "CachedRenderBatch.h"
 #include "ForwardShaderState.h"
 #include "Geometry.h"
 
@@ -23,6 +24,7 @@ GraphicsManager::GraphicsManager (const std::string& assetLibrary)
 	ReloadAssets();
 
 	glEnable(GL_CULL_FACE);
+	glAlphaFunc(GL_GREATER,0.1f);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
@@ -224,11 +226,11 @@ void GraphicsManager::LoadEffectFile (const std::string& effectFile) {
 }
 
 void GraphicsManager::ClearScreen () {
-	m_renderBatches.clear();
+	m_cachedRenderBatches.clear();
 }
 
 void GraphicsManager::Render (const RenderBatch& batch) {
-	m_renderBatches.push_back(batch);
+	m_cachedRenderBatches.push_back(CachedRenderBatch(batch, m_renderParameters));
 }
 
 void GraphicsManager::SwapBuffers () {
@@ -281,6 +283,8 @@ void GraphicsManager::SwapBuffers () {
 		// Process RenderPass flags
 		unsigned int clearFlags = 0;
 		bool blend = false;
+		bool alphaTest = false;
+
 		std::vector<std::string> shaderStateFlags;
 		for (std::vector<std::string>::iterator flagIter = passIter->m_flags.begin(); flagIter != passIter->m_flags.end(); ++flagIter) {
 			if (*flagIter == "clearColor") {
@@ -291,6 +295,9 @@ void GraphicsManager::SwapBuffers () {
 			}
 			else if (*flagIter == "blend") {
 				blend = true;
+			}
+			else if (*flagIter == "alphaTest") {
+				alphaTest = true;
 			}
 			// Let shader state try to handle the flag
 			else {
@@ -303,10 +310,19 @@ void GraphicsManager::SwapBuffers () {
 			glClear(clearFlags);
 			
 		// Setup blending mode
-		if (blend) 
+		if (blend)  {
 			glEnable(GL_BLEND);
-		else 
+			glDepthMask(false);
+		}
+		else { 
 			glDisable(GL_BLEND);
+			glDepthMask(true);
+		}
+
+		if (alphaTest)
+			glEnable(GL_ALPHA_TEST);
+		else
+			glDisable(GL_ALPHA_TEST);
 		
 		UberShader* shader;
 		ShaderState* state;
@@ -350,36 +366,36 @@ void GraphicsManager::SwapBuffers () {
 		// Render the geometry
 		switch (passIter->m_geometryType) {
 			case e_GeometryTypeOpaqueRenderBatches:
-				for (std::vector<RenderBatch>::iterator batchesIter = m_renderBatches.begin(); batchesIter != m_renderBatches.end(); ++batchesIter) {
-					if (batchesIter->m_effectParameters.m_materialOpacity < 1.0f)
+				for (std::vector<CachedRenderBatch>::iterator batchesIter = m_cachedRenderBatches.begin(); batchesIter != m_cachedRenderBatches.end(); ++batchesIter) {
+					if (batchesIter->m_renderBatch.m_effectParameters.m_materialOpacity < 1.0f)
 						continue;
 
-					state->CalculateShaderState(m_renderParameters, batchesIter->m_effectParameters);
+					state->CalculateShaderState(batchesIter->m_renderParameters, batchesIter->m_renderBatch.m_effectParameters);
 
-					state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_effectParameters.m_diffuseTexture);
-					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, m_renderParameters.m_environmentMap);
-					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_effectParameters.m_normalMap);
+					state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_renderBatch.m_effectParameters.m_diffuseTexture);
+					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, batchesIter->m_renderParameters.m_environmentMap);
+					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_renderBatch.m_effectParameters.m_normalMap);
 
 					shader->SetShaderState(state);
 
-					m_geometryManager->RenderGeometry(batchesIter->m_geometryID);
+					m_geometryManager->RenderGeometry(batchesIter->m_renderBatch.m_geometryID);
 				}
 			break;
 
 			case e_GeometryTypeTransparentRenderBatches:
-				for (std::vector<RenderBatch>::iterator batchesIter = m_renderBatches.begin(); batchesIter != m_renderBatches.end(); ++batchesIter) {
-					if (batchesIter->m_effectParameters.m_materialOpacity == 1.0f)
+				for (std::vector<CachedRenderBatch>::iterator batchesIter = m_cachedRenderBatches.begin(); batchesIter != m_cachedRenderBatches.end(); ++batchesIter) {
+					if (batchesIter->m_renderBatch.m_effectParameters.m_materialOpacity == 1.0f)
 						continue;
 
-					state->CalculateShaderState(m_renderParameters, batchesIter->m_effectParameters);
+					state->CalculateShaderState(batchesIter->m_renderParameters, batchesIter->m_renderBatch.m_effectParameters);
 					
-					state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_effectParameters.m_diffuseTexture);
-					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, m_renderParameters.m_environmentMap);
-					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_effectParameters.m_normalMap);
+					state->b_useDiffuseTexture = m_textureManager->SetTexture(e_TextureChannelDiffuse, batchesIter->m_renderBatch.m_effectParameters.m_diffuseTexture);
+					state->b_useEnvironmentMap = m_textureManager->SetTexture(e_TextureChannelEnvMap, batchesIter->m_renderParameters.m_environmentMap);
+					state->b_useNormalMap = m_textureManager->SetTexture(e_TextureChannelNormalMap, batchesIter->m_renderBatch.m_effectParameters.m_normalMap);
 
 					shader->SetShaderState(state);
 
-					m_geometryManager->RenderGeometry(batchesIter->m_geometryID);
+					m_geometryManager->RenderGeometry(batchesIter->m_renderBatch.m_geometryID);
 				}
 			break;
 

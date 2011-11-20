@@ -92,6 +92,7 @@
     <ClInclude Include="Code\Angel.h" />
     <ClInclude Include="Code\BMPTexture.h" />
     <ClInclude Include="Code\BoundingBox.h" />
+    <ClInclude Include="Code\CachedRenderBatch.h" />
     <ClInclude Include="Code\EffectParameters.h" />
     <ClInclude Include="Code\ForwardShader.h" />
     <ClInclude Include="Code\FrameBufferTexture.h" />

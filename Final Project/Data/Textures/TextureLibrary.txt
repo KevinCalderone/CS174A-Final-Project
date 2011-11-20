@@ -1,19 +1,19 @@
-2d panda 
+2d rgb panda 
 	../Data/Textures/panda.bmp
 
-2d monster 
+2d rgb monster 
 	../Data/Textures/monster.bmp
 
-2d monsterNormal
+2d rgb monsterNormal
 	../Data/Textures/monsterNormal.bmp
 
-2d stone 
+2d rgb stone 
 	../Data/Textures/stone.bmp
 
-2d stoneNormal 
+2d rgb stoneNormal 
 	../Data/Textures/stoneNormal.bmp
 
-cube envMap
+cube rgb envMap
 	../Data/Textures/envMap_+x.bmp
 	../Data/Textures/envMap_+y.bmp
 	../Data/Textures/envMap_+z.bmp
@@ -21,23 +21,23 @@ cube envMap
 	../Data/Textures/envMap_-y.bmp
 	../Data/Textures/envMap_-z.bmp
 
-2d noise
+2d rgb noise
 	../Data/Textures/noise.bmp
 
-2d numbers
+2d rgb numbers
 	../Data/Textures/numbers.bmp
 
-2d tree
+2d rgb tree
 	../Data/Textures/tree.bmp
 
-2d leaves
+2d rgba leaves
 	../Data/Textures/leaves.bmp
 
-2d bush
+2d rgba bush
 	../Data/Textures/bush.bmp
 
-2d grass
+2d rgb grass
 	../Data/Textures/seamless_ground2048.bmp
 
-2d grassNormal
+2d rgb grassNormal
 	../Data/Textures/seamless_ground2048_normal.bmp

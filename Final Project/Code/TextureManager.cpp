@@ -14,8 +14,18 @@ TextureManager::TextureManager (const std::string& assetLibrary) {
 	else {
 		while (is.good()) {
 			std::string textureType;
-			is >> textureType;
+			std::string textureFormatString;
+
+			is >> textureType >> textureFormatString;
 			
+			TextureFormat textureFormat = e_TextureFormatRGB;
+			if (textureFormatString == "rgb") {
+				textureFormat = e_TextureFormatRGB;
+			}
+			else if (textureFormatString == "rgba") {
+				textureFormat = e_TextureFormatRGBA;
+			}
+
 			std::vector<const std::string> textureFiles;
 
 			if (textureType == "2d") {
@@ -27,7 +37,7 @@ TextureManager::TextureManager (const std::string& assetLibrary) {
 
 				textureFiles.push_back(textureFile);
 
-				LoadTextureFile(textureName, e_TextureType2d, e_TextureModeTriLinear, textureFiles);      
+				LoadTextureFile(textureName, textureFormat, e_TextureType2d, e_TextureModeTriLinear, textureFiles);      
 			}
 			else if (textureType == "cube") {
 				std::string textureName;
@@ -39,7 +49,7 @@ TextureManager::TextureManager (const std::string& assetLibrary) {
 					textureFiles.push_back(textureFile);
 				}
 
-				LoadTextureFile(textureName, e_TextureTypeCube, e_TextureModeBiLinear, textureFiles);      
+				LoadTextureFile(textureName, textureFormat, e_TextureTypeCube, e_TextureModeBiLinear, textureFiles);      
 			}
 		}
 
@@ -63,11 +73,11 @@ bool TextureManager::SetTexture (TextureChannel channel, const std::string& text
 }
 
 
-void TextureManager::LoadTextureFile (const std::string& textureName, TextureType type, TextureMode mode, const std::vector<const std::string>& textureFiles) {
+void TextureManager::LoadTextureFile (const std::string& textureName, TextureFormat textureFormat, TextureType type, TextureMode mode, const std::vector<const std::string>& textureFiles) {
 	std::map<std::string, BMPTexture*>::iterator iter = m_textures.find(textureName);
 
 	if (iter != m_textures.end())
 		return;
 
-	m_textures[textureName] = new BMPTexture(type, mode, textureFiles);
+	m_textures[textureName] = new BMPTexture(type, mode, textureFormat, textureFiles);
 }

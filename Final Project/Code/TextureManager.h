@@ -18,7 +18,7 @@ public:
 	bool SetTexture (TextureChannel channel, const std::string& textureName) const;
 
 private:
-	void LoadTextureFile (const std::string& textureName, TextureType type, TextureMode mode, const std::vector<const std::string>& textureFiles);
+	void LoadTextureFile (const std::string& textureName, TextureFormat textureFormat, TextureType type, TextureMode mode, const std::vector<const std::string>& textureFiles);
 
 	std::map<std::string, BMPTexture*> m_textures;
 };

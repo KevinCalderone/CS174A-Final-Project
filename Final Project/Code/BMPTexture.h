@@ -12,7 +12,7 @@
 class BMPTexture
 {
 public:
-	BMPTexture (TextureType type, TextureMode mode, const std::vector<const std::string>& fileNames);
+	BMPTexture (TextureType type, TextureMode mode, TextureFormat format, const std::vector<const std::string>& fileNames);
 	~BMPTexture (); 
 
 	void Apply (TextureChannel channel);
@@ -26,6 +26,7 @@ private:
 	std::string file;
      
 	TextureType m_type;
+	TextureFormat m_format;
 	GLuint m_textureID;
 };
 
