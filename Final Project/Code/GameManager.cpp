@@ -14,6 +14,28 @@ GameManager::GameManager()
 
 GameManager::~GameManager()
 {
+	// need to delete all monsters, bullets, enviro, bgenviro, m_ground, m_graphicsmanagers, m_system;
+
+	if(m_ground)
+		delete m_ground;
+
+	if(m_player)
+		delete m_player;
+
+	if(m_graphicsManager)
+		delete m_graphicsManager;
+
+	// Do i also have to delete FMOD::Channel and FMOD::Sound ?
+	if(m_system)
+		delete m_system;
+
+	// vector::clear should delete all objects within
+	m_monsters.clear();
+	m_bullets.clear();
+	m_enviro.clear();
+	m_bgenviro.clear();
+
+	
 }
 
 void GameManager::callbackKeyboard(unsigned char key, int x, int y)
