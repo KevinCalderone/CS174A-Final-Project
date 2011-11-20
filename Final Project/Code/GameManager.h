@@ -38,7 +38,7 @@ private:
 	int m_score;
 	int m_god;
 	bool m_godmode;
-	static const int MONSTERCAP = 1;
+	static const int MONSTERCAP = 30;
 	void Spawn(objectType type, vec3 position, float size=10.0);
 	Monster* spawnMonster();
 	Player* spawnPlayer();

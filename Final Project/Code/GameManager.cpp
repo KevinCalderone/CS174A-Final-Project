@@ -2,7 +2,7 @@
 #include <ctime>
 #include <vector>
 
-const bool BBDEBUG = true;
+const bool BBDEBUG = false;
 
 GameManager::GameManager()
 {
