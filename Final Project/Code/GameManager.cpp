@@ -124,11 +124,6 @@ void GameManager::keyboardUpdate()
 	m_player->getBoundingBox()->rotate((m_l-m_j)*(0.05/DegreesToRadians));
 }
 
-GraphicsManager* GameManager::getGraphicsManager()
-{
-	return m_graphicsManager;
-}
-
 void GameManager::ResetGame()
 {
 	m_w=m_a=m_s=m_d=m_j=m_l=m_auto=m_godmode=m_pause = false;
@@ -153,8 +148,14 @@ void GameManager::ResetGame()
 	m_enviro.clear();
 	m_bgenviro.clear();
 
-	initGame();
+	m_system->close();
 
+
+	initGame();
+}
+
+void GameManager::initParameters()
+{
 	RenderParameters& renderParameters = m_graphicsManager->GetRenderParameters();
 	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, 2.0f);
 	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.6f;
@@ -421,21 +422,18 @@ void GameManager::Update()
 
 	CollisionDetection();
 
-	//m_pgp = *m_player->getPosition()+(*m_player->getVelocity()*10);
 	m_pgp = vec3(0);
 	for(int i=0;i<m_monsters.size();i++)
 		m_pgp += normalize(m_pp-*m_monsters.at(i)->getPosition());
 	m_pgp = m_pp+15*normalize(m_pgp);
 
-
-	//std::cout << m_pgp << " " << *m_player->getPosition() << std::endl;
 	for(int i=0;i<m_monsters.size();i++){
 		//m_monsters.at(i)->setVelocity(*m_player->getDirection());
-		//if(length(*m_monsters.at(i)->getPosition()-*m_player->getPosition()) < 5)
-		//	m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
-		//else
-		//	m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
-		m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
+		if(length(*m_monsters.at(i)->getPosition()-*m_player->getPosition()) < 3)
+			m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
+		else
+			m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
+		//m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
 
 	for(int j=0;j<m_enviro.size();j++){
 		if((length(*m_enviro.at(j)->getPosition()-*m_monsters.at(i)->getPosition()) < 2) && // this 2 will have to depend on sizes
@@ -475,11 +473,6 @@ void GameManager::Render()
 		if(length(*m_enviro.at(i)->getPosition()-m_pp) <= 50){
 			m_graphicsManager->Render(*m_enviro.at(i)->getRenderBatch());
 			if(BBDEBUG) m_graphicsManager->Render(*m_enviro.at(i)->getBoundingBox()->getRenderBatch());}
-	/*if(!(BBDEBUG)){
-		for(int i=0;i<m_bgenviro.size();i++)
-		if(length(*m_bgenviro.at(i)->getPosition()-*m_player->getPosition()) <= 50)
-			m_graphicsManager->Render(*m_bgenviro.at(i)->getRenderBatch());
-	}*/
 	if(!(BBDEBUG))
 		renderBG();
 	m_graphicsManager->Render(*m_player->getRenderBatch());
@@ -518,18 +511,14 @@ void GameManager::initGame()
 	std::cout << "INITIALIZING GAME";
 	m_graphicsManager = new GraphicsManager("../Data/AssetLibrary.txt");
 	std::cout << ".";
+	initSounds();
+	initParameters();
+	std::cout << ".";
 	initEnviro();
 	std::cout << ".";
-	initSounds();
 	initPlayer();
-	std::cout << "." << std::endl;
 	initMonsters();
-	std::cout << "...GAME INITIALIZED!" << std::endl << std::endl;
-}
-
-Player* GameManager::getPlayer()
-{
-	return m_player;
+	std::cout << std::endl << "...GAME INITIALIZED!" << std::endl << std::endl;
 }
 
 void GameManager::SetCameraOrthogonal()

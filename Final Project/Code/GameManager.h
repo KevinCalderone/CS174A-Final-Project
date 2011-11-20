@@ -25,8 +25,6 @@ public:
 	void Render();
 	void callbackKeyboard (unsigned char key, int x, int y);
 	void callbackKeyUp (unsigned char key, int x, int y);
-	GraphicsManager* getGraphicsManager(); // temporary?
-	Player* getPlayer();
 private:
 	Player* m_player;
 	vec3 m_pp;
@@ -55,6 +53,7 @@ private:
 	void initPlayer();
 	void initMonsters();
 	void initEnviro();
+	void initParameters();
 	void renderBG();
 	void SetCameraOrthogonal();
 	void SetupCamera(vec4 playerPos);
