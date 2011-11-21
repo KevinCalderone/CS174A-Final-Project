@@ -205,7 +205,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 				x = -400+ 50*i - rand()%50;
 				z = 300 - rand()%600;
 			} while((x < 4 && x > -4) && (z < 4 && z > -4));
-			Spawn(BUSH,Angel::vec3(x,0.0f,z),2.5);
+			Spawn(BUSH,Angel::vec3(x,0.0f,z),2);
 		} while(m_bgenviro.size() < 500*i);
 	}
 
@@ -216,8 +216,8 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 			x = 400 - rand()%800;
 			z = 300 - rand()%600;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
-		Spawn(LEAVES,Angel::vec3(x,0.0f,z),2);
-		Spawn(TREE,Angel::vec3(x,0.0f,z),2);
+		Spawn(LEAVES,Angel::vec3(x,0.0f,z),1.7);
+		Spawn(TREE,Angel::vec3(x,0.0f,z),1.7);
 	} while(m_enviro.size() < 300);
 
 	do
@@ -227,7 +227,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 			x = 400 - rand()%800;
 			z = 300 - rand()%600;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
-		Spawn(ROCK,Angel::vec3(x,0.0f,z),1.5);
+		Spawn(ROCK,Angel::vec3(x,0.0f,z),1.25);
 	} while(m_enviro.size() < 600);
 
 	for(int i=0;i<m_bgenviro.size();i++)
@@ -238,7 +238,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 
 void GameManager::initPlayer()
 {
-	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 1.0f, 0.2f, 3, 5);
+	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 0.8f, 0.2f, 3, 5);
 	m_pp = *m_player->getPosition();
 	if(BBDEBUG) m_player->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
 }
@@ -366,7 +366,7 @@ void GameManager::CollisionDetection()
 			vec3 smons1p = monsp + (monss * normalize(normal(monsp-m_pp)));
 			vec3 smons2p = monsp + (-monss * normalize(normal(monsp-m_pp)));
 			Delete(MONSTER,i);
-			if(monss > 0.5)
+			if(monss > 0.4)
 			{
 				Spawn(MONSTER,smons1p,monss/1.5);
 				Spawn(MONSTER,smons2p,monss/1.5);
@@ -781,6 +781,6 @@ void GameManager::spawnMonsters()
 	for(int i=0;i<5;i++)
 	{
 		position = m_pp + 15*anchor + anchor*(rand()%5) + (20-rand()%40)*an;
-		Spawn(MONSTER,position,1.0);
+		Spawn(MONSTER,position,0.8);
 	}
 }
