@@ -439,6 +439,17 @@ void GameManager::Update()
 		//	m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
 		//m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
 
+	for(int k=0;k<m_monsters.size();k++){
+		if(i != k){
+			vec3 temp = *m_monsters.at(i)->getPosition()-*m_monsters.at(k)->getPosition();
+			GLfloat len = length(temp);
+			if(len < 1)
+			{
+				m_monsters.at(i)->setVelocity(normalize(*m_monsters.at(i)->getVelocity() + (1-len)*temp));
+			}
+		}
+	}
+
 	for(int j=0;j<m_enviro.size();j++){
 		if((length(*m_enviro.at(j)->getPosition()-*m_monsters.at(i)->getPosition()) < 2) && // this 2 will have to depend on sizes
 			acos(dot(normalize(*m_monsters.at(i)->getPosition()-*m_enviro.at(j)->getPosition()),
@@ -447,6 +458,7 @@ void GameManager::Update()
 			m_monsters.at(i)->setVelocity(monsColDirection(m_monsters.at(i),m_enviro.at(j)));
 		}
 	}
+
 		m_monsters.at(i)->Update(1.0f);
 	}
 
