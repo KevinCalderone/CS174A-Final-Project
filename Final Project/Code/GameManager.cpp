@@ -58,7 +58,7 @@ void GameManager::callbackKeyboard(unsigned char key, int x, int y)
 		m_j = true; break;
 	case 'l':
 		m_l = true; break;
-	case 'r':
+	case 13:
 		if(!m_pause) break;
 		ResetGame();
 		break;

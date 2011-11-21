@@ -77,7 +77,7 @@ void main() {
 	if (b_useDiffuseTexture) {
 		vec4 diffuseColor = texture2D(diffuseTexture, texCoord);
 		color *= diffuseColor.rgb;
-		opacity = diffuseColor.a;
+		opacity *= diffuseColor.a;
 	}
 
 	// specular highlight

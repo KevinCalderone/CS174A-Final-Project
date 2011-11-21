@@ -26,7 +26,6 @@ struct PostProcessShaderState;
 Kevin TODO
 
 ON DECK
-- Add cubemap shadowmapping for point light shadows
 - Assign constants from GraphicsSettings into shaders
 - Pass blur widths into post process shader 
 - Make render passes and frame buffer textures const
@@ -38,7 +37,6 @@ FUTURE FEATURES
 - Add dynamic geometry
 	- Add particles for a torch
 - Add gloss maps
-- Add SSAO
 - Optimization: Combine final pipeline into MRT passes to reduce total passes
 */
 
