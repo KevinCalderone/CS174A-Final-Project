@@ -399,13 +399,17 @@ void GameManager::CollisionDetection()
 
 	if(m_godmode)
 		m_god--;
-	if(m_god==0)
-		m_godmode = false;
+	if(m_god==0){
+		m_player->getRenderBatch()->m_effectParameters.m_materialOpacity = 1.0f;
+		m_player->setSpeed(0.2f);
+		m_godmode = false;}
 
 	for(int k=0; k<m_monsters.size();k++){
 		if(collision(*m_monsters.at(k)->getBoundingBox(),*m_player->getBoundingBox())){
 			if(!m_godmode){
 				m_godmode = true;
+				m_player->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
+				m_player->setSpeed(0.3f);
 				m_god = 100;
 				std::cout << "YOU GOT HIT BY: " << k << std::endl;
 				if(m_player->kill()){
