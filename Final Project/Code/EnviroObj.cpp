@@ -32,14 +32,15 @@ EnviroObj::EnviroObj(objectType type, vec3 position, vec3 direction, float size)
 	}
 	if(type==ROCK)
 	{
-		batch->m_geometryID = "cube";
-		batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 0.0f) * 0.5f;
-		batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 0.0f) * 0.3f;
-		batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 0.8f, 0.0f) * 0.0f;
-		batch->m_effectParameters.m_materialSpecularExponent = 1.0f;
-		batch->m_effectParameters.m_materialGloss = 0.1f;
-		batch->m_effectParameters.m_diffuseTexture = "none";	
-		batch->m_effectParameters.m_normalMap = "none";
+		batch->m_geometryID = "rock";
+		batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 1.0f;
+		batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 0.1f;
+		batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f) * 0.1f;
+		batch->m_effectParameters.m_materialSpecularExponent = 14.0f;
+		batch->m_effectParameters.m_materialGloss = 0.01f;
+		batch->m_effectParameters.m_diffuseTexture = "rock";	
+		batch->m_effectParameters.m_normalMap = "rockNormal";
+		batch->m_effectParameters.m_materialOpacity = 1.0f;
 	}
 	if(type==BUSH)
 	{

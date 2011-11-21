@@ -227,7 +227,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 			x = 400 - rand()%800;
 			z = 300 - rand()%600;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
-		Spawn(ROCK,Angel::vec3(x,0.0f,z),1.25);
+		Spawn(ROCK,Angel::vec3(x,0.0f,z),0.015);
 	} while(m_enviro.size() < 600);
 
 	for(int i=0;i<m_bgenviro.size();i++)
