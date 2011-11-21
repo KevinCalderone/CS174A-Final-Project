@@ -647,6 +647,26 @@ void GameManager::RenderHUD()
 
 	delete rb;
 
+	// Render game over 
+	if (m_pause) {
+		RenderBatch* rb = new RenderBatch();
+		rb->m_geometryID = "gameover";
+		rb->m_effectParameters.m_materialAmbient = vec3(5.0f, 5.0f, 5.0f);
+		rb->m_effectParameters.m_materialDiffuse = vec3(0.0f, 0.0f, 0.0f);
+		rb->m_effectParameters.m_materialSpecular = vec3(0.0f, 0.0f, 0.0f);
+		rb->m_effectParameters.m_materialSpecularExponent = 1.0f;
+		rb->m_effectParameters.m_materialGloss = 0.0f;
+		rb->m_effectParameters.m_materialOpacity = 0.9999f;
+		rb->m_effectParameters.m_diffuseTexture = "gameover";	
+		rb->m_effectParameters.m_normalMap = "none";
+		rb->m_effectParameters.m_HUDRender = true;
+		rb->m_effectParameters.m_materialOpacity = 1.0f;
+		rb->m_effectParameters.m_modelviewMatrix = mat4();
+
+		m_graphicsManager->Render(*rb);
+
+		delete rb;
+	}
 
 
 	SetupCamera(m_pp);

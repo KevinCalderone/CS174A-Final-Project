@@ -83,3 +83,6 @@ static fern3
 
 static fern4
 	../Data/Geometry/fern4.obj
+
+static gameover
+	../Data/Geometry/gameover.obj

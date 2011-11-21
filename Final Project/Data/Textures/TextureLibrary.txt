@@ -56,3 +56,6 @@ cube rgb envMap
 
 2d rgba fern4
 	../Data/Textures/fern4.bmp
+
+2d rgba gameover
+	../Data/Textures/gameover.bmp
