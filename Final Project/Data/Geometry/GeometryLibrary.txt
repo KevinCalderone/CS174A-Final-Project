@@ -1,4 +1,4 @@
-50000
+200000
 
 static screenQuad 
 	../Data/Geometry/screenQuad.obj
@@ -89,3 +89,6 @@ static gameover
 
 static rock
 	../Data/Geometry/rock.obj
+
+static robot
+	../Data/Geometry/robot.obj
