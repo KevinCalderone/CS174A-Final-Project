@@ -118,9 +118,10 @@ void GameManager::keyboardUpdate()
 	else
 		m_player->setVelocity((vec3(ad,0.0f,ws)));
 
-	if(m_j) angle += 0.05;
-	if(m_l) angle -= 0.05;
-	if(angle>360 || angle<-360) angle = 0.0;
+	if(m_j) angle += 0.08  * m_delta;
+	if(m_l) angle -= 0.08 * m_delta;
+	if(angle>360) angle -= 360;
+	if (angle<-360) angle += 360;
 	m_player->setDirection(vec3(-sin(angle),0.0f,-cos(angle)));
 	m_player->getBoundingBox()->rotate((m_l-m_j)*(0.05/DegreesToRadians));
 }
@@ -431,12 +432,6 @@ void GameManager::Update()
 
 	CollisionDetection();
 
-	if(m_timer == NULL)
-		m_timer = new Timer();
-
-	float delta = m_timer->GetElapsedTime() * 60;
-	m_timer->Reset();
-
 	//m_pgp = vec3(0);
 	//for(int i=0;i<m_monsters.size();i++)
 	//	m_pgp += normalize(m_pp-*m_monsters.at(i)->getPosition());
@@ -470,24 +465,30 @@ void GameManager::Update()
 		}
 	}
 
-		m_monsters.at(i)->Update(delta);
+		m_monsters.at(i)->Update(m_delta);
 	}
 
 	for(int i=0;i<m_bullets.size();i++)
 	{
 		if(m_bullets.size() != 0){
-			m_bullets.at(i)->Update(delta);
+			m_bullets.at(i)->Update(m_delta);
 			if(length(*m_bullets.at(i)->getPosition()-m_pp) > 25){
 				Delete(BULLET,i); i--;}
 		}
 	}
-	m_player->Update(delta);
+	m_player->Update(m_delta);
 	m_pp = *m_player->getPosition();
 }
 	
 
 void GameManager::Render()
 {
+	if(m_timer == NULL)
+		m_timer = new Timer();
+
+	m_delta = m_timer->GetElapsedTime() * 60.0f;
+	m_timer->Reset();
+
 	keyboardUpdate();
 	updateCamera();
 	Update();
