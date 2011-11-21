@@ -78,7 +78,7 @@ vec3* Player::getVelocity () {
 
 void Player::Update(float delta)
 {
-	m_position += m_velocity;
+	m_position += m_velocity * delta;
 	m_bb->setCenter(vec2(m_position.x,m_position.z));
 	m_bb->update(m_direction.x,m_direction.z, m_size);
 	if(m_render!=NULL)

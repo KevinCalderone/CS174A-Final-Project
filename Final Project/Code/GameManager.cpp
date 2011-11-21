@@ -10,6 +10,7 @@ GameManager::GameManager()
 	angle = 0.0f;
 	m_score = m_god = 0;
 	m_bulletchannel = m_monschannel = m_bgchannel = 0;
+	m_timer = NULL;
 }
 
 GameManager::~GameManager()
@@ -141,6 +142,10 @@ void GameManager::ResetGame()
 
 	if(m_graphicsManager)
 		delete m_graphicsManager;
+
+	if(m_timer)
+		delete m_timer;
+	m_timer = NULL;
 
 	// vector::clear should delete all objects within
 	m_monsters.clear();
@@ -426,6 +431,12 @@ void GameManager::Update()
 
 	CollisionDetection();
 
+	if(m_timer == NULL)
+		m_timer = new Timer();
+
+	float delta = m_timer->GetElapsedTime() * 60;
+	m_timer->Reset();
+
 	//m_pgp = vec3(0);
 	//for(int i=0;i<m_monsters.size();i++)
 	//	m_pgp += normalize(m_pp-*m_monsters.at(i)->getPosition());
@@ -459,18 +470,18 @@ void GameManager::Update()
 		}
 	}
 
-		m_monsters.at(i)->Update(1.0f);
+		m_monsters.at(i)->Update(delta);
 	}
 
 	for(int i=0;i<m_bullets.size();i++)
 	{
 		if(m_bullets.size() != 0){
-			m_bullets.at(i)->Update(1.0f);
+			m_bullets.at(i)->Update(delta);
 			if(length(*m_bullets.at(i)->getPosition()-m_pp) > 25){
 				Delete(BULLET,i); i--;}
 		}
 	}
-	m_player->Update(1.0f);
+	m_player->Update(delta);
 	m_pp = *m_player->getPosition();
 }
 	
