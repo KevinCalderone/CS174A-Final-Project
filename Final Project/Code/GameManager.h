@@ -9,6 +9,7 @@
 #include "Bullet.h"
 #include "EnviroObj.h"
 #include "Ground.h"
+#include "Timer.h"
 #include <vector>
 #include "FMOD\fmod.hpp"
 #include "FMOD\fmod_errors.h"
@@ -70,6 +71,8 @@ private:
 
 	void ResetGame();
 	bool m_pause;
+
+	Timer* m_timer;
 };
 
 directionType relativePosition(Object& a, Object& b);
