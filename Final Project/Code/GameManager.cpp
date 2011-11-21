@@ -246,14 +246,15 @@ void GameManager::initPlayer()
 void GameManager::initMonsters()
 {
 	// this is just a random spawning algorithm at the moment
-	float x, z;
+	/*float x, z;
 	srand((unsigned)time(0));
 	do
 	{
 		x = 20 - rand()%40;
 		z = 20 - rand()%40;
 		Spawn(MONSTER,Angel::vec3(x,0.0f,z),0.6);
-	} while(m_monsters.size() < MONSTERCAP);
+	} while(m_monsters.size() < MONSTERCAP);*/
+	spawnMonsters();
 }
 
 void GameManager::Spawn(objectType type, vec3 position, float size){
@@ -262,7 +263,7 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 		break;
 	case MONSTER:
 		{
-			Monster* monster = new Monster(position, normalize(m_pp - position), size, 0.1);
+			Monster* monster = new Monster(position, normalize(m_pp - position), size, 0.15);
 			bool allowed = true;
 			for(int i=0;i<m_enviro.size();i++)
 				if(collision(*monster->getBoundingBox(), *m_enviro.at(i)->getBoundingBox()))
@@ -365,7 +366,7 @@ void GameManager::CollisionDetection()
 			vec3 smons1p = monsp + (monss * normalize(normal(monsp-m_pp)));
 			vec3 smons2p = monsp + (-monss * normalize(normal(monsp-m_pp)));
 			Delete(MONSTER,i);
-			if(monss > 0.3)
+			if(monss > 0.5)
 			{
 				Spawn(MONSTER,smons1p,monss/1.5);
 				Spawn(MONSTER,smons2p,monss/1.5);
@@ -416,23 +417,26 @@ void GameManager::Update()
 	if(m_pause)
 		return;
 
+	if(m_monsters.size() < MONSTERCAP)
+		spawnMonsters();
+
 	if(m_auto && m_player->shoot()){
 		playSound(MACHINEGUN);
 		Spawn(BULLET,m_pp);}
 
 	CollisionDetection();
 
-	m_pgp = vec3(0);
-	for(int i=0;i<m_monsters.size();i++)
-		m_pgp += normalize(m_pp-*m_monsters.at(i)->getPosition());
-	m_pgp = m_pp+15*normalize(m_pgp);
+	//m_pgp = vec3(0);
+	//for(int i=0;i<m_monsters.size();i++)
+	//	m_pgp += normalize(m_pp-*m_monsters.at(i)->getPosition());
+	//m_pgp = m_pp+15*normalize(m_pgp);
 
 	for(int i=0;i<m_monsters.size();i++){
 		//m_monsters.at(i)->setVelocity(*m_player->getDirection());
-		if(length(*m_monsters.at(i)->getPosition()-*m_player->getPosition()) < 3)
-			m_monsters.at(i)->setVelocity(normalize(*m_player->getPosition()-*m_monsters.at(i)->getPosition()));
-		else
-			m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
+		//if(length(*m_monsters.at(i)->getPosition()-*m_player->getPosition()) < 3)
+			m_monsters.at(i)->setVelocity(normalize(m_pp-*m_monsters.at(i)->getPosition()));
+		//else
+		//	m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
 		//m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
 
 	for(int j=0;j<m_enviro.size();j++){
@@ -740,4 +744,31 @@ void GameManager::renderBG()
 	for(int i = 8000; i < m_bgenviro.size(); i++)
 		if(length(*m_bgenviro.at(i)->getPosition()-m_pp) <= 50)
 			m_graphicsManager->Render(*m_bgenviro.at(i)->getRenderBatch());
+}
+
+
+void GameManager::spawnMonsters()
+{
+	srand((unsigned)time(0));
+	directionType dir = directions[rand()%8];
+	vec3 anchor;
+	switch(dir)
+	{
+	case UP:		anchor = vec3(0,0,-1);	break;
+	case DOWN:		anchor = vec3(0,0,1);	break;
+	case LEFT:		anchor = vec3(-1,0,0);	break;
+	case RIGHT:		anchor = vec3(1,0,0);	break;
+	case UPLEFT:	anchor = vec3(-1,0,-1);	break;
+	case UPRIGHT:	anchor = vec3(1,0,-1);	break;
+	case DOWNLEFT:	anchor = vec3(-1,0,1);	break;
+	case DOWNRIGHT:	anchor = vec3(1,0,1);	break;
+	}
+
+	vec3 an = normal(anchor);
+	vec3 position;
+	for(int i=0;i<5;i++)
+	{
+		position = m_pp + 15*anchor + anchor*(rand()%5) + (20-rand()%40)*an;
+		Spawn(MONSTER,position,1.0);
+	}
 }

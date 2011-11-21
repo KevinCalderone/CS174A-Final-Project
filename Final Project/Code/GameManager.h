@@ -13,7 +13,8 @@
 #include "FMOD\fmod.hpp"
 #include "FMOD\fmod_errors.h"
 
-const enum directionType {UP,DOWN,LEFT,RIGHT};
+const enum directionType {UP,DOWN,LEFT,RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT};
+const directionType directions[8] = {UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT};
 const enum soundType {MACHINEGUN, SHOTGUN, MONSDEATH, BGMUSIC};
 
 class GameManager
@@ -38,11 +39,9 @@ private:
 	int m_score;
 	int m_god;
 	bool m_godmode;
-	static const int MONSTERCAP = 30;
+	static const int MONSTERCAP = 10;
 	void Spawn(objectType type, vec3 position, float size=10.0);
-	Monster* spawnMonster();
-	Player* spawnPlayer();
-	Bullet* spawnBullet(vec3 position);
+	void spawnMonsters();
 	float angle;
 	bool m_w,m_a,m_s,m_d,m_j,m_l,m_auto;
 	void Delete(objectType type, int index=0);
