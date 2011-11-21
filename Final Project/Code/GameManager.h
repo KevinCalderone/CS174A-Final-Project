@@ -73,6 +73,7 @@ private:
 	bool m_pause;
 
 	Timer* m_timer;
+	float m_delta;
 };
 
 directionType relativePosition(Object& a, Object& b);
