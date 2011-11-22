@@ -68,3 +68,9 @@ cube rgb envMap
 
 2d rgb crate
 	../Data/Textures/crate.bmp
+
+2d rgb marcus
+	../Data/Textures/76338dc800.bmp
+
+2d rbg marcusBump
+	../Data/Textures/d3b7e5c800.bmp

@@ -259,6 +259,12 @@ Geometry* GeometryManager::LoadOBJFile (const std::string& geometryFile) {
 
 	glBufferSubData(GL_ARRAY_BUFFER, m_vertexDataUsed, dataSize, &geometryData[0]);
 
+	GLenum error = glGetError();
+	if (error) {
+		std::cout << error;
+		return NULL;
+	}
+
 	Geometry* geometry = new Geometry();
 	geometry->m_geometryMode = e_GeometryModeTriangles;
 	geometry->m_numVertex = dataSize / sizeof(Vertex);

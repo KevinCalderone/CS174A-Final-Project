@@ -96,5 +96,8 @@ static robot
 static crate
 	../Data/Geometry/crate.obj
 
+static marcus
+	../Data/Geometry/marcus.obj
+
 static bullet
 	../Data/Geometry/bullet.obj

@@ -244,7 +244,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 
 void GameManager::initPlayer()
 {
-	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 0.7f, 0.2f, 3, 5);
+	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 1.15f, 0.2f, 3, 5);
 	m_pp = *m_player->getPosition();
 	if(BBDEBUG) m_player->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
 }
@@ -582,14 +582,14 @@ void GameManager::updateCamera()
 		SetupCamera(m_pp);
 
 		RenderParameters& renderParameters = m_graphicsManager->GetRenderParameters();
-
+		m_player->getDirection();
 		// Position lights at player postion
-		renderParameters.m_pointLightPosition[0] = m_pp + vec3(0.0f, 1.5f, -1.5f);
-		renderParameters.m_pointLightPosition[1] = m_pp + vec3(0.0f, 0.5f, -2.5f);
+		renderParameters.m_pointLightPosition[0] = m_pp + *m_player->getDirection() * 2.0f + vec3(0.0f, 3.5f, 0.0f);
+		renderParameters.m_pointLightPosition[1] = m_pp + *m_player->getDirection() * 2.0f + vec3(0.0f, 3.5f, 0.0f);
 		
 		// Muzzle flash
-		float flashIntensity = 1;//cos((3.14159 / 2.0f) * (fmod(theta, 20.0f) < 13.0f ? fmod(theta, 20.0f) / 13.0f : 1.0f))*1.5;
-		renderParameters.m_pointLightDiffuse[1] = vec3(3.0f, 3.0f, 0.3f) * flashIntensity;
+		float flashIntensity = cos((3.14159 / 2.0f) * (fmod(theta, 5.0f) < 13.0f ? fmod(theta, 5.0f) / 13.0f : 1.0f))*1.5;
+		renderParameters.m_pointLightDiffuse[1] = vec3(3.0f, 3.0f, 0.3f) * flashIntensity * 0.3f;
 		renderParameters.m_pointLightSpecular[1] = vec3(2.0f, 2.0f, 0.3f) * flashIntensity;
 		renderParameters.m_pointLightRange[1] = 8.0f * flashIntensity;
 		renderParameters.m_pointLightFalloff[1] = 2.0f * flashIntensity;
