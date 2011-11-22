@@ -25,10 +25,6 @@ GraphicsManager::GraphicsManager (const std::string& assetLibrary)
 
 	glAlphaFunc(GL_GREATER,0.1f);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	RenderBatch screenQuad;
-	screenQuad.m_geometryID = "screenQuad";
-	m_cachedRenderBatches[e_GeometryTypeScreenQuad].push_back(CachedRenderBatch(screenQuad, m_renderParameters));
 }
 
 GraphicsManager::~GraphicsManager () {
@@ -235,6 +231,7 @@ void GraphicsManager::ClearScreen () {
 	m_cachedRenderBatches[e_GeometryTypeOpaque].clear();
 	m_cachedRenderBatches[e_GeometryTypeTransparent].clear();
 	m_cachedRenderBatches[e_GeometryTypeHUD].clear();
+	m_cachedRenderBatches[e_GeometryTypeScreenQuad].clear();
 }
 
 void GraphicsManager::Render (const RenderBatch& batch) {
@@ -250,6 +247,11 @@ void GraphicsManager::SwapBuffers () {
 	if (m_forwardShader == NULL || m_postProcessShader == NULL)
 		return;
 	
+	// Add the screenQuad batch for the postProcess step
+	RenderBatch screenQuad;
+	screenQuad.m_geometryID = "screenQuad";
+	m_cachedRenderBatches[e_GeometryTypeScreenQuad].push_back(CachedRenderBatch(screenQuad, m_renderParameters));
+
 	for (std::vector<RenderPass>::iterator passIter = m_renderPasses.begin(); passIter != m_renderPasses.end(); ++passIter) {
 		unsigned int destinationWidth;
 		unsigned int destinationHeight;

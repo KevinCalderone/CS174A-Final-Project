@@ -164,7 +164,7 @@ void GameManager::initParameters()
 {
 	RenderParameters& renderParameters = m_graphicsManager->GetRenderParameters();
 	renderParameters.m_lightDirection = vec3(1.0f, 2.0f, 2.0f);
-	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.6f;
+	renderParameters.m_lightAmbient = vec3(0.5f, 0.5f, 0.7f) * 0.45f;
 	renderParameters.m_lightDiffuse = vec3(1.0f, 1.0f, 0.6f) * 0.0f;
 	renderParameters.m_lightSpecular = vec3(1.0f, 1.0f, 0.7f) * 0.0f;
 	renderParameters.m_environmentMap = "envMap";
@@ -186,7 +186,7 @@ void GameManager::initParameters()
 	//renderParameters.m_pointLightSpecular[2] = vec3(0.0f, 1.0f, 0.0f);
 	//renderParameters.m_pointLightRange[2] = 8.0f;
 	//renderParameters.m_pointLightFalloff[2] = 2.0f;
-	
+
 	// No color correction
 	renderParameters.m_colorCorrection = mat4(
 		1.0f, 0.0f, 0.0f, 0.0f,
@@ -546,6 +546,34 @@ void GameManager::Render()
 {
 	if(m_timer == NULL)
 		m_timer = new Timer();
+
+	if (m_pause) {
+		// Desaturate the colors
+		m_graphicsManager->GetRenderParameters().m_colorCorrection = mat4(
+			0.33f, 0.33f, 0.33f, 0.0f,
+			0.33f, 0.33f, 0.33f, 0.0f, 
+			0.33f, 0.33f, 0.33f, 0.0f, 
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+	} else if (m_god) {
+		float tint = 0.05f + 0.15f * abs(sin(m_god * 0.12f));
+		// Tint the screen red like you just got hurt
+		m_graphicsManager->GetRenderParameters().m_colorCorrection = mat4(
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f - tint / 2.0f, 0.0f, 0.0f, 
+			0.0f, 0.0f, 1.0f - tint/ 2.0f, 0.0f, 
+			tint, 0.0f, 0.0f, 1.0f
+		);
+	}
+	else {
+		// No color correction
+		m_graphicsManager->GetRenderParameters().m_colorCorrection = mat4(
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f, 0.0f, 
+			0.0f, 0.0f, 1.0f, 0.0f, 
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+	}
 
 	m_delta = m_timer->GetElapsedTime() * 60.0f;
 	m_timer->Reset();
