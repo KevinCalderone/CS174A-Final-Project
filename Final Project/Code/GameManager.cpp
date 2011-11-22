@@ -256,22 +256,13 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 
 void GameManager::initPlayer()
 {
-	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 0.7f, 0.2f, 3, 5);
+	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 0.7f, 0.2f, 3, 5.00);
 	m_pp = *m_player->getPosition();
 	if(BBDEBUG) m_player->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
 }
 
 void GameManager::initMonsters()
 {
-	// this is just a random spawning algorithm at the moment
-	/*float x, z;
-	srand((unsigned)time(0));
-	do
-	{
-		x = 20 - rand()%40;
-		z = 20 - rand()%40;
-		Spawn(MONSTER,Angel::vec3(x,0.0f,z),0.6);
-	} while(m_monsters.size() < MONSTERCAP);*/
 	spawnMonsters();
 }
 
@@ -488,7 +479,7 @@ void GameManager::Update()
 	if(m_monsters.size() < MONSTERCAP)
 		spawnMonsters();
 
-	if(m_auto && m_player->shoot()){
+	if(m_auto && m_player->shoot(m_delta)){
 		if(m_player->getWeapon() == SHOTTY)
 			//std::cout << "BANG!" << std::endl;
 			playSound(SHOTGUN);
