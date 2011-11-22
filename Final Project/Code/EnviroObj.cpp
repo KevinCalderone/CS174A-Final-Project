@@ -44,7 +44,8 @@ EnviroObj::EnviroObj(objectType type, vec3 position, vec3 direction, float size)
 	}
 	if(type==BUSH)
 	{
-		const char* plantTypes[5] = 
+		const unsigned int c_num_plants = 5;
+		const char* plantTypes[c_num_plants] = 
 		{
 			"smallBush",
 			"fern",
@@ -53,7 +54,7 @@ EnviroObj::EnviroObj(objectType type, vec3 position, vec3 direction, float size)
 			"fern4"
 		};
 
-		int type = rand()%5;
+		int type = rand() % c_num_plants;
 
 		batch->m_geometryID = plantTypes[type];
 		batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 0.0f) * 0.5f;

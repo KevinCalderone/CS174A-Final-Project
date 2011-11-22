@@ -92,3 +92,9 @@ static rock
 
 static robot
 	../Data/Geometry/robot.obj
+
+static crate
+	../Data/Geometry/crate.obj
+
+static bullet
+	../Data/Geometry/bullet.obj
