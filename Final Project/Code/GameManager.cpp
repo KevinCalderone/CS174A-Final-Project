@@ -243,7 +243,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 			x = 400 - rand()%800;
 			z = 300 - rand()%600;
 		} while((x < 4 && x > -4) && (z < 4 && z > -4));
-		Spawn(CRATE,Angel::vec3(x,0.0f,z),1.0);
+		Spawn(CRATE,Angel::vec3(x,0.0f,z),0.3);
 	} while(m_powerups.size() < 100);
 
 	for(int i=0;i<m_bgenviro.size();i++)
@@ -298,16 +298,16 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 		break;
 	case BULLET:
 		{
-			Bullet* bullet = new Bullet(m_pp, normalize(*m_player->getDirection()), 1.0f, 0.6 +
+			Bullet* bullet = new Bullet(vec3(m_pp.x,1.0,m_pp.z), normalize(*m_player->getDirection()), 1.0f, 0.6 +
 				length(*m_player->getVelocity()));
 			m_bullets.push_back(bullet);
 			if(m_player->getWeapon()==SHOTTY)
 			{
-				Bullet* bullet2 = new Bullet(m_pp, normalize(*m_player->getDirection()+0.2*normal(*m_player->getDirection())), 0.1, 0.6 +
+				Bullet* bullet2 = new Bullet(vec3(m_pp.x,1.0,m_pp.z), normalize(*m_player->getDirection()+0.2*normal(*m_player->getDirection())), 1.0f, 0.6 +
 					length(*m_player->getVelocity()));
 				m_bullets.push_back(bullet2);
 
-				Bullet* bullet3 = new Bullet(m_pp, normalize(*m_player->getDirection()-0.2*normal(*m_player->getDirection())), 0.1, 0.6 +
+				Bullet* bullet3 = new Bullet(vec3(m_pp.x,1.0,m_pp.z), normalize(*m_player->getDirection()-0.2*normal(*m_player->getDirection())), 1.0f, 0.6 +
 					length(*m_player->getVelocity()));
 				m_bullets.push_back(bullet3);
 			}
