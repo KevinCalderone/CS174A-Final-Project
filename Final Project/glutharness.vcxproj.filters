@@ -46,6 +46,7 @@
     <ClCompile Include="Code\PostProcessShaderState.cpp">
       <Filter>Graphics\Shader\PostProcessShader</Filter>
     </ClCompile>
+    <ClCompile Include="Code\Crate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Code\Angel.h">
@@ -128,6 +129,7 @@
     <ClInclude Include="Code\AttributeLocation.h">
       <Filter>Graphics\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Code\Crate.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Support">

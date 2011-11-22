@@ -4,7 +4,7 @@
 #include "RenderBatch.h"
 #include "BoundingBox.h"
 
-const enum objectType {PLAYER, MONSTER, BULLET, TREE, LEAVES, ROCK, BUSH};
+const enum objectType {PLAYER, MONSTER, BULLET, TREE, LEAVES, ROCK, BUSH, CRATE};
 
 class Object
 {

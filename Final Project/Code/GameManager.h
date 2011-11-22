@@ -9,6 +9,7 @@
 #include "Bullet.h"
 #include "EnviroObj.h"
 #include "Ground.h"
+#include "Crate.h"
 #include "Timer.h"
 #include <vector>
 #include "FMOD\fmod.hpp"
@@ -35,6 +36,7 @@ private:
 	std::vector<Bullet*> m_bullets;
 	std::vector<EnviroObj*> m_enviro;
 	std::vector<EnviroObj*> m_bgenviro;
+	std::vector<Crate*> m_powerups;
 	Ground* m_ground;
 	GraphicsManager* m_graphicsManager;
 	int m_score;
@@ -58,7 +60,7 @@ private:
 	void SetCameraOrthogonal();
 	void SetupCamera(vec4 playerPos);
 	void updateCamera();
-	vec3 monsColDirection(Monster* m, EnviroObj* e);
+	vec3 monsColDirection(Monster* m, Object* o);
 	void playSound(soundType sound);
 	FMOD::System *m_system;
     FMOD::Sound *m_sounds[4];
