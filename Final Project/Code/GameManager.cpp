@@ -236,10 +236,22 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 		Spawn(ROCK,Angel::vec3(x,0.0f,z),0.015);
 	} while(m_enviro.size() < 600);
 
+	do
+	{
+		do
+		{
+			x = 400 - rand()%800;
+			z = 300 - rand()%600;
+		} while((x < 4 && x > -4) && (z < 4 && z > -4));
+		Spawn(CRATE,Angel::vec3(x,0.0f,z),1.0);
+	} while(m_powerups.size() < 100);
+
 	for(int i=0;i<m_bgenviro.size();i++)
 		m_bgenviro.at(i)->Update(1.0f);
 	for(int i=0;i<m_enviro.size();i++)
 		m_enviro.at(i)->Update(1.0f);
+
+	
 }
 
 void GameManager::initPlayer()
@@ -289,6 +301,16 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 			Bullet* bullet = new Bullet(m_pp, normalize(*m_player->getDirection()), 0.1, 0.6 +
 				length(*m_player->getVelocity()));
 			m_bullets.push_back(bullet);
+			if(m_player->getWeapon()==SHOTTY)
+			{
+				Bullet* bullet2 = new Bullet(m_pp, normalize(*m_player->getDirection()+0.2*normal(*m_player->getDirection())), 0.1, 0.6 +
+					length(*m_player->getVelocity()));
+				m_bullets.push_back(bullet2);
+
+				Bullet* bullet3 = new Bullet(m_pp, normalize(*m_player->getDirection()-0.2*normal(*m_player->getDirection())), 0.1, 0.6 +
+					length(*m_player->getVelocity()));
+				m_bullets.push_back(bullet3);
+			}
 		}
 		break;
 	case LEAVES:
@@ -336,6 +358,22 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 				delete obj;
 		}
 		break;
+	case CRATE:
+		{
+			Crate* obj = new Crate(type, position, vec3(0,0,1), size);
+			bool allowed = true;
+			for(int i=0;i<m_enviro.size();i++)
+				if(length(position-*m_enviro.at(i)->getPosition()) < 5)
+					allowed = false;
+			for(int i=0;i<m_powerups.size();i++)
+				if(length(position-*m_powerups.at(i)->getPosition()) < 50)
+					allowed = false;
+			if(allowed)
+				m_powerups.push_back(obj);
+			else
+				delete obj;
+		}
+		break;
 	}
 }
 
@@ -349,6 +387,8 @@ void GameManager::Delete(objectType type, int index)
 		m_monsters.erase(m_monsters.begin()+index); break;
 	case BULLET:
 		m_bullets.erase(m_bullets.begin()+index); break;
+	case CRATE:
+		m_powerups.erase(m_powerups.begin()+index); break;
 	}
 }
 
@@ -397,6 +437,18 @@ void GameManager::CollisionDetection()
 	}
 	}
 
+	for(int j=0; j<m_bullets.size();j++){
+	for(int i=0; i<m_powerups.size();i++){
+		if(m_bullets.size()!=0 
+			&& length(*m_bullets.at(j)->getPosition() - *m_powerups.at(i)->getPosition()) < 3)///////////
+		{
+			Delete(BULLET,j);
+			i = m_powerups.size();
+			j--;
+		}
+	}
+	}
+
 	if(m_godmode)
 		m_god--;
 	if(m_god==0){
@@ -420,10 +472,16 @@ void GameManager::CollisionDetection()
 			return;
 		}
 	}
+
+	for(int i=0; i<m_powerups.size(); i++)
+		if(length(m_pp - *m_powerups.at(i)->getPosition()) < 2){
+			m_player->setWeapon(SHOTTY);
+			Delete(CRATE, i);}
 }
 
 void GameManager::Update()
 {
+//	std::cout << (*m_player->getPosition()-*m_powerups.at(0)->getPosition()) << std::endl;
 	if(m_pause)
 		return;
 
@@ -431,23 +489,22 @@ void GameManager::Update()
 		spawnMonsters();
 
 	if(m_auto && m_player->shoot()){
-		playSound(MACHINEGUN);
+		if(m_player->getWeapon() == SHOTTY)
+			//std::cout << "BANG!" << std::endl;
+			playSound(SHOTGUN);
+		else
+			playSound(MACHINEGUN);
 		Spawn(BULLET,m_pp);}
 
 	CollisionDetection();
 
-	//m_pgp = vec3(0);
-	//for(int i=0;i<m_monsters.size();i++)
-	//	m_pgp += normalize(m_pp-*m_monsters.at(i)->getPosition());
-	//m_pgp = m_pp+15*normalize(m_pgp);
+
+	for(int i=0;i<m_powerups.size();i++)
+		m_powerups.at(i)->Update(m_delta);
 
 	for(int i=0;i<m_monsters.size();i++){
-		//m_monsters.at(i)->setVelocity(*m_player->getDirection());
-		//if(length(*m_monsters.at(i)->getPosition()-*m_player->getPosition()) < 3)
+
 			m_monsters.at(i)->setVelocity(normalize(m_pp-*m_monsters.at(i)->getPosition()));
-		//else
-		//	m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
-		//m_monsters.at(i)->setVelocity(normalize(m_pgp-*m_monsters.at(i)->getPosition()));
 
 	for(int k=0;k<m_monsters.size();k++){
 		if(i != k){
@@ -466,6 +523,15 @@ void GameManager::Update()
 				normalize(*m_monsters.at(i)->getPosition()-m_pp)))/DegreesToRadians < 90)
 		{
 			m_monsters.at(i)->setVelocity(monsColDirection(m_monsters.at(i),m_enviro.at(j)));
+		}
+	}
+
+	for(int j=0;j<m_powerups.size();j++){
+		if((length(*m_powerups.at(j)->getPosition()-*m_monsters.at(i)->getPosition()) < 2) &&
+			acos(dot(normalize(*m_monsters.at(i)->getPosition()-*m_powerups.at(j)->getPosition()),
+				normalize(*m_monsters.at(i)->getPosition()-m_pp)))/DegreesToRadians < 90)
+		{
+			m_monsters.at(i)->setVelocity(monsColDirection(m_monsters.at(i),m_powerups.at(j)));
 		}
 	}
 
@@ -496,6 +562,8 @@ void GameManager::Render()
 	keyboardUpdate();
 	updateCamera();
 	Update();
+	for(int i=0;i<m_powerups.size();i++)
+		m_graphicsManager->Render(*m_powerups.at(i)->getRenderBatch());
 	for(int i=0;i<m_monsters.size();i++){
 		m_graphicsManager->Render(*m_monsters.at(i)->getRenderBatch());
 		if(BBDEBUG) m_graphicsManager->Render(*m_monsters.at(i)->getBoundingBox()->getRenderBatch());}
@@ -522,6 +590,7 @@ void GameManager::initSounds()
 	FMOD::System_Create(&m_system);
 	m_system->init(3, FMOD_INIT_NORMAL, 0);
 	m_system->createStream("../Data/Sounds/MachinegunFire.wav", FMOD_HARDWARE | FMOD_2D, 0, &m_sounds[MACHINEGUN]);
+	m_system->createStream("../Data/Sounds/ShotgunFire.wav", FMOD_HARDWARE | FMOD_2D, 0, &m_sounds[SHOTGUN]);
 	m_system->createStream("../Data/Sounds/BGMusic.mp3", FMOD_HARDWARE | FMOD_LOOP_NORMAL | FMOD_2D, 0, &m_sounds[BGMUSIC]);
 	m_system->createStream("../Data/Sounds/MonsHit.wav", FMOD_HARDWARE | FMOD_2D, 0, &m_sounds[MONSDEATH]);
 	playSound(BGMUSIC);
@@ -604,10 +673,10 @@ void GameManager::updateCamera()
 	// This is just for testing until you get this incorportated into GameManager
 }
 
-vec3 GameManager::monsColDirection(Monster* m, EnviroObj* e)
+vec3 GameManager::monsColDirection(Monster* m, Object* o)
 {
 	vec3* M = m->getPosition();
-	vec3* T = e->getPosition();
+	vec3* T = o->getPosition();
 	vec3* P = m_player->getPosition();
 
 	double r = (M->z-T->z)*(M->z-P->z)-(M->x-T->x)*(P->x-M->x);

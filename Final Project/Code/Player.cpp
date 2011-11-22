@@ -24,15 +24,30 @@ Player::Player (vec3 position, vec3 direction, float size, float speed, int live
 	this->setRenderBatch(batch);
 
 	m_bb = new BoundingBox(vec2(position.x,position.z),1,1);
+	m_gun = UZI;
+	m_ammo = 0;
 }
 
 Player::~Player () {
+}
+
+void Player::setWeapon(gunType gun)
+{
+	m_gun = gun;
+	if(m_gun == SHOTTY){ m_ammo = 10; m_weaponDelay = 10; }
+}
+
+gunType Player::getWeapon()
+{
+	return m_gun;
 }
 
 // Returns true if the player can shoot again yet, otherwise returns false
 bool Player::shoot() {
 	if (m_cooldown == 0) {
 		m_cooldown = m_weaponDelay;
+		if(m_gun == SHOTTY) m_ammo--;
+		if(m_ammo <= 0){ m_gun = UZI; m_weaponDelay = 5; }
 		return true;
 	}
 	else {
@@ -66,6 +81,10 @@ void Player::removeLife() {
 void Player::setDirection (const vec3& direction) {
 	m_bb->setDirection(vec2(direction.x,direction.z));
 	m_direction = direction;
+}
+
+void Player::setVelocity(const vec3& velocity) {
+	m_velocity = velocity * m_speed;
 }
 
 vec3* Player::getDirection () {

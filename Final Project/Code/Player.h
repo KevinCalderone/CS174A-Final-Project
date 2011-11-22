@@ -3,6 +3,8 @@
 
 #include "Object.h"
 
+enum gunType {UZI, SHOTTY};
+
 class Player : public Object
 {
 
@@ -17,15 +19,20 @@ public:
 	void setDirection (const vec3& direction);
 	vec3* getDirection ();
 	vec3* getVelocity ();
+	void setVelocity(const vec3& velocity);
 	void setWeaponDelay(int delay);
 	void addLife(int add);
 	void removeLife();
 	void Update(float delta);
+	void setWeapon(gunType gun);
+	gunType getWeapon();
 	int getLives();
 
 
 private:
 
+	gunType m_gun;
+	int m_ammo;
 	int m_lives;
 	int m_weaponDelay;
 	int m_cooldown;
