@@ -37,6 +37,7 @@ private:
 	std::vector<EnviroObj*> m_enviro;
 	std::vector<EnviroObj*> m_bgenviro;
 	std::vector<Crate*> m_powerups;
+	std::vector<Crate*> m_walls;
 	Ground* m_ground;
 	GraphicsManager* m_graphicsManager;
 	int m_score;
