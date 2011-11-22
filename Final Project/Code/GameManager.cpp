@@ -286,7 +286,7 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 		break;
 	case BULLET:
 		{
-			Bullet* bullet = new Bullet(m_pp, normalize(*m_player->getDirection()), 0.1, 0.6 +
+			Bullet* bullet = new Bullet(m_pp, normalize(*m_player->getDirection()), 1.0f, 0.6 +
 				length(*m_player->getVelocity()));
 			m_bullets.push_back(bullet);
 		}

@@ -63,6 +63,8 @@ cube rgb envMap
 2d rgb rock
 	../Data/Textures/rock.bmp
 
-
 2d rgb rockNormal
 	../Data/Textures/rockNormal.bmp
+
+2d rgb crate
+	../Data/Textures/crate.bmp
