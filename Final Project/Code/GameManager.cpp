@@ -201,19 +201,19 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 	m_ground = new Ground();
 
 	for(int i=0; i<=162; i++){
-		Crate* obj = new Crate(CRATE,vec3(-405+i*5,0,-305),vec3(0,0,1),1);
+		Crate* obj = new Crate(CRATE,vec3(-404+i*5,0,-304),vec3(0,0,1),1);
 		obj->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
 		m_walls.push_back(obj);}
 	for(int i=0; i<=162; i++){
-		Crate* obj = new Crate(CRATE,vec3(-405+i*5,0,305),vec3(0,0,1),1);
+		Crate* obj = new Crate(CRATE,vec3(-404+i*5,0,304),vec3(0,0,1),1);
 		obj->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
 		m_walls.push_back(obj);}
 	for(int i=0; i<=120; i++){
-		Crate* obj = new Crate(CRATE,vec3(-405,0,-300+i*5),vec3(0,0,1),1);
+		Crate* obj = new Crate(CRATE,vec3(-404,0,-300+i*5),vec3(0,0,1),1);
 		obj->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
 		m_walls.push_back(obj);}
 	for(int i=0; i<=120; i++){
-		Crate* obj = new Crate(CRATE,vec3(405,0,-300+i*5),vec3(0,0,1),1);
+		Crate* obj = new Crate(CRATE,vec3(404,0,-300+i*5),vec3(0,0,1),1);
 		obj->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
 		m_walls.push_back(obj);}
 
@@ -310,16 +310,18 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 		break;
 	case BULLET:
 		{
-			Bullet* bullet = new Bullet(vec3(m_pp.x,1.0,m_pp.z), normalize(*m_player->getDirection()), 1.0f, 0.6 +
+			vec3 bp = vec3(m_pp.x, 1.875, m_pp.z);
+			bp = bp - 0.425*normalize(normal(*m_player->getDirection()));
+			Bullet* bullet = new Bullet(bp, normalize(*m_player->getDirection()), 0.75f, 0.6 +
 				length(*m_player->getVelocity()));
 			m_bullets.push_back(bullet);
 			if(m_player->getWeapon()==SHOTTY)
 			{
-				Bullet* bullet2 = new Bullet(vec3(m_pp.x,1.0,m_pp.z), normalize(*m_player->getDirection()+0.2*normal(*m_player->getDirection())), 1.0f, 0.6 +
+				Bullet* bullet2 = new Bullet(bp, normalize(*m_player->getDirection()+0.2*normal(*m_player->getDirection())), 0.75f, 0.6 +
 					length(*m_player->getVelocity()));
 				m_bullets.push_back(bullet2);
 
-				Bullet* bullet3 = new Bullet(vec3(m_pp.x,1.0,m_pp.z), normalize(*m_player->getDirection()-0.2*normal(*m_player->getDirection())), 1.0f, 0.6 +
+				Bullet* bullet3 = new Bullet(bp, normalize(*m_player->getDirection()-0.2*normal(*m_player->getDirection())), 0.75f, 0.6 +
 					length(*m_player->getVelocity()));
 				m_bullets.push_back(bullet3);
 			}
@@ -439,7 +441,7 @@ void GameManager::CollisionDetection()
 	for(int j=0; j<m_bullets.size();j++){
 	for(int i=0; i<m_enviro.size();i++){
 		if(m_bullets.size()!=0 
-			&& length(*m_bullets.at(j)->getPosition() - *m_enviro.at(i)->getPosition()) < 3
+			&& length(*m_bullets.at(j)->getPosition() - *m_enviro.at(i)->getPosition()) < 2.5
 			&& collision(*m_bullets.at(j)->getBoundingBox(), *m_enviro.at(i)->getBoundingBox()))
 		{
 			Delete(BULLET,j);
@@ -493,7 +495,7 @@ void GameManager::CollisionDetection()
 
 void GameManager::Update()
 {
-//	std::cout << (*m_player->getPosition()-*m_powerups.at(0)->getPosition()) << std::endl;
+	std::cout << m_pp << std::endl;
 	if(m_pause)
 		return;
 

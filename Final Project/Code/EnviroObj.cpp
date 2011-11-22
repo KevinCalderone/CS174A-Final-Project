@@ -40,7 +40,8 @@ EnviroObj::EnviroObj(objectType type, vec3 position, vec3 direction, float size)
 		batch->m_effectParameters.m_materialGloss = 0.01f;
 		batch->m_effectParameters.m_diffuseTexture = "rock";	
 		batch->m_effectParameters.m_normalMap = "rockNormal";
-		batch->m_effectParameters.m_materialOpacity = 1.0f;
+
+		m_bbfactor = 85.0;
 	}
 	if(type==BUSH)
 	{
