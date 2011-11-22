@@ -200,6 +200,26 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 {
 	m_ground = new Ground();
 
+	for(int i=0; i<=162; i++){
+		Crate* obj = new Crate(CRATE,vec3(-405+i*5,0,-305),vec3(0,0,1),1);
+		obj->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
+		m_walls.push_back(obj);}
+	for(int i=0; i<=162; i++){
+		Crate* obj = new Crate(CRATE,vec3(-405+i*5,0,305),vec3(0,0,1),1);
+		obj->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
+		m_walls.push_back(obj);}
+	for(int i=0; i<=120; i++){
+		Crate* obj = new Crate(CRATE,vec3(-405,0,-300+i*5),vec3(0,0,1),1);
+		obj->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
+		m_walls.push_back(obj);}
+	for(int i=0; i<=120; i++){
+		Crate* obj = new Crate(CRATE,vec3(405,0,-300+i*5),vec3(0,0,1),1);
+		obj->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
+		m_walls.push_back(obj);}
+
+	for(int i=0;i<m_walls.size();i++)
+		m_walls.at(i)->Update(0.f);
+
 	float x, z;
 	srand((unsigned)time(0));
 	for(int i=1;i<=16;i++)
@@ -256,7 +276,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 
 void GameManager::initPlayer()
 {
-	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 0.7f, 0.2f, 3, 5.00);
+	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 0.7f, 2.f, 3, 5.00);
 	m_pp = *m_player->getPosition();
 	if(BBDEBUG) m_player->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
 }
@@ -444,7 +464,7 @@ void GameManager::CollisionDetection()
 		m_god--;
 	if(m_god==0){
 		m_player->getRenderBatch()->m_effectParameters.m_materialOpacity = 1.0f;
-		m_player->setSpeed(0.2f);
+		m_player->setSpeed(2.f);
 		m_godmode = false;}
 
 	for(int k=0; k<m_monsters.size();k++){
@@ -553,8 +573,14 @@ void GameManager::Render()
 	keyboardUpdate();
 	updateCamera();
 	Update();
+
+	for(int i=0;i<m_walls.size();i++)
+		if(length(*m_walls.at(i)->getPosition()-m_pp) <= 50)
+			m_graphicsManager->Render(*m_walls.at(i)->getRenderBatch());
+
 	for(int i=0;i<m_powerups.size();i++)
-		m_graphicsManager->Render(*m_powerups.at(i)->getRenderBatch());
+		if(length(*m_powerups.at(i)->getPosition()-m_pp) <= 50)
+			m_graphicsManager->Render(*m_powerups.at(i)->getRenderBatch());
 	for(int i=0;i<m_monsters.size();i++){
 		m_graphicsManager->Render(*m_monsters.at(i)->getRenderBatch());
 		if(BBDEBUG) m_graphicsManager->Render(*m_monsters.at(i)->getBoundingBox()->getRenderBatch());}
