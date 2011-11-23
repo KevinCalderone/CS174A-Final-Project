@@ -511,7 +511,13 @@ void GameManager::Update()
 			playSound(SHOTGUN);
 		else
 			playSound(MACHINEGUN);
-		Spawn(BULLET,m_pp);}
+		Spawn(BULLET,m_pp);
+		m_flashTimer = 15.0f;
+	}
+
+	m_flashTimer -= m_delta;
+	if (m_flashTimer < 0.0f)
+		m_flashTimer = 0.0f;
 
 	CollisionDetection();
 
@@ -712,8 +718,10 @@ void GameManager::updateCamera()
 		renderParameters.m_pointLightPosition[1] = m_pp + *m_player->getDirection() * 2.0f + vec3(0.0f, 3.5f, 0.0f);
 		
 		// Muzzle flash
-		float flashIntensity = cos((3.14159 / 2.0f) * (fmod(theta, 5.0f) < 13.0f ? fmod(theta, 5.0f) / 13.0f : 1.0f))*1.5;
-		renderParameters.m_pointLightDiffuse[1] = vec3(3.0f, 3.0f, 0.3f) * flashIntensity * 0.3f;
+		float flashIntensity = m_flashTimer / 15.0f;
+		flashIntensity *= flashIntensity;
+		//float flashIntensity = cos((3.14159 / 2.0f) * (fmod(theta, 5.0f) < 13.0f ? fmod(theta, 5.0f) / 13.0f : 1.0f))*1.5;
+		renderParameters.m_pointLightDiffuse[1] = vec3(3.0f, 3.0f, 0.3f) * flashIntensity * 0.5f;
 		renderParameters.m_pointLightSpecular[1] = vec3(2.0f, 2.0f, 0.3f) * flashIntensity;
 		renderParameters.m_pointLightRange[1] = 8.0f * flashIntensity;
 		renderParameters.m_pointLightFalloff[1] = 2.0f * flashIntensity;

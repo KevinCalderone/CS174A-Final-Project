@@ -32,6 +32,7 @@ private:
 	Player* m_player;
 	vec3 m_pp;
 	vec3 m_pgp;
+	float m_flashTimer;
 	std::vector<Monster*> m_monsters;
 	std::vector<Bullet*> m_bullets;
 	std::vector<EnviroObj*> m_enviro;

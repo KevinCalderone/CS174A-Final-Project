@@ -15,8 +15,8 @@ Player::Player (vec3 position, vec3 direction, float size, float speed, int live
 	batch->m_geometryID = "marcus";
 	batch->m_effectParameters.m_materialAmbient = vec3(1.0f, 1.0f, 1.0f) * 3.0f;
 	batch->m_effectParameters.m_materialDiffuse = vec3(1.0f, 1.0f, 1.0f) * 1.2f;
-	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f) * 0.3f;
-	batch->m_effectParameters.m_materialSpecularExponent = 4.0f;
+	batch->m_effectParameters.m_materialSpecular = vec3(1.0f, 1.0f, 1.0f) * 0.5f;
+	batch->m_effectParameters.m_materialSpecularExponent = 6.0f;
 	batch->m_effectParameters.m_materialGloss = 0.05f;
 	batch->m_effectParameters.m_materialOpacity = 1.0f;
 	batch->m_effectParameters.m_diffuseTexture = "marcus";	
