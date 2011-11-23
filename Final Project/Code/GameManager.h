@@ -17,7 +17,7 @@
 
 const enum directionType {UP,DOWN,LEFT,RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT};
 const directionType directions[8] = {UP, DOWN, LEFT, RIGHT, UPLEFT, UPRIGHT, DOWNLEFT, DOWNRIGHT};
-const enum soundType {MACHINEGUN, SHOTGUN, MONSDEATH, BGMUSIC};
+const enum soundType {MACHINEGUN, SHOTGUN, MONSDEATH, BGMUSIC, GRUNT, GLOAD};
 
 class GameManager
 {
@@ -64,10 +64,11 @@ private:
 	vec3 monsColDirection(Monster* m, Object* o);
 	void playSound(soundType sound);
 	FMOD::System *m_system;
-    FMOD::Sound *m_sounds[4];
+    FMOD::Sound *m_sounds[6];
     FMOD::Channel *m_bulletchannel;
 	FMOD::Channel *m_monschannel;
 	FMOD::Channel *m_bgchannel;
+	FMOD::Channel *m_fxchannel;
 
 	void RenderHUD();
 	std::string intID(int x);

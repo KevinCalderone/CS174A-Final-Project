@@ -131,7 +131,7 @@ void GameManager::ResetGame()
 	m_w=m_a=m_s=m_d=m_j=m_l=m_auto=m_godmode=m_pause = false;
 	angle = 0.0f;
 	m_score = m_god = 0;
-	m_bulletchannel = m_monschannel = m_bgchannel = 0;
+	m_bulletchannel = m_monschannel = m_bgchannel = m_fxchannel = 0;
 
 	// need to delete all monsters, bullets, enviro, bgenviro, m_ground, m_graphicsmanagers, m_system;
 
@@ -153,6 +153,7 @@ void GameManager::ResetGame()
 	m_bullets.clear();
 	m_enviro.clear();
 	m_bgenviro.clear();
+	m_walls.clear();
 
 	m_system->close();
 
@@ -477,6 +478,7 @@ void GameManager::CollisionDetection()
 				m_player->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
 				m_player->setSpeed(0.3f);
 				m_god = 100;
+				playSound(GRUNT);
 				std::cout << "YOU GOT HIT BY: " << k << std::endl;
 				if(m_player->kill()){
 					std::cout << "YOU'RE DEAD!" << std::endl;
@@ -490,6 +492,7 @@ void GameManager::CollisionDetection()
 	for(int i=0; i<m_powerups.size(); i++)
 		if(length(m_pp - *m_powerups.at(i)->getPosition()) < 2){
 			m_player->setWeapon(SHOTTY);
+			playSound(GLOAD);
 			Delete(CRATE, i);}
 }
 
@@ -636,11 +639,13 @@ void GameManager::Render()
 void GameManager::initSounds()
 {
 	FMOD::System_Create(&m_system);
-	m_system->init(3, FMOD_INIT_NORMAL, 0);
+	m_system->init(4, FMOD_INIT_NORMAL, 0);
 	m_system->createStream("../Data/Sounds/MachinegunFire.wav", FMOD_HARDWARE | FMOD_2D, 0, &m_sounds[MACHINEGUN]);
 	m_system->createStream("../Data/Sounds/ShotgunFire.wav", FMOD_HARDWARE | FMOD_2D, 0, &m_sounds[SHOTGUN]);
 	m_system->createStream("../Data/Sounds/BGMusic.mp3", FMOD_HARDWARE | FMOD_LOOP_NORMAL | FMOD_2D, 0, &m_sounds[BGMUSIC]);
 	m_system->createStream("../Data/Sounds/MonsHit.wav", FMOD_HARDWARE | FMOD_2D, 0, &m_sounds[MONSDEATH]);
+	m_system->createStream("../Data/Sounds/Grunt.mp3", FMOD_HARDWARE | FMOD_2D, 0, &m_sounds[GRUNT]);
+	m_system->createStream("../Data/Sounds/GunLoad.mp3", FMOD_HARDWARE | FMOD_2D, 0, &m_sounds[GLOAD]);
 	playSound(BGMUSIC);
 }
 
@@ -651,7 +656,9 @@ void GameManager::playSound(soundType sound)
 	case MACHINEGUN:
 	case SHOTGUN:	temp = m_bulletchannel; break;
 	case MONSDEATH: temp = m_monschannel; break;
-	case BGMUSIC:	temp = m_bgchannel; break;}
+	case BGMUSIC:	temp = m_bgchannel; break;
+	case GLOAD:
+	case GRUNT:		temp = m_fxchannel; break;}
 	m_system->playSound(FMOD_CHANNEL_FREE, m_sounds[sound], false, &temp);
 }
 
