@@ -6,7 +6,7 @@ const bool BBDEBUG = false;
 
 GameManager::GameManager()
 {
-	m_w=m_a=m_s=m_d=m_j=m_l=m_auto=m_godmode=m_pause = false;
+	m_w=m_a=m_s=m_d=m_j=m_l=m_auto=m_godmode=m_pause=m_mute = false;
 	angle = 0.0f;
 	m_score = m_god = 0;
 	m_bulletchannel = m_monschannel = m_bgchannel = 0;
@@ -58,6 +58,10 @@ void GameManager::callbackKeyboard(unsigned char key, int x, int y)
 		m_j = true; break;
 	case 'l':
 		m_l = true; break;
+	case 'm':
+		m_mute = !m_mute;
+		m_bgchannel->setMute(m_mute); m_bulletchannel->setMute(m_mute);
+		m_fxchannel->setMute(m_mute); m_monschannel->setMute(m_mute); break;
 	case 13:
 		if(!m_pause) break;
 		ResetGame();
@@ -271,13 +275,11 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 		m_bgenviro.at(i)->Update(1.0f);
 	for(int i=0;i<m_enviro.size();i++)
 		m_enviro.at(i)->Update(1.0f);
-
-	
 }
 
 void GameManager::initPlayer()
 {
-	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 0.7f, 0.2f, 3, 5.00);
+	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 0.7f, 0.2f, 9, 5.00);
 
 	m_pp = *m_player->getPosition();
 	if(BBDEBUG) m_player->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
@@ -288,7 +290,7 @@ void GameManager::initMonsters()
 	spawnMonsters();
 }
 
-void GameManager::Spawn(objectType type, vec3 position, float size){
+void GameManager::Spawn(objectType type, vec3& position, float size){
 	switch(type){
 	case PLAYER:
 		break;
@@ -498,7 +500,7 @@ void GameManager::CollisionDetection()
 
 void GameManager::Update()
 {
-	std::cout << m_pp << std::endl;
+	//std::cout << (m_bgchannel == NULL) << std::endl;
 	if(m_pause)
 		return;
 
@@ -610,8 +612,7 @@ void GameManager::Render()
 
 	for(int i=0;i<m_walls.size();i++)
 		if(length(*m_walls.at(i)->getPosition()-m_pp) <= 50)
-			m_graphicsManager->Render(*m_walls.at(i)->getRenderBatch());
-
+			m_graphicsManager->Render(*m_walls.at(i)->getRenderBatch());		
 	for(int i=0;i<m_powerups.size();i++)
 		if(length(*m_powerups.at(i)->getPosition()-m_pp) <= 50)
 			m_graphicsManager->Render(*m_powerups.at(i)->getRenderBatch());
@@ -652,14 +653,15 @@ void GameManager::initSounds()
 void GameManager::playSound(soundType sound)
 {
 	FMOD::Channel *temp;
+	m_system->playSound(FMOD_CHANNEL_FREE, m_sounds[sound], false, &temp);
+
 	switch(sound){
 	case MACHINEGUN:
-	case SHOTGUN:	temp = m_bulletchannel; break;
-	case MONSDEATH: temp = m_monschannel; break;
-	case BGMUSIC:	temp = m_bgchannel; break;
+	case SHOTGUN:	m_bulletchannel = temp; break;
+	case MONSDEATH: m_monschannel = temp; break;
+	case BGMUSIC:	m_bgchannel = temp; break;
 	case GLOAD:
-	case GRUNT:		temp = m_fxchannel; break;}
-	m_system->playSound(FMOD_CHANNEL_FREE, m_sounds[sound], false, &temp);
+	case GRUNT:		m_fxchannel = temp; break;}
 }
 
 void GameManager::initGame()

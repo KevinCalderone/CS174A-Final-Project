@@ -34,7 +34,7 @@ Player::~Player () {
 void Player::setWeapon(gunType gun)
 {
 	m_gun = gun;
-	if(m_gun == SHOTTY){ m_ammo = 10; m_weaponDelay = 12.00; }
+	if(m_gun == SHOTTY){ m_ammo += 10; m_weaponDelay = 15.00; }
 }
 
 gunType Player::getWeapon()
