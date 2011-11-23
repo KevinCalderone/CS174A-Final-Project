@@ -293,7 +293,7 @@ void GameManager::Spawn(objectType type, vec3 position, float size){
 		break;
 	case MONSTER:
 		{
-			Monster* monster = new Monster(position, normalize(m_pp - position), size, 0.15);
+			Monster* monster = new Monster(position, normalize(m_pp - position), size, (2.2-size)/10.0);
 			bool allowed = true;
 			for(int i=0;i<m_enviro.size();i++)
 				if(collision(*monster->getBoundingBox(), *m_enviro.at(i)->getBoundingBox()))
@@ -913,7 +913,7 @@ void GameManager::spawnMonsters()
 	vec3 position;
 	for(int i=0;i<5;i++)
 	{
-		position = m_pp + 15*anchor + anchor*(rand()%5) + (20-rand()%40)*an;
+		position = m_pp + 25*anchor + anchor*(rand()%5) + (20-rand()%40)*an;
 		Spawn(MONSTER,position,0.8);
 	}
 }
