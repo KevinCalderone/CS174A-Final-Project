@@ -17,6 +17,9 @@ PostProcessShader::PostProcessShader (const std::string& vertShader, const std::
 	m_colorCorrection = glGetUniformLocation(m_program, "colorCorrection");
 	m_randSeed = glGetUniformLocation(m_program, "randSeed");
 
+	m_windowWidth = glGetUniformLocation(m_program, "windowWidth");
+	m_windowHeight = glGetUniformLocation(m_program, "windowHeight");
+
 	// bind samplers to texture units
 	glUniform1i(glGetUniformLocation(m_program, "renderPassSource0"), e_TextureChannelRenderPassSource0 - e_TextureChannelFirst);
 	glUniform1i(glGetUniformLocation(m_program, "renderPassSource1"), e_TextureChannelRenderPassSource1 - e_TextureChannelFirst);
@@ -35,6 +38,9 @@ void PostProcessShader::SetShaderState (const ShaderState* shaderState) {
 
 	glUniformMatrix4fv(m_colorCorrection, 1, GL_TRUE, (GLfloat*)&postProcessShaderState->m_colorCorrection);
 	glUniform1i(m_randSeed, postProcessShaderState->m_randSeed);
+	
+	glUniform1f(m_windowWidth, (GLfloat)Settings::Get().s_windowWidth);
+	glUniform1f(m_windowHeight, (GLfloat)Settings::Get().s_windowHeight);
 
  	glEnableVertexAttribArray(m_vPosition);
 	glVertexAttribPointer(m_vPosition, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), BUFFER_OFFSET(postProcessShaderState->m_attributeLocation.m_position0));

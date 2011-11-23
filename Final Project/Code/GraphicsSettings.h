@@ -1,8 +1,20 @@
 #ifndef __GRAPHICSSETTINGS_H__
 #define __GRAPHICSSETTINGS_H__
 
-const unsigned int c_window_width = 800;
-const unsigned int c_window_height = 600;
+struct Settings 
+{
+	static Settings& Get () {
+		static Settings s;
+		return s;
+	}
+
+	bool s_fullScreen;
+	unsigned int s_windowWidth;
+	unsigned int s_windowHeight;
+
+private:
+	Settings () {};
+};
 
 const unsigned int c_num_point_lights = 3;		// must be same value in shaders
 

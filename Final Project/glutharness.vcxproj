@@ -150,6 +150,7 @@
   <ItemGroup>
     <None Include="Data\AssetLibrary.txt" />
     <None Include="Data\Geometry\GeometryLibrary.txt" />
+    <None Include="Data\Settings.txt" />
     <None Include="Data\Shaders\Effect.txt" />
     <None Include="Data\Shaders\forwardFrag.txt" />
     <None Include="Data\Shaders\forwardVert.txt" />

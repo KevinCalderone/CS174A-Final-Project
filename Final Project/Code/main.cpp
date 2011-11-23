@@ -3,6 +3,8 @@
 // ------------------------
 
 #include <stdlib.h>
+#include <fstream>
+
 #include "Timer.h"
 #include "GameManager.h"
 #include "GraphicsManager.h"
@@ -13,17 +15,42 @@ static GameManager* gameManager;
 
 const int FPS = 60;
 
+void loadSettings (std::string settingsFile) {
+	std::ifstream is;
+	is.open (settingsFile.c_str(), std::ios::binary);
+
+	if(!is.is_open()) {
+		printf("loadSettings: Error opening settings file.");
+		Settings::Get().s_fullScreen = false;
+		Settings::Get().s_windowWidth = 800;
+		Settings::Get().s_windowHeight = 600;
+		return;
+	}
+
+	std::string screenType;
+	unsigned int screenWidth;
+	unsigned int screenHeight;
+
+	is >> screenType >> screenWidth >> screenHeight;
+
+	if (screenType == "full_screen")
+		Settings::Get().s_fullScreen = true;
+	else 
+		Settings::Get().s_fullScreen = false;
+
+	Settings::Get().s_windowWidth = screenWidth;
+	Settings::Get().s_windowHeight = screenHeight;
+}
+
 void initGlut (int& argc, char** argv) { 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowPosition(100, 50);
-	glutInitWindowSize(c_window_width, c_window_height);
+	glutInitWindowSize(Settings::Get().s_windowWidth, Settings::Get().s_windowHeight);
 	glutCreateWindow("CS17A Final Project");
+	if (Settings::Get().s_fullScreen)
+		glutFullScreen();
 }
-
-
-
-
 
 // Called when the window needs to be redrawn.
 void callbackDisplay () {
@@ -84,6 +111,7 @@ void initCallbacks () {
 }
 
 int main (int argc, char** argv) {
+	loadSettings("../Data/Settings.txt");
 	initGlut(argc, argv);
 	initCallbacks();
 	glewInit();

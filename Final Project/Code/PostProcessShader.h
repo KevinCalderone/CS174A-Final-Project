@@ -24,6 +24,9 @@ private:
 	GLuint m_colorCorrection;
 	GLuint m_randSeed;
 
+	GLuint m_windowWidth;
+	GLuint m_windowHeight;
+
 	PostProcessShaderState m_currentState;
 };
 

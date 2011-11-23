@@ -143,7 +143,7 @@ void GraphicsManager::LoadEffectFile (const std::string& effectFile) {
 				if (iter != m_frameBufferTextures.end())
 					continue;
 
-				FrameBufferTexture* texture = new FrameBufferTexture(bufferFormat, c_window_width * widthRatio, c_window_height * heightRatio);
+				FrameBufferTexture* texture = new FrameBufferTexture(bufferFormat, Settings::Get().s_windowWidth * widthRatio, Settings::Get().s_windowHeight * heightRatio);
 				m_frameBufferTextures[bufferName] = texture;
 			}
 		}
@@ -260,8 +260,8 @@ void GraphicsManager::SwapBuffers () {
 		if (passIter->m_colorAttach0 == "screen") {	
 			glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
-			destinationWidth = c_window_width;
-			destinationHeight = c_window_height;
+			destinationWidth = Settings::Get().s_windowWidth;
+			destinationHeight = Settings::Get().s_windowHeight;
 
 			glDisable(GL_DEPTH_TEST);
 		}

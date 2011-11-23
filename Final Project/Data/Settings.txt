@@ -1,0 +1,3 @@
+windowed 800 600
+
+// full_screen 1200 900

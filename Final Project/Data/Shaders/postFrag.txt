@@ -12,6 +12,9 @@ uniform bool b_blurX;
 uniform bool b_blurY;
 uniform bool b_depthOfField;
 
+uniform float windowWidth;
+uniform float windowHeight;
+
 uniform mat4 colorCorrection;
 
 void main() { 
@@ -19,7 +22,7 @@ void main() {
 	vec4 sum = vec4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	if (b_blurY) {
-		float blurHeight = 2.0f / 600.0f;
+		float blurHeight = 2.0f / windowHeight;
 		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y - 4.0*blurHeight)) * 0.05;
 		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y - 3.0*blurHeight)) * 0.09;
 		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y - 2.0*blurHeight)) * 0.12;
@@ -31,7 +34,7 @@ void main() {
 		sum += texture2D(renderPassSource0, vec2(texCoord.x, texCoord.y + 4.0*blurHeight)) * 0.05;
 	}
 	else if (b_blurX) {
-		float blurWidth = 2.0f / 800.0f;
+		float blurWidth = 2.0f / windowWidth;
 		sum += texture2D(renderPassSource0, vec2(texCoord.x - 4.0*blurWidth, texCoord.y)) * 0.05;
 		sum += texture2D(renderPassSource0, vec2(texCoord.x - 3.0*blurWidth, texCoord.y)) * 0.09;
 		sum += texture2D(renderPassSource0, vec2(texCoord.x - 2.0*blurWidth, texCoord.y)) * 0.12;

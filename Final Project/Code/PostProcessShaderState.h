@@ -9,7 +9,7 @@
 struct PostProcessShaderState : public ShaderState
 {
 	PostProcessShaderState () 
-		: b_blurX(false), b_blurY(false), b_depthOfField(false) 
+		: b_blurX(false), b_blurY(false), b_depthOfField(false)
 	{}
 
 	void HandleShaderFlags (std::vector<std::string> shaderFlags);

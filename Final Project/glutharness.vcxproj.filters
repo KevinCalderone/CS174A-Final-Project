@@ -188,5 +188,8 @@
     <None Include="Data\Shaders\Effect.txt">
       <Filter>Data</Filter>
     </None>
+    <None Include="Data\Settings.txt">
+      <Filter>Data</Filter>
+    </None>
   </ItemGroup>
 </Project>
