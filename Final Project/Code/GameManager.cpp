@@ -48,21 +48,30 @@ void GameManager::callbackKeyboard(unsigned char key, int x, int y)
 	case ' ':
 		m_auto = !m_auto; break;
 	case 'w':
+	case 'W':
 		m_w = true; break;
 	case 's':
+	case 'S':
 		m_s = true; break;
 	case 'a':
+	case 'A':
 		m_a = true; break;
 	case 'd':
+	case 'D':
 		m_d = true; break;
 	case 'j':
+	case 'J':
 		m_j = true; break;
 	case 'l':
+	case 'L':
 		m_l = true; break;
 	case 'm':
+	case 'M':
 		m_mute = !m_mute;
-		m_bgchannel->setMute(m_mute); m_bulletchannel->setMute(m_mute);
-		m_fxchannel->setMute(m_mute); m_monschannel->setMute(m_mute); break;
+		m_bgchannel->setMute(m_mute); break;
+	case 'p':
+	case 'P':
+		if(m_player->getLives() > 0)	m_pause = !m_pause;	break;
 	case 13:
 		if(!m_pause) break;
 		ResetGame();
@@ -280,7 +289,7 @@ void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & G
 
 void GameManager::initPlayer()
 {
-	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 0.7f, 0.2f, 9, 5.00);
+	m_player = new Player(Angel::vec3(0.0f,0.0f,1.0f), Angel::vec3(0.0f), 0.7f, 0.2f, 5, 5.00);
 
 	m_pp = *m_player->getPosition();
 	if(BBDEBUG) m_player->getRenderBatch()->m_effectParameters.m_materialOpacity = 0.5f;
@@ -482,9 +491,9 @@ void GameManager::CollisionDetection()
 				m_player->setSpeed(0.3f);
 				m_god = 100;
 				playSound(GRUNT);
-				std::cout << "YOU GOT HIT BY: " << k << std::endl;
+				std::cout << "YOU GOT HIT!" << std::endl;
 				if(m_player->kill()){
-					std::cout << "YOU'RE DEAD!" << std::endl;
+					std::cout << "YOU'RE DEAD!" << std::endl << std::endl;f
 					m_pause = true;
 				}
 			}
@@ -659,6 +668,7 @@ void GameManager::initSounds()
 
 void GameManager::playSound(soundType sound)
 {
+	if(m_mute)	return;
 	FMOD::Channel *temp;
 	m_system->playSound(FMOD_CHANNEL_FREE, m_sounds[sound], false, &temp);
 
@@ -815,7 +825,7 @@ void GameManager::RenderHUD()
 	delete rb;
 
 	// Render game over 
-	if (m_pause) {
+	if (m_pause && m_player->getLives() <= 0) {
 		RenderBatch* rb = new RenderBatch();
 		rb->m_geometryID = "gameover";
 		rb->m_effectParameters.m_materialAmbient = vec3(5.0f, 5.0f, 5.0f);
