@@ -90,9 +90,6 @@ static gameover
 static rock
 	../Data/Geometry/rock.obj
 
-static robot
-	../Data/Geometry/robot.obj
-
 static crate
 	../Data/Geometry/crate.obj
 

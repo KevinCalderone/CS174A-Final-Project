@@ -45,7 +45,7 @@ private:
 	int m_god;
 	bool m_godmode;
 	static const int MONSTERCAP = 10;
-	void Spawn(objectType type, vec3 position, float size=10.0);
+	void Spawn(objectType type, vec3& position, float size=10.0);
 	void spawnMonsters();
 	float angle;
 	bool m_w,m_a,m_s,m_d,m_j,m_l,m_auto;
@@ -70,6 +70,7 @@ private:
 	FMOD::Channel *m_monschannel;
 	FMOD::Channel *m_bgchannel;
 	FMOD::Channel *m_fxchannel;
+	bool m_mute;
 
 	void RenderHUD();
 	std::string intID(int x);
