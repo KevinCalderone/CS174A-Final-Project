@@ -251,10 +251,6 @@ void GameManager::updateLighting() {
 		else if (time < timeKeyFrames[i]) {
 			float lerp = (time - timeKeyFrames[i - 1]) / (timeKeyFrames[i] - timeKeyFrames[i - 1]);
 			renderParameters.m_lightAmbient = ambientKeyFrames[i - 1] * (1 - lerp) + ambientKeyFrames[i] * lerp;
-			std::cout << time << ' ' << lerp << 
-				' ' << ambientKeyFrames[i - 1].x * lerp << 
-				' ' << ambientKeyFrames[i].x * (1 - lerp) << 
-				' ' << renderParameters.m_lightAmbient.x << std::endl;
 			break;
 		}
 	}
