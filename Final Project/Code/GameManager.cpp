@@ -12,6 +12,7 @@ GameManager::GameManager()
 	m_score = m_god = 0;
 	m_bulletchannel = m_monschannel = m_bgchannel = 0;
 	m_timer = NULL;
+	m_timeOfDay = 0.0f;
 }
 
 GameManager::~GameManager()
@@ -146,6 +147,7 @@ void GameManager::ResetGame()
 	angle = 0.0f;
 	m_score = m_god = 0;
 	m_bulletchannel = m_monschannel = m_bgchannel = m_fxchannel = 0;
+	m_timeOfDay = 0.0f;
 
 	// need to delete all monsters, bullets, enviro, bgenviro, m_ground, m_graphicsmanagers, m_system;
 
@@ -209,6 +211,54 @@ void GameManager::initParameters()
 		0.0f, 0.0f, 1.0f, 0.0f, 
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
+}
+
+void GameManager::updateLighting() {
+	
+	const unsigned int c_num_keyframes = 7;
+	float timeKeyFrames[c_num_keyframes] = { 
+		0.0f,	
+		10.0f,
+		11.0f,
+		12.0f,
+		22.0f,
+		23.0f,
+		24.0f
+	};
+
+	// 10 day, 1 red, 1 twilight, 10 dark, 1 twilight, 1 red
+
+	vec3 ambientKeyFrames[c_num_keyframes] = {
+		vec3(0.5f, 0.5f, 0.7f) * 0.45f,
+		vec3(0.6f, 0.5f, 0.6f) * 0.5f,
+		vec3(0.9f, 0.5f, 0.7f) * 0.5f,
+		vec3(0.9f, 0.5f, 0.4f) * 0.1f,
+		vec3(0.5f, 0.5f, 0.7f) * 0.2f,
+		vec3(0.9f, 0.5f, 0.4f) * 0.6f,
+		vec3(0.5f, 0.5f, 0.7f) * 0.45f
+	};
+
+	RenderParameters& renderParameters = m_graphicsManager->GetRenderParameters();
+	
+	float time = fmod(m_timeOfDay / 100.0f, 24.0f);
+
+	unsigned int keyframe = 0;
+	for (int i = 0; i < c_num_keyframes; ++i) {
+		if (time == timeKeyFrames[i]) {
+			renderParameters.m_lightAmbient = timeKeyFrames[i];
+			break;
+		}
+		else if (time < timeKeyFrames[i]) {
+			float lerp = (time - timeKeyFrames[i - 1]) / (timeKeyFrames[i] - timeKeyFrames[i - 1]);
+			renderParameters.m_lightAmbient = ambientKeyFrames[i - 1] * (1 - lerp) + ambientKeyFrames[i] * lerp;
+			std::cout << time << ' ' << lerp << 
+				' ' << ambientKeyFrames[i - 1].x * lerp << 
+				' ' << ambientKeyFrames[i].x * (1 - lerp) << 
+				' ' << renderParameters.m_lightAmbient.x << std::endl;
+			break;
+		}
+	}
+
 }
 
 void GameManager::initEnviro() // gotta wait for implementation of EnviroObj & Ground
@@ -530,6 +580,9 @@ void GameManager::Update()
 	m_flashTimer -= m_delta;
 	if (m_flashTimer < 0.0f)
 		m_flashTimer = 0.0f;
+
+	m_timeOfDay += m_delta;
+	updateLighting();
 
 	CollisionDetection();
 

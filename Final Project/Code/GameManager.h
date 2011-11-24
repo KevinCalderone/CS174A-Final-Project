@@ -33,6 +33,7 @@ private:
 	vec3 m_pp;
 	vec3 m_pgp;
 	float m_flashTimer;
+	float m_timeOfDay;
 	std::vector<Monster*> m_monsters;
 	std::vector<Bullet*> m_bullets;
 	std::vector<EnviroObj*> m_enviro;
@@ -62,6 +63,7 @@ private:
 	void SetCameraOrthogonal();
 	void SetupCamera(vec4 playerPos);
 	void updateCamera();
+	void updateLighting();
 	vec3 monsColDirection(Monster* m, Object* o);
 	void playSound(soundType sound);
 	FMOD::System *m_system;
