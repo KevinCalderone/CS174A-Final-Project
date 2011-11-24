@@ -165,6 +165,7 @@ void GameManager::ResetGame()
 	m_timer = NULL;
 
 	// vector::clear should delete all objects within
+	// No it doesnt.  Memory leak all the things!
 	m_monsters.clear();
 	m_bullets.clear();
 	m_enviro.clear();
